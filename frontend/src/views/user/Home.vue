@@ -1,6 +1,6 @@
 <script>
-import CategoryCard from "../components/CategoryCard.vue";
-import ProductCard from "../components/ProductCard.vue";
+import CategoryCard from "@/components/CategoryCard.vue";
+import ProductCard from "@/components/ProductCard.vue";
 
 export default {
   components: {
@@ -243,7 +243,7 @@ export default {
           <div class="product-offer mb-30" style="height: 300px">
             <img
               class="img-fluid"
-              src="../assets/img/navyuniforms.jpg"
+              src="../../assets/img/navyuniforms.jpg"
               alt=""
             />
             <div class="offer-text">
@@ -255,7 +255,7 @@ export default {
         </div>
         <div class="col-md-6">
           <div class="product-offer mb-30" style="height: 300px">
-            <img class="img-fluid" src="../assets/img/suniforms.jpg" alt="" />
+            <img class="img-fluid" src="../../assets/img/suniforms.jpg" alt="" />
             <div class="offer-text">
               <h6 class="text-white text-uppercase">Save 30%</h6>
               <h3 class="text-white mb-3">Discount</h3>
