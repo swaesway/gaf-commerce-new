@@ -98,15 +98,13 @@
                   <a href="/shop" class="dropdown-item">Air Forces</a>
                 </div>
               </div>
-              <a href="" class="nav-item nav-link">Shirts</a>
-              <a href="" class="nav-item nav-link">Jeans</a>
-              <a href="" class="nav-item nav-link">Swimwear</a>
-              <a href="" class="nav-item nav-link">Sleepwear</a>
-              <a href="" class="nav-item nav-link">Sportswear</a>
-              <a href="" class="nav-item nav-link">Jumpsuits</a>
-              <a href="" class="nav-item nav-link">Blazers</a>
-              <a href="" class="nav-item nav-link">Jackets</a>
-              <a href="" class="nav-item nav-link">Shoes</a>
+              <a href="" class="nav-item nav-link">Clothes</a>
+              <a href="" class="nav-item nav-link">Electronics</a>
+              <a href="" class="nav-item nav-link">Cosmetics</a>
+              <a href="" class="nav-item nav-link">Footwear</a>
+              <a href="" class="nav-item nav-link">Headgear</a>
+              <a href="" class="nav-item nav-link">Books & Stationery</a>
+              <a href="" class="nav-item nav-link">Food & Beverages</a>
             </div>
           </nav>
         </div>
