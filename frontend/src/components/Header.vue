@@ -135,11 +135,11 @@
               <div class="navbar-nav mr-auto py-0">
                 <a href="/" class="nav-item nav-link active">Home</a>
                 <a href="/shop" class="nav-item nav-link">Products</a>
-                <a href="/detail" class="nav-item nav-link">Wishlist</a>
+                <a href="/wishlist" class="nav-item nav-link">Wishlist</a>
                 <a href="/contact" class="nav-item nav-link">Contact</a>
               </div>
               <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
-                <a href="" class="btn px-0">
+                <a href="/wishlist" class="btn px-0">
                   <i class="fas fa-heart text-primary"></i>
                   <span
                     class="badge text-secondary border border-secondary rounded-circle"

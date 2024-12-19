@@ -5,7 +5,7 @@ export default {};
 <template lang="">
   <div>
     <!-- Footer Start -->
-    <div class="container-fluid bg-dark text-secondary mt-5 pt-5">
+    <div class="container-fluid bg-green text-secondary mt-5 pt-5">
       <div class="row px-xl-5 pt-5">
         <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
           <h5 class="text-secondary text-uppercase mb-4">Get In Touch</h5>
@@ -130,4 +130,11 @@ export default {};
     ></a>
   </div>
 </template>
+
+<style>
+.text-green {
+  color: #318e2b !important;
+}
+
+</style>
 
