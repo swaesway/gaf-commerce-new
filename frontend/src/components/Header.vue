@@ -6,23 +6,33 @@
         class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex"
       >
         <div class="col-lg-4">
-          <a href="" class="text-decoration-none">
-            <span class="h1 text-uppercase text-primary bg-dark px-2">GAF</span>
-            <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1"
+          <a href="/" class="text-decoration-none poppins-bold text-green">
+            <!-- <span class="h1 text-uppercase text-primary bg-green px-2">GAF</span>
+            <span class="h1 text-uppercase text-green bg-primary px-2 ml-n1"
               >MARKET</span
-            >
+            > -->
+
+            GAF MARKET
           </a>
         </div>
         <div class="col-lg-4 col-6 text-left">
           <form action="">
-            <div class="input-group">
+            <div class="input-group" style="width: 150%">
               <input
                 type="text"
-                class="form-control"
+                class="form-control rounded-pill"
                 placeholder="Search for products"
+                style="
+                  height: 50px;
+                  border-radius: 50px;
+                  padding-right: 40px;
+                  width: 100%;
+                "
               />
               <div class="input-group-append">
-                <span class="input-group-text bg-transparent text-primary">
+                <span
+                  class="input-group-text bg-transparent text-primary border-0"
+                >
                   <i class="fa fa-search"></i>
                 </span>
               </div>
@@ -39,8 +49,12 @@
               My Account
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-              <button class="dropdown-item" type="button">Sign in</button>
-              <button class="dropdown-item" type="button">Sign up</button>
+              <a href="/login"
+                ><button class="dropdown-item" type="button">Sign in</button></a
+              >
+              <a href="/register"
+                ><button class="dropdown-item" type="button">Sign up</button></a
+              >
             </div>
           </div>
         </div>
@@ -49,7 +63,7 @@
     <!-- Topbar End -->
 
     <!-- Navbar Start -->
-    <div class="container-fluid bg-dark mb-30">
+    <div class="container-fluid bg-green mb-30">
       <div class="row px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
           <a
@@ -71,17 +85,17 @@
             <div class="navbar-nav w-100">
               <div class="nav-item dropdown dropright">
                 <a
-                  href="#"
+                  href="/shop"
                   class="nav-link dropdown-toggle"
                   data-toggle="dropdown"
-                  >Dresses <i class="fa fa-angle-right float-right mt-1"></i
+                  >Uniforms <i class="fa fa-angle-right float-right mt-1"></i
                 ></a>
                 <div
                   class="dropdown-menu position-absolute rounded-0 border-0 m-0"
                 >
-                  <a href="" class="dropdown-item">Men's Dresses</a>
-                  <a href="" class="dropdown-item">Women's Dresses</a>
-                  <a href="" class="dropdown-item">Baby's Dresses</a>
+                  <a href="/shop" class="dropdown-item">Army</a>
+                  <a href="/shop" class="dropdown-item">Navy</a>
+                  <a href="/shop" class="dropdown-item">Air Forces</a>
                 </div>
               </div>
               <a href="" class="nav-item nav-link">Shirts</a>
@@ -98,7 +112,7 @@
         </div>
         <div class="col-lg-9">
           <nav
-            class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0"
+            class="navbar navbar-expand-lg bg-green navbar-dark py-3 py-lg-0 px-0"
           >
             <a href="" class="text-decoration-none d-block d-lg-none">
               <span class="h1 text-uppercase text-dark bg-light px-2">GAF</span>
@@ -149,3 +163,35 @@
     </div>
   </div>
 </template>
+
+<style>
+.bg-green {
+  background-color: #318e2b !important;
+}
+
+.text-green {
+  color: #318e2b !important;
+}
+
+.poppins-bold {
+  font-family: "Poppins", serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.input-group {
+  max-width: 700px;
+  margin: auto;
+}
+
+.input-group-text {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+</style>
