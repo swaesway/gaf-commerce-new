@@ -162,18 +162,14 @@ export default {
         <span class="bg-secondary pr-3">Categories</span>
       </h2>
       <div class="row px-xl-5 pb-3">
-        <CategoryCard name="Clothes" image="../assets/img/cat-1.jpg" />
+        <CategoryCard name="Uniform" image="../assets/img/uniform-1.jpeg" />
+        <CategoryCard name="Clothes" image="../assets/img/clothes.jpg" />
         <CategoryCard name="Electronics" image="../assets/img/cat-2.jpg" />
         <CategoryCard name="Cosmetics" image="../assets/img/cat-4.jpg" />
-        <CategoryCard name="Uniform" image="../assets/img/cat-1.jpg" />
         <CategoryCard name="Footwear" image="../assets/img/cat-3.jpg" />
-        <CategoryCard name="Headgear" image="../assets/img/cat-2.jpg" />
-        <CategoryCard name="Acessories" image="../assets/img/cat-3.jpg" />
-        <CategoryCard name="Casual Wear" image="../assets/img/cat-1.jpg" />
-        <CategoryCard name="Electronics" image="../assets/img/cat-2.jpg" />
-        <CategoryCard name="Cosmetics" image="../assets/img/cat-4.jpg" />
-        <CategoryCard name="Shoes" image="../assets/img/cat-3.jpg" />
-        <CategoryCard name="Cosmetics" image="../assets/img/cat-4.jpg" />
+        <CategoryCard name="Headgear" image="../assets/img/headgear.jpg" />
+        <CategoryCard name="Books & Stationery" image="../assets/img/books.jpg" />
+        <CategoryCard name="Food & Beverages" image="../assets/img/drinks.png" />
       </div>
     </div>
     <!-- Categories End -->
