@@ -165,11 +165,11 @@ export default {
         <CategoryCard name="Clothes" image="../assets/img/cat-1.jpg" />
         <CategoryCard name="Electronics" image="../assets/img/cat-2.jpg" />
         <CategoryCard name="Cosmetics" image="../assets/img/cat-4.jpg" />
-        <CategoryCard name="Clothes" image="../assets/img/cat-1.jpg" />
-        <CategoryCard name="Shoes" image="../assets/img/cat-3.jpg" />
-        <CategoryCard name="Electronics" image="../assets/img/cat-2.jpg" />
-        <CategoryCard name="Shoes" image="../assets/img/cat-3.jpg" />
-        <CategoryCard name="Clothes" image="../assets/img/cat-1.jpg" />
+        <CategoryCard name="Uniform" image="../assets/img/cat-1.jpg" />
+        <CategoryCard name="Footwear" image="../assets/img/cat-3.jpg" />
+        <CategoryCard name="Headgear" image="../assets/img/cat-2.jpg" />
+        <CategoryCard name="Acessories" image="../assets/img/cat-3.jpg" />
+        <CategoryCard name="Casual Wear" image="../assets/img/cat-1.jpg" />
         <CategoryCard name="Electronics" image="../assets/img/cat-2.jpg" />
         <CategoryCard name="Cosmetics" image="../assets/img/cat-4.jpg" />
         <CategoryCard name="Shoes" image="../assets/img/cat-3.jpg" />
