@@ -5,6 +5,7 @@ import Shop from '@/views/user/Shop.vue';
 import Login from '@/views/user/Login.vue';
 import Wishlist from '@/views/user/Wishlist.vue';
 import Contact from '@/views/user/Contact.vue';
+import ProductDetail from '@/views/user/ProductDetail.vue';
 import ChatSystem from '@/components/chat/ChatSystem.vue';
 
 const routes = [
@@ -23,6 +24,11 @@ const routes = [
                 path: '/shop',
                 name: 'Shop',
                 component: Shop,
+            },
+            {
+                path: '/productdetails',
+                name: 'ProductDetails',
+                component: ProductDetail,
             },
             {
                 path: '/wishlist',
