@@ -37,20 +37,19 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 //auth sanctum routes for users
-Route::middleware(['auth:sanctum'])->group(function (){
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('user/home', [buyerController::class, 'home']);
     Route::post('user/viewmoreinfo/{id}', [buyerController::class, 'viewmoreinfo']);
     Route::Post('users/chatvendor', [buyerController::class, 'chatvendor']);
     Route::post('user/logout', [buyerController::class, 'userlogout']);
-
 });
 
 
 //auth sanctum for admin
-Route::middleware(['auth:sanctum'])->group(function (){
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('admin/dashboard', [adminController::class, 'dashboard']);
     Route::get('admin/viewvendors', [adminController::class, 'viewvendors']);
-    Route::put('admin/vendor/approve/{id}', [adminController::class, 'approveVendor']);//option required-proof of business 
+    Route::put('admin/vendor/approve/{id}', [adminController::class, 'approveVendor']); //option required-proof of business 
     Route::put('admin/vendor/blockvendor/{id}', [adminController::class, 'blockVendor']);
     Route::put('admin/vendor/unblockvendor/{id}', [adminController::class, 'unblockVendor']);
     Route::get('admin/users', [adminController::class, 'viewusers']);
@@ -58,5 +57,6 @@ Route::middleware(['auth:sanctum'])->group(function (){
 });
 
 //search option  
-
-
+Route::get('/test/image-upload', function () {
+    return view('productForm');
+});
