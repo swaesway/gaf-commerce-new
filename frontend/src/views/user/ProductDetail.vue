@@ -25,16 +25,32 @@
           >
             <div class="carousel-inner bg-light">
               <div class="carousel-item active">
-                <img class="w-100 h-100" src="/assets/img/product-1.jpg" alt="Image" />
+                <img
+                  class="w-100 h-100"
+                  src="/assets/img/product-1.jpg"
+                  alt="Image"
+                />
               </div>
               <div class="carousel-item">
-                <img class="w-100 h-100" src="/assets/img/product-2.jpg" alt="Image" />
+                <img
+                  class="w-100 h-100"
+                  src="/assets/img/product-2.jpg"
+                  alt="Image"
+                />
               </div>
               <div class="carousel-item">
-                <img class="w-100 h-100" src="/assets/img/product-3.jpg" alt="Image" />
+                <img
+                  class="w-100 h-100"
+                  src="/assets/img/product-3.jpg"
+                  alt="Image"
+                />
               </div>
               <div class="carousel-item">
-                <img class="w-100 h-100" src="/assets/img/product-4.jpg" alt="Image" />
+                <img
+                  class="w-100 h-100"
+                  src="/assets/img/product-4.jpg"
+                  alt="Image"
+                />
               </div>
             </div>
             <a
@@ -198,7 +214,7 @@
                 </div>
               </div>
               <button class="btn btn-primary px-3">
-                <i class="fa fa-shopping-cart mr-1"></i> Add To Cart
+                <i class="fa fa-heart mr-1"></i> Add To Wishlist
               </button>
             </div>
             <div class="d-flex pt-2">
@@ -417,7 +433,11 @@
           <div class="owl-carousel related-carousel">
             <div class="product-item bg-light">
               <div class="product-img position-relative overflow-hidden">
-                <img class="img-fluid w-100" src="/assets/img/product-1.jpg" alt="" />
+                <img
+                  class="img-fluid w-100"
+                  src="/assets/img/product-1.jpg"
+                  alt=""
+                />
                 <div class="product-action">
                   <a class="btn btn-outline-dark btn-square" href=""
                     ><i class="fa fa-shopping-cart"></i
@@ -457,7 +477,11 @@
             </div>
             <div class="product-item bg-light">
               <div class="product-img position-relative overflow-hidden">
-                <img class="img-fluid w-100" src="/assets/img/product-2.jpg" alt="" />
+                <img
+                  class="img-fluid w-100"
+                  src="/assets/img/product-2.jpg"
+                  alt=""
+                />
                 <div class="product-action">
                   <a class="btn btn-outline-dark btn-square" href=""
                     ><i class="fa fa-shopping-cart"></i
@@ -497,7 +521,11 @@
             </div>
             <div class="product-item bg-light">
               <div class="product-img position-relative overflow-hidden">
-                <img class="img-fluid w-100" src="/assets/img/product-3.jpg" alt="" />
+                <img
+                  class="img-fluid w-100"
+                  src="/assets/img/product-3.jpg"
+                  alt=""
+                />
                 <div class="product-action">
                   <a class="btn btn-outline-dark btn-square" href=""
                     ><i class="fa fa-shopping-cart"></i
@@ -537,7 +565,11 @@
             </div>
             <div class="product-item bg-light">
               <div class="product-img position-relative overflow-hidden">
-                <img class="img-fluid w-100" src="/assets/img/product-4.jpg" alt="" />
+                <img
+                  class="img-fluid w-100"
+                  src="/assets/img/product-4.jpg"
+                  alt=""
+                />
                 <div class="product-action">
                   <a class="btn btn-outline-dark btn-square" href=""
                     ><i class="fa fa-shopping-cart"></i
@@ -577,7 +609,11 @@
             </div>
             <div class="product-item bg-light">
               <div class="product-img position-relative overflow-hidden">
-                <img class="img-fluid w-100" src="/assets/img/product-5.jpg" alt="" />
+                <img
+                  class="img-fluid w-100"
+                  src="/assets/img/product-5.jpg"
+                  alt=""
+                />
                 <div class="product-action">
                   <a class="btn btn-outline-dark btn-square" href=""
                     ><i class="fa fa-shopping-cart"></i
