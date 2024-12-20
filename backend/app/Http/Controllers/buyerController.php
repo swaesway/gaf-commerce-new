@@ -13,7 +13,7 @@ class buyerController extends Controller
     {
         $products = Product::where('frozen', 0)->get();
         return response()->json(
-           ['products' => $products]
+            ['products' => $products]
         );
     }
 
@@ -23,8 +23,7 @@ class buyerController extends Controller
 
         $productinfo = Product::find($id);
 
-        if($productinfo)
-        {
+        if ($productinfo) {
             $shopdetails = ShopVendor::find($productinfo->shopvendor_id);
             return response()->json(
                 [
@@ -41,23 +40,17 @@ class buyerController extends Controller
                         'region' => $shopdetails->region
                     ]
                 ]
-                );
+            );
         }
-
-       
-
     }
 
     public function userlogout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete(); 
+        $request->user()->currentAccessToken()->delete();
         return response()->json([
-            'status'=>201
+            'status' => 201
         ], 201);
     }
 
-    public function chatvendor(Request $request, $id)
-    {
-
-    }
+    public function chatvendor(Request $request, $id) {}
 }

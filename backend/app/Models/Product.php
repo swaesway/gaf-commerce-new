@@ -9,7 +9,7 @@ class Product extends Model
     //
     protected $table = 'products';
     protected $fillable = [
-        'vendorid', 
+        'vendorid',
         'productid',
         'title',
         'category',
