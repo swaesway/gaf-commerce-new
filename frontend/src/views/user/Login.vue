@@ -60,7 +60,7 @@ export default {};
                       Please enter your password!
                     </div>
                   </div>
-                  <div class="col-12">
+                  <div class="col-12 mt-3 mb-2">
                     <button
                       class="btn btn-primary w-100"
                       type="submit"
