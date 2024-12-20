@@ -145,7 +145,7 @@
                     >0</span
                   >
                 </a>
-                <a href="" class="btn px-0 ml-3">
+                <a href="/chat" class="btn px-0 ml-3">
                   <i class="fas fa-comment text-primary"></i>
                   <span
                     class="badge text-secondary border border-secondary rounded-circle"
