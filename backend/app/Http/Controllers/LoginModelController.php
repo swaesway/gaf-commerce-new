@@ -84,9 +84,6 @@ class LoginModelController extends Controller
     public function verify(Request $request)
     {
         //validate input request
-        $request->validate([
-            'token' => 'required|digits:4'
-        ]);
 
         $validate = Validator::make($request->all(), [
             'token' => 'required|digits:4'
@@ -288,7 +285,6 @@ class LoginModelController extends Controller
         $admindata->tokens()->delete();
         return  $admindata->createToken('admintoken')->plainTextToken;
 
-        //return if all true 
         return response()->json([
             "message" => "Admin: $request->email logged in successfully"
         ], 200);

@@ -26,7 +26,6 @@ class vendorController extends Controller
             'category' => 'required|string',
             'description' => 'required|string',
             "images" => 'required|array|max:4',
-
             "images.*" => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -121,12 +120,21 @@ class vendorController extends Controller
         $vendor = $request->user();
 
         //validate inputs
-        $request->validate([
+
+        $validate = Validator::make($request->all(), [
             'title' => 'required|string|min:7',
             'price' => 'required|numeric|min:0',
             'category' => 'required|string',
             'description' => 'required|string',
+            "images" => 'required|array|max:4',
+            "images.*" => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+
+        if ($validate->fails()) {
+            return response()->json($validate->errors(), 400);
+        }
+
 
         $product = Product::where('id', $id)->where('shopvendor_id', $vendor->id)->first();
 
@@ -143,6 +151,39 @@ class vendorController extends Controller
             'category' => $request->category,
             'description' => $request->description,
         ]);
+
+
+        if ($request->hasFile("images")) {
+            $deleteProductImages = ProductImage::where("proudct_id", $product->id)->delete();
+
+            if (!$deleteProductImages) {
+                return response()->json([
+                    'message' => 'Failed to delete product images',
+                ], 403);
+            }
+
+            foreach ($request->file("images") as $file) {
+                $pathToUploadFile = $file->store("product-images", "public");
+
+                if (!$pathToUploadFile) {
+                    return response()->json("Failed to upload product-images", 403);
+                }
+
+                $fileExtension = $file->getMimeType();
+
+                $product_image = new ProductImage();
+
+                $product_image->product_id = $product->id;
+                $product_image->image = $pathToUploadFile;
+                $product_image->type = $fileExtension;
+
+                $saveProductImage = $product_image->save();
+
+                if (!$saveProductImage) {
+                    return response()->json("Failed to save product images", 500);
+                }
+            }
+        }
 
         if ($Productedit) {
             # code...
