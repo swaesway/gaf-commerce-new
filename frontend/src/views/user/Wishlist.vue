@@ -5,9 +5,8 @@
       <div class="row px-xl-5">
         <div class="col-12">
           <nav class="breadcrumb bg-light mb-30">
-            <a class="breadcrumb-item text-dark" href="#">Home</a>
-            <a class="breadcrumb-item text-dark" href="#">Shop</a>
-            <span class="breadcrumb-item active">Shopping Cart</span>
+            <a class="breadcrumb-item text-dark" href="/">Home</a>
+            <span class="breadcrumb-item active">Wishlist</span>
           </nav>
         </div>
       </div>
@@ -25,229 +24,266 @@
               <tr>
                 <th>Products</th>
                 <th>Price</th>
-                <th>Quantity</th>
-                <th>Total</th>
-                <th>Remove</th>
+                <th>Review</th>
+                <th>Category</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody class="align-middle">
               <tr>
                 <td class="align-middle">
-                  <img src="/assets/img/product-1.jpg" alt="" style="width: 50px" />
+                  <img
+                    src="/assets/img/product-1.jpg"
+                    alt=""
+                    style="width: 50px"
+                  />
                   Product Name
                 </td>
-                <td class="align-middle">$150</td>
+                <td class="align-middle">₵150</td>
                 <td class="align-middle">
-                  <div
-                    class="input-group quantity mx-auto"
-                    style="width: 100px"
-                  >
-                    <div class="input-group-btn">
-                      <button class="btn btn-sm btn-primary btn-minus">
-                        <i class="fa fa-minus"></i>
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      class="form-control form-control-sm bg-secondary border-0 text-center"
-                      value="1"
-                    />
-                    <div class="input-group-btn">
-                      <button class="btn btn-sm btn-primary btn-plus">
-                        <i class="fa fa-plus"></i>
-                      </button>
-                    </div>
-                  </div>
+                  <small
+                    v-for="n in 5"
+                    :key="n"
+                    class="fa fa-star text-primary mr-1"
+                  ></small>
                 </td>
-                <td class="align-middle">$150</td>
+                <td class="align-middle">Electronics</td>
                 <td class="align-middle">
-                  <button class="btn btn-sm btn-danger">
-                    <i class="fa fa-times"></i>
+                  <button class="btn btn">
+                    <i class="fa fa-heart text-primary"></i>
                   </button>
                 </td>
               </tr>
               <tr>
                 <td class="align-middle">
-                  <img src="/assets/img/product-2.jpg" alt="" style="width: 50px" />
+                  <img
+                    src="/assets/img/product-2.jpg"
+                    alt=""
+                    style="width: 50px"
+                  />
                   Product Name
                 </td>
-                <td class="align-middle">$150</td>
+                <td class="align-middle">₵150</td>
                 <td class="align-middle">
-                  <div
-                    class="input-group quantity mx-auto"
-                    style="width: 100px"
-                  >
-                    <div class="input-group-btn">
-                      <button class="btn btn-sm btn-primary btn-minus">
-                        <i class="fa fa-minus"></i>
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      class="form-control form-control-sm bg-secondary border-0 text-center"
-                      value="1"
-                    />
-                    <div class="input-group-btn">
-                      <button class="btn btn-sm btn-primary btn-plus">
-                        <i class="fa fa-plus"></i>
-                      </button>
-                    </div>
-                  </div>
+                  <small
+                    v-for="n in 5"
+                    :key="n"
+                    class="fa fa-star text-primary mr-1"
+                  ></small>
                 </td>
-                <td class="align-middle">$150</td>
+                <td class="align-middle">Clothes</td>
                 <td class="align-middle">
-                  <button class="btn btn-sm btn-danger">
-                    <i class="fa fa-times"></i>
+                  <button class="btn btn">
+                    <i class="fa fa-heart text-primary"></i>
                   </button>
                 </td>
               </tr>
               <tr>
                 <td class="align-middle">
-                  <img src="/assets/img/product-3.jpg" alt="" style="width: 50px" />
+                  <img
+                    src="/assets/img/product-3.jpg"
+                    alt=""
+                    style="width: 50px"
+                  />
                   Product Name
                 </td>
-                <td class="align-middle">$150</td>
+                <td class="align-middle">₵150</td>
                 <td class="align-middle">
-                  <div
-                    class="input-group quantity mx-auto"
-                    style="width: 100px"
-                  >
-                    <div class="input-group-btn">
-                      <button class="btn btn-sm btn-primary btn-minus">
-                        <i class="fa fa-minus"></i>
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      class="form-control form-control-sm bg-secondary border-0 text-center"
-                      value="1"
-                    />
-                    <div class="input-group-btn">
-                      <button class="btn btn-sm btn-primary btn-plus">
-                        <i class="fa fa-plus"></i>
-                      </button>
-                    </div>
-                  </div>
+                  <small
+                    v-for="n in 5"
+                    :key="n"
+                    class="fa fa-star text-primary mr-1"
+                  ></small>
                 </td>
-                <td class="align-middle">$150</td>
+                <td class="align-middle">Electronics</td>
                 <td class="align-middle">
-                  <button class="btn btn-sm btn-danger">
-                    <i class="fa fa-times"></i>
+                  <button class="btn btn">
+                    <i class="fa fa-heart text-primary"></i>
                   </button>
                 </td>
               </tr>
               <tr>
                 <td class="align-middle">
-                  <img src="/assets/img/product-4.jpg" alt="" style="width: 50px" />
+                  <img
+                    src="/assets/img/product-4.jpg"
+                    alt=""
+                    style="width: 50px"
+                  />
                   Product Name
                 </td>
-                <td class="align-middle">$150</td>
+                <td class="align-middle">₵150</td>
                 <td class="align-middle">
-                  <div
-                    class="input-group quantity mx-auto"
-                    style="width: 100px"
-                  >
-                    <div class="input-group-btn">
-                      <button class="btn btn-sm btn-primary btn-minus">
-                        <i class="fa fa-minus"></i>
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      class="form-control form-control-sm bg-secondary border-0 text-center"
-                      value="1"
-                    />
-                    <div class="input-group-btn">
-                      <button class="btn btn-sm btn-primary btn-plus">
-                        <i class="fa fa-plus"></i>
-                      </button>
-                    </div>
-                  </div>
+                  <small
+                    v-for="n in 5"
+                    :key="n"
+                    class="fa fa-star text-primary mr-1"
+                  ></small>
                 </td>
-                <td class="align-middle">$150</td>
+                <td class="align-middle">Footwear</td>
                 <td class="align-middle">
-                  <button class="btn btn-sm btn-danger">
-                    <i class="fa fa-times"></i>
+                  <button class="btn btn">
+                    <i class="fa fa-heart text-primary"></i>
                   </button>
                 </td>
               </tr>
               <tr>
                 <td class="align-middle">
-                  <img src="/assets/img/product-5.jpg" alt="" style="width: 50px" />
+                  <img
+                    src="/assets/img/product-5.jpg"
+                    alt=""
+                    style="width: 50px"
+                  />
                   Product Name
                 </td>
-                <td class="align-middle">$150</td>
+                <td class="align-middle">₵150</td>
                 <td class="align-middle">
-                  <div
-                    class="input-group quantity mx-auto"
-                    style="width: 100px"
-                  >
-                    <div class="input-group-btn">
-                      <button class="btn btn-sm btn-primary btn-minus">
-                        <i class="fa fa-minus"></i>
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      class="form-control form-control-sm bg-secondary border-0 text-center"
-                      value="1"
-                    />
-                    <div class="input-group-btn">
-                      <button class="btn btn-sm btn-primary btn-plus">
-                        <i class="fa fa-plus"></i>
-                      </button>
-                    </div>
-                  </div>
+                  <small
+                    v-for="n in 5"
+                    :key="n"
+                    class="fa fa-star text-primary mr-1"
+                  ></small>
                 </td>
-                <td class="align-middle">$150</td>
+                <td class="align-middle">Electronics</td>
                 <td class="align-middle">
-                  <button class="btn btn-sm btn-danger">
-                    <i class="fa fa-times"></i>
+                  <button class="btn btn">
+                    <i class="fa fa-heart text-primary"></i>
                   </button>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
+
         <div class="col-lg-4">
-          <form class="mb-30" action="">
-            <div class="input-group">
-              <input
-                type="text"
-                class="form-control border-0 p-4"
-                placeholder="Coupon Code"
-              />
-              <div class="input-group-append">
-                <button class="btn btn-primary">Apply Coupon</button>
-              </div>
-            </div>
-          </form>
+          <!-- Color Start -->
           <h5 class="section-title position-relative text-uppercase mb-3">
-            <span class="bg-secondary pr-3">Cart Summary</span>
+            <span class="bg-secondary pr-3">Filter by category</span>
           </h5>
-          <div class="bg-light p-30 mb-5">
-            <div class="border-bottom pb-2">
-              <div class="d-flex justify-content-between mb-3">
-                <h6>Subtotal</h6>
-                <h6>$150</h6>
-              </div>
-              <div class="d-flex justify-content-between">
-                <h6 class="font-weight-medium">Shipping</h6>
-                <h6 class="font-weight-medium">$10</h6>
-              </div>
-            </div>
-            <div class="pt-2">
-              <div class="d-flex justify-content-between mt-2">
-                <h5>Total</h5>
-                <h5>$160</h5>
-              </div>
-              <button
-                class="btn btn-block btn-primary font-weight-bold my-3 py-3"
+          <div class="bg-light p-4 mb-30">
+            <form>
+              <div
+                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
               >
-                Proceed To Checkout
-              </button>
-            </div>
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  checked
+                  id="color-all"
+                />
+                <label class="custom-control-label" for="price-all"
+                  >All category</label
+                >
+                <span class="badge border font-weight-normal">1000</span>
+              </div>
+              <div
+                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
+              >
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="color-1"
+                />
+                <label class="custom-control-label" for="color-1"
+                  >Uniforms</label
+                >
+                <span class="badge border font-weight-normal">150</span>
+              </div>
+              <div
+                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
+              >
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="color-2"
+                />
+                <label class="custom-control-label" for="color-2"
+                  >Clothes</label
+                >
+                <span class="badge border font-weight-normal">295</span>
+              </div>
+              <div
+                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
+              >
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="color-3"
+                />
+                <label class="custom-control-label" for="color-3"
+                  >Electronics</label
+                >
+                <span class="badge border font-weight-normal">246</span>
+              </div>
+              <div
+                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
+              >
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="color-1"
+                />
+                <label class="custom-control-label" for="color-1"
+                  >Cosmetics</label
+                >
+                <span class="badge border font-weight-normal">150</span>
+              </div>
+              <div
+                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
+              >
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="color-2"
+                />
+                <label class="custom-control-label" for="color-2"
+                  >Footwear</label
+                >
+                <span class="badge border font-weight-normal">295</span>
+              </div>
+              <div
+                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
+              >
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="color-4"
+                />
+                <label class="custom-control-label" for="color-4"
+                  >Headgear</label
+                >
+                <span class="badge border font-weight-normal">145</span>
+              </div>
+
+              <div
+                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
+              >
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="color-2"
+                />
+                <label class="custom-control-label" for="color-2"
+                  >Books & Stationary</label
+                >
+                <span class="badge border font-weight-normal">295</span>
+              </div>
+
+              <div
+                class="custom-control custom-checkbox d-flex align-items-center justify-content-between"
+              >
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="color-5"
+                />
+                <label class="custom-control-label" for="color-5"
+                  >Food & Beverages</label
+                >
+                <span class="badge border font-weight-normal">168</span>
+              </div>
+            </form>
           </div>
+          <!-- Color End -->
         </div>
       </div>
     </div>
