@@ -278,4 +278,68 @@ class vendorController extends Controller
             'message' => 'Product unfrozen ❄️! '
         ], 201);
     }
+
+    public function searchByProduct(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'search' => 'required|string',
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json($validate->errors(), 400);
+        }
+
+        $products = Product::searchItem($request->search)->get();
+
+        if ($products->isEmpty()) {
+            return response()->json(["message" => "No Product found for this search $request->search "], 404);
+        }
+
+        return response()->json(["products" => $products]);
+    }
+
+    public function searchProductByCategory(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'categories' => 'required|array|min:1',
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json($validate->errors(), 400);
+        }
+
+        $products = Product::searchCategory($request->categories)->get();
+
+        if ($products->isEmpty()) {
+            return response()->json(["message" => "No product category search found for these categories in " . implode(", ", $request->categories)], 404);
+        }
+
+        return response()->json(["message" => $products], 200);
+    }
+
+    public function searchProductByPriceRange(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'price_range' => 'required|array|min:1',
+            "all_prices" => "nullable|string"
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json($validate->errors(), 400);
+        }
+
+
+        if (!empty($request->all_prices)) {
+            $products = Product::searchPrice($request->price_range, $request->all_prices)->get();
+        } else {
+            $products = Product::searchPrice($request->price_range)->get();
+        }
+
+
+        if ($products->isEmpty()) {
+            return response()->json(["message" => "No product found within the price range of $request->price_range[0] to $request->price_range[1]"], 404);
+        }
+
+        return response()->json(["products" => $products]);
+    }
 }
