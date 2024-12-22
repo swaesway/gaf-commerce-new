@@ -56,6 +56,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //admin to add categories 
 });
 
+
+Route::get("/vendor/product/preview-image", [vendorController::class, "previewProductImage"]);
 //search option  
 Route::get('/test/image-upload', function () {
     return view('productForm');
