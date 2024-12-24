@@ -15,4 +15,9 @@ class Serviceinfo extends Model
         'telephone',
         'name'
     ];
+
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class, "servicenumber");
+    }
 }

@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Framework\Session\Session;
 
 use function Pest\Laravel\json;
 
@@ -18,6 +19,7 @@ class LoginModelController extends Controller
     //function to check login credentials 
     public function login(Request $request)
     {
+
         //validate input requests coming from user
 
         $validate = Validator::make($request->all(), [
@@ -83,8 +85,11 @@ class LoginModelController extends Controller
     //if credential are true, verify token to continue
     public function verify(Request $request)
     {
-        //validate input request
 
+        $session = new Session();
+        $session->start();
+
+        //validate input request
         $validate = Validator::make($request->all(), [
             'token' => 'required|digits:4'
         ]);
@@ -114,9 +119,14 @@ class LoginModelController extends Controller
             // Generate a new access token for the user
             $accessToken = $tokendata->createToken('User Login Token')->plainTextToken;
 
+            $session->isUserAuthenticated = true;
+            $session->serviceNumber = $tokendata->id;
+
+
             //return response with access token 
             return response()->json([
-                'accesstoken' => $accessToken
+                'accesstoken' => $accessToken,
+
             ], 200);
         }
         //if false
@@ -179,6 +189,10 @@ class LoginModelController extends Controller
     //function for vendor login
     public function vendorlogin(Request $request)
     {
+        $session = new Session();
+
+        $session->start();
+
         $validate = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string|min:8'
@@ -233,6 +247,9 @@ class LoginModelController extends Controller
         //generate token for vendor
 
         $accessToken = $vendordata->createToken($request->email)->plainTextToken;
+
+        $session->isVendor = true;
+
         return response()->json([
             "message" => "Vendor logged in successfully",
             "access_token" => $accessToken

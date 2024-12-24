@@ -103,7 +103,7 @@
                 contentType: false,
                 headers: {
                     "Authorization": "Bearer " +
-                        "1|iKnVLV6pQshpsaUNJyvaCGU5AQDIw6uBzvDv9c0X9fcccff8"
+                        "1|LxUoSaiHJwaKquEL2qYKHviWqM0AErC4rLAdrZaq28585df2"
                 },
                 success: function(response) {
                     alert(response.message);

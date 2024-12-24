@@ -4,8 +4,522 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "615b0f27dd95e80a7164358e4e7f6a4b",
+    "content-hash": "488477a795ea2bd70f069d0429f95b06",
     "packages": [
+        {
+            "name": "aplus/cli",
+            "version": "v3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aplus-framework/cli.git",
+                "reference": "be0e04052213075f1038cda8edc940b517a27678"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aplus-framework/cli/zipball/be0e04052213075f1038cda8edc940b517a27678",
+                "reference": "be0e04052213075f1038cda8edc940b517a27678",
+                "shasum": ""
+            },
+            "require": {
+                "aplus/language": "^4.0",
+                "ext-posix": "*",
+                "php": ">=8.3"
+            },
+            "require-dev": {
+                "aplus/coding-standard": "^2.8",
+                "ergebnis/composer-normalize": "^2.25",
+                "ext-xdebug": "*",
+                "jetbrains/phpstorm-attributes": "^1.0",
+                "phpmd/phpmd": "^2.13",
+                "phpstan/phpstan": "^1.7",
+                "phpunit/phpunit": "^10.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Framework\\CLI\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Natan Felles",
+                    "email": "natanfelles@gmail.com",
+                    "homepage": "https://natanfelles.github.io"
+                }
+            ],
+            "description": "Aplus Framework CLI Library",
+            "homepage": "https://aplus-framework.com/packages/cli",
+            "keywords": [
+                "cli",
+                "command",
+                "commands",
+                "console",
+                "cron",
+                "terminal"
+            ],
+            "support": {
+                "docs": "https://docs.aplus-framework.com/guides/libraries/cli/",
+                "email": "support@aplus-framework.com",
+                "forum": "https://aplus-framework.com/forum",
+                "issues": "https://github.com/aplus-framework/cli/issues",
+                "source": "https://github.com/aplus-framework/cli"
+            },
+            "funding": [
+                {
+                    "url": "https://aplus-framework.com/sponsor",
+                    "type": "Aplus Sponsor"
+                }
+            ],
+            "time": "2024-11-07T22:29:36+00:00"
+        },
+        {
+            "name": "aplus/database",
+            "version": "v4.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aplus-framework/database.git",
+                "reference": "679bb0c314f1fef3d7754ac060d37c1c2d8f6cc8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aplus-framework/database/zipball/679bb0c314f1fef3d7754ac060d37c1c2d8f6cc8",
+                "reference": "679bb0c314f1fef3d7754ac060d37c1c2d8f6cc8",
+                "shasum": ""
+            },
+            "require": {
+                "aplus/debug": "^4.0",
+                "aplus/log": "^4.0",
+                "ext-mysqli": "*",
+                "php": ">=8.3"
+            },
+            "require-dev": {
+                "aplus/coding-standard": "^2.8",
+                "ergebnis/composer-normalize": "^2.25",
+                "ext-xdebug": "*",
+                "jetbrains/phpstorm-attributes": "^1.0",
+                "phpmd/phpmd": "^2.13",
+                "phpstan/phpstan": "^1.9",
+                "phpunit/phpunit": "^10.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Framework\\Database\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Natan Felles",
+                    "email": "natanfelles@gmail.com",
+                    "homepage": "https://natanfelles.github.io"
+                }
+            ],
+            "description": "Aplus Framework Database Library",
+            "homepage": "https://aplus-framework.com/packages/database",
+            "keywords": [
+                "data-definition",
+                "data-manipulation",
+                "database",
+                "mariadb",
+                "mysql",
+                "mysqli"
+            ],
+            "support": {
+                "docs": "https://docs.aplus-framework.com/guides/libraries/database/",
+                "email": "support@aplus-framework.com",
+                "forum": "https://aplus-framework.com/forum",
+                "issues": "https://github.com/aplus-framework/database/issues",
+                "source": "https://github.com/aplus-framework/database"
+            },
+            "funding": [
+                {
+                    "url": "https://aplus-framework.com/sponsor",
+                    "type": "Aplus Sponsor"
+                }
+            ],
+            "time": "2024-08-23T21:29:45+00:00"
+        },
+        {
+            "name": "aplus/debug",
+            "version": "v4.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aplus-framework/debug.git",
+                "reference": "74e35f66cb1cd1f6efbef554a6518aa4e95f31ca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aplus-framework/debug/zipball/74e35f66cb1cd1f6efbef554a6518aa4e95f31ca",
+                "reference": "74e35f66cb1cd1f6efbef554a6518aa4e95f31ca",
+                "shasum": ""
+            },
+            "require": {
+                "aplus/cli": "^3.0",
+                "aplus/helpers": "^4.0",
+                "aplus/language": "^4.0",
+                "aplus/log": "^4.0",
+                "php": ">=8.3"
+            },
+            "require-dev": {
+                "aplus/coding-standard": "^2.8",
+                "ergebnis/composer-normalize": "^2.25",
+                "ext-xdebug": "*",
+                "jetbrains/phpstorm-attributes": "^1.0",
+                "phpmd/phpmd": "^2.13",
+                "phpstan/phpstan": "^1.5",
+                "phpunit/phpunit": "^10.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Framework\\Debug\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Natan Felles",
+                    "email": "natanfelles@gmail.com",
+                    "homepage": "https://natanfelles.github.io"
+                }
+            ],
+            "description": "Aplus Framework Debug Library",
+            "homepage": "https://aplus-framework.com/packages/debug",
+            "keywords": [
+                "debug",
+                "error",
+                "error-handling",
+                "error-reporting",
+                "exception",
+                "exception-handling",
+                "handler",
+                "log",
+                "timer",
+                "view"
+            ],
+            "support": {
+                "docs": "https://docs.aplus-framework.com/guides/libraries/debug/",
+                "email": "support@aplus-framework.com",
+                "forum": "https://aplus-framework.com/forum",
+                "issues": "https://github.com/aplus-framework/debug/issues",
+                "source": "https://github.com/aplus-framework/debug"
+            },
+            "funding": [
+                {
+                    "url": "https://aplus-framework.com/sponsor",
+                    "type": "Aplus Sponsor"
+                }
+            ],
+            "time": "2024-12-07T23:27:45+00:00"
+        },
+        {
+            "name": "aplus/helpers",
+            "version": "v4.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aplus-framework/helpers.git",
+                "reference": "3f036489c913468e9bef89bb8dc00ad939fafd51"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aplus-framework/helpers/zipball/3f036489c913468e9bef89bb8dc00ad939fafd51",
+                "reference": "3f036489c913468e9bef89bb8dc00ad939fafd51",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.3"
+            },
+            "require-dev": {
+                "aplus/coding-standard": "^2.0",
+                "ergebnis/composer-normalize": "^2.25",
+                "ext-xdebug": "*",
+                "jetbrains/phpstorm-attributes": "^1.0",
+                "phpmd/phpmd": "^2.13",
+                "phpstan/phpstan": "^1.5",
+                "phpunit/phpunit": "^10.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Framework\\Helpers\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Natan Felles",
+                    "email": "natanfelles@gmail.com",
+                    "homepage": "https://natanfelles.github.io"
+                }
+            ],
+            "description": "Aplus Framework Helpers Library",
+            "homepage": "https://aplus-framework.com/packages/helpers",
+            "keywords": [
+                "array-simple",
+                "files",
+                "helpers",
+                "isolation"
+            ],
+            "support": {
+                "docs": "https://docs.aplus-framework.com/guides/libraries/helpers/",
+                "email": "support@aplus-framework.com",
+                "forum": "https://aplus-framework.com/forum",
+                "issues": "https://github.com/aplus-framework/helpers/issues",
+                "source": "https://github.com/aplus-framework/helpers"
+            },
+            "funding": [
+                {
+                    "url": "https://aplus-framework.com/sponsor",
+                    "type": "Aplus Sponsor"
+                }
+            ],
+            "time": "2024-08-30T21:05:54+00:00"
+        },
+        {
+            "name": "aplus/language",
+            "version": "v4.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aplus-framework/language.git",
+                "reference": "b759f58bcea33fea27d7ecfc0f7993f22bdd15a5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aplus-framework/language/zipball/b759f58bcea33fea27d7ecfc0f7993f22bdd15a5",
+                "reference": "b759f58bcea33fea27d7ecfc0f7993f22bdd15a5",
+                "shasum": ""
+            },
+            "require": {
+                "aplus/debug": "^4.0",
+                "aplus/helpers": "^4.0",
+                "ext-intl": "*",
+                "php": ">=8.3"
+            },
+            "require-dev": {
+                "aplus/coding-standard": "^2.8",
+                "ergebnis/composer-normalize": "^2.25",
+                "ext-xdebug": "*",
+                "jetbrains/phpstorm-attributes": "^1.0",
+                "phpmd/phpmd": "^2.13",
+                "phpstan/phpstan": "^1.9",
+                "phpunit/phpunit": "^10.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Framework\\Language\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Natan Felles",
+                    "email": "natanfelles@gmail.com",
+                    "homepage": "https://natanfelles.github.io"
+                }
+            ],
+            "description": "Aplus Framework Language Library",
+            "homepage": "https://aplus-framework.com/packages/language",
+            "keywords": [
+                "i18n",
+                "internationalization",
+                "intl",
+                "l10n",
+                "lang",
+                "language",
+                "locale",
+                "localization"
+            ],
+            "support": {
+                "docs": "https://docs.aplus-framework.com/guides/libraries/language/",
+                "email": "support@aplus-framework.com",
+                "forum": "https://aplus-framework.com/forum",
+                "issues": "https://github.com/aplus-framework/language/issues",
+                "source": "https://github.com/aplus-framework/language"
+            },
+            "funding": [
+                {
+                    "url": "https://aplus-framework.com/sponsor",
+                    "type": "Aplus Sponsor"
+                }
+            ],
+            "time": "2024-08-24T00:02:46+00:00"
+        },
+        {
+            "name": "aplus/log",
+            "version": "v4.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aplus-framework/log.git",
+                "reference": "555c57d4e832c4df7c1d4295769bdd6e96ea4c01"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aplus-framework/log/zipball/555c57d4e832c4df7c1d4295769bdd6e96ea4c01",
+                "reference": "555c57d4e832c4df7c1d4295769bdd6e96ea4c01",
+                "shasum": ""
+            },
+            "require": {
+                "aplus/debug": "^4.0",
+                "php": ">=8.3"
+            },
+            "require-dev": {
+                "aplus/coding-standard": "^2.8",
+                "ergebnis/composer-normalize": "^2.25",
+                "ext-xdebug": "*",
+                "jetbrains/phpstorm-attributes": "^1.0",
+                "phpmd/phpmd": "^2.13",
+                "phpstan/phpstan": "^1.5",
+                "phpunit/phpunit": "^10.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Framework\\Log\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Natan Felles",
+                    "email": "natanfelles@gmail.com",
+                    "homepage": "https://natanfelles.github.io"
+                }
+            ],
+            "description": "Aplus Framework Log Library",
+            "homepage": "https://aplus-framework.com/packages/log",
+            "keywords": [
+                "log",
+                "logger"
+            ],
+            "support": {
+                "docs": "https://docs.aplus-framework.com/guides/libraries/log/",
+                "email": "support@aplus-framework.com",
+                "forum": "https://aplus-framework.com/forum",
+                "issues": "https://github.com/aplus-framework/log/issues",
+                "source": "https://github.com/aplus-framework/log"
+            },
+            "funding": [
+                {
+                    "url": "https://aplus-framework.com/sponsor",
+                    "type": "Aplus Sponsor"
+                }
+            ],
+            "time": "2024-09-28T21:33:39+00:00"
+        },
+        {
+            "name": "aplus/session",
+            "version": "v4.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aplus-framework/session.git",
+                "reference": "44765b0ec74a678ea59606ea7f7878d8d0830e69"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aplus-framework/session/zipball/44765b0ec74a678ea59606ea7f7878d8d0830e69",
+                "reference": "44765b0ec74a678ea59606ea7f7878d8d0830e69",
+                "shasum": ""
+            },
+            "require": {
+                "aplus/database": "^4.0",
+                "aplus/debug": "^4.0",
+                "aplus/log": "^4.0",
+                "ext-memcached": "*",
+                "ext-redis": "*",
+                "php": ">=8.3"
+            },
+            "require-dev": {
+                "aplus/coding-standard": "^2.8",
+                "ergebnis/composer-normalize": "^2.25",
+                "ext-xdebug": "*",
+                "jetbrains/phpstorm-attributes": "^1.0",
+                "phpmd/phpmd": "^2.13",
+                "phpstan/phpstan": "^1.5",
+                "phpunit/phpunit": "^10.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Framework\\Session\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Natan Felles",
+                    "email": "natanfelles@gmail.com",
+                    "homepage": "https://natanfelles.github.io"
+                }
+            ],
+            "description": "Aplus Framework Session Library",
+            "homepage": "https://aplus-framework.com/packages/session",
+            "keywords": [
+                "cookie",
+                "database",
+                "files",
+                "memcached",
+                "redis",
+                "session"
+            ],
+            "support": {
+                "docs": "https://docs.aplus-framework.com/guides/libraries/session/",
+                "email": "support@aplus-framework.com",
+                "forum": "https://aplus-framework.com/forum",
+                "issues": "https://github.com/aplus-framework/session/issues",
+                "source": "https://github.com/aplus-framework/session"
+            },
+            "funding": [
+                {
+                    "url": "https://aplus-framework.com/sponsor",
+                    "type": "Aplus Sponsor"
+                }
+            ],
+            "time": "2024-12-05T23:00:15+00:00"
+        },
         {
             "name": "brick/math",
             "version": "0.12.1",

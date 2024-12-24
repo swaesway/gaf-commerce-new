@@ -6,8 +6,10 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ShopVendor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use PhpParser\Builder\Function_;
+
+use Framework\Session\Session;
 
 class vendorController extends Controller
 {
@@ -226,6 +228,7 @@ class vendorController extends Controller
             ], 404);
         }
     }
+
 
     public function vendorlogout(Request $request)
     {

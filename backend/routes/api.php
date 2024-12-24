@@ -41,6 +41,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('user/home', [buyerController::class, 'home']);
     Route::post('user/viewmoreinfo/{id}', [buyerController::class, 'viewmoreinfo']);
     Route::Post('users/chatvendor', [buyerController::class, 'chatvendor']);
+    Route::post("user/product/{productId}/rate-product", [buyerController::class, "productRating"]);
     Route::post('user/logout', [buyerController::class, 'userlogout']);
 });
 
@@ -55,6 +56,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('admin/users', [adminController::class, 'viewusers']);
     //admin to add categories 
 });
+
+
+Route::post("user/product/{productId}/add-wishlist", [buyerController::class, "addProductToWishlist"]);
+Route::delete("user/product/{productId}/remove-wishlist", [buyerController::class, "removeProductFromWishlist"]);
 
 //search option  
 Route::get('/test/image-upload', function () {
