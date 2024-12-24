@@ -7,6 +7,7 @@ use App\Models\loginModel;
 use App\Models\Serviceinfo;
 use App\Models\ShopVendor;
 use App\Models\User;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -121,6 +122,24 @@ class LoginModelController extends Controller
 
             $session->isUserAuthenticated = true;
             $session->serviceNumber = $tokendata->id;
+
+            $wishList = (array) $session->wishList;
+
+            if ($wishList && count($wishList) > 0) {
+                foreach ($wishList as $wishlist) {
+                    $foundWishList = Wishlist::where("servicenumber", $session->serviceNumber)
+                        ->where("product_id", $wishlist["product_id"])
+                        ->first();
+
+                    if (!$foundWishList) {
+                        $wishlist["servicenumber"] = $session->serviceNumber;
+                        Wishlist::create($wishlist);
+                    }
+                }
+
+                $session->remove("wishList");
+            }
+
 
 
             //return response with access token 

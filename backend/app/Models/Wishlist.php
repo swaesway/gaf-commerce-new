@@ -13,6 +13,12 @@ class Wishlist extends Model
         "product_id"
     ];
 
+
+    function product()
+    {
+        return $this->belongsTo(Product::class, "product_id");
+    }
+
     function serviceinfo()
     {
         return $this->belongsTo(Serviceinfo::class, "servicenumber");

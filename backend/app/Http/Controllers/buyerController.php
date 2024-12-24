@@ -66,6 +66,70 @@ class buyerController extends Controller
 
     public function chatvendor(Request $request, $id) {}
 
+    public function getAllProducts()
+    {
+        $products = Product::all();
+        return response()->json(['products' => $products]);
+    }
+
+    public function getWishList()
+    {
+        $session = new Session();
+        $session->start();
+
+        if (!$session->isUserAuthenticated && $session->wishList) {
+
+            $wishList = (array) $session->get("wishList");
+
+            $product = Product::wishListProduct($wishList)->get();
+
+            if ($product->isEmpty()) {
+                return response()->json(["error" => "Product not found"], 400);
+            }
+
+            return response()->json([
+                "wishList" => $product
+            ], 200);
+        }
+
+        if ($session->isUserAuthenticated && !$session->wishList) {
+            $wishList =  Serviceinfo::find($session->isUserAuthenticated)->wishlist;
+
+            $product = Product::wishListProduct($wishList)->get();
+
+            if ($product->isEmpty()) {
+                return response()->json(["error" => "Product not found"], 400);
+            }
+
+
+            return response()->json([
+                "wishList" => $product
+            ], 200);
+        }
+
+        return response()->json([
+            "wishList" => []
+        ], 200);
+    }
+
+    public function getProductRatings($productId)
+    {
+
+        if (empty($productId)) {
+            return response()->json(['message' => 'Product ID is required.'], 400);
+        }
+
+        $product = Product::find($productId)->ratings;
+
+        if (!$product) {
+            return response()->json(['message' => 'No ratings found for this product.'], 404);
+        }
+
+        return response()->json([
+            "ratings" => $product
+        ], 200);
+    }
+
     public function addProductToWishlist(Request $request, $productId)
     {
         $session = new Session();
@@ -83,7 +147,7 @@ class buyerController extends Controller
 
         $storeWishList = $session->get("wishList", []);
 
-        // return $session->destroy();
+
 
         if (!$session->isUserAuthenticated) {
 

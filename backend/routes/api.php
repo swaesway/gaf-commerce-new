@@ -58,10 +58,22 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 
+// @desc Get all products
+Route::get("/products-all", [buyerController::class, "getAllProducts"]);
+
+// @desc Get product Ratings
+Route::get("/product/{productId}/ratings", [buyerController::class, "getProductRatings"]);
+
+// @desc Get User wishlist
+Route::get("/user/product-wishlist", [buyerController::class, "getWishList"]);
+
+// @desc Add Product to guest or users wishlist
 Route::post("user/product/{productId}/add-wishlist", [buyerController::class, "addProductToWishlist"]);
+
+// @desc Remove Product from guest or users wishlist
 Route::delete("user/product/{productId}/remove-wishlist", [buyerController::class, "removeProductFromWishlist"]);
 
-//search option  
+
 Route::get('/test/image-upload', function () {
     return view('productForm');
 });
