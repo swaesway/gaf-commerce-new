@@ -62,6 +62,8 @@ Route::post("/vendor/product/search-category", [vendorController::class, "search
 Route::get("/vendor/product/search-price", [vendorController::class, "searchProductByPriceRange"]);
 
 
+Route::get("/product/preview-image", [vendorController::class, "previewProductImage"]);
+
 //search option  
 Route::get('/test/image-upload', function () {
     return view('productForm');
