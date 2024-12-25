@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ShopVendor;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PhpParser\Builder\Function_;
@@ -75,7 +76,12 @@ class vendorController extends Controller
                 if (!$saveProductImage) {
                     return response()->json("Failed to save product images", 500);
                 }
-            }
+            };
+
+            return response()->json([
+                'message' => 'Product  uploaded successfully',
+                'product' => $product
+            ], 201);
         }
 
         //return if products added
@@ -140,9 +146,8 @@ class vendorController extends Controller
 
         if (!$product) {
             return response()->json([
-                'status' => 422,
                 'message' => 'No Product found'
-            ], 422);
+            ], 404);
         }
 
         $Productedit = $product->update([
@@ -159,7 +164,7 @@ class vendorController extends Controller
             if (!$deleteProductImages) {
                 return response()->json([
                     'message' => 'Failed to delete product images',
-                ], 403);
+                ], 500);
             }
 
             foreach ($request->file("images") as $file) {
@@ -188,12 +193,10 @@ class vendorController extends Controller
         if ($Productedit) {
             # code...
             return response()->json([
-                'status' => 201,
                 'message' => 'Product updated successfully!'
             ], 210);
         } else {
             return response()->json([
-                'status' => 404,
                 'message' => 'An error occured updating product'
             ], 404);
         }
@@ -205,26 +208,55 @@ class vendorController extends Controller
         $vendor = request()->user();
 
         $product = Product::where('id', $id)->where('shopvendor_id', $vendor->id)->first();
+        $productImages = ProductImage::where("product_id", $id)->get();
 
         if (!$product) {
             return response()->json([
-                'status' => 422,
                 'message' => 'No Product found'
-            ], 422);
-        }
-
-        if ($product->delete()) {
-            # code...
-            return response()->json([
-                'status' => 201,
-                'message' => 'Product deleted successfully!'
-            ], 210);
-        } else {
-            return response()->json([
-                'status' => 404,
-                'message' => 'An error occured deleting product'
             ], 404);
         }
+
+        $deleteProduct = $product->delete();
+
+        if (!$deleteProduct) {
+            return response()->json([
+                'message' => 'An error occured while deleting product'
+            ], 404);
+        }
+
+        foreach ($productImages as $image) {
+            $productImageExist = Storage::disk("public")->exists($image["image"]);
+
+            if ($productImageExist) {
+                Storage::disk("public")->delete($image["image"]);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Product deleted successfully!'
+        ], 210);
+    }
+
+    public function previewProductImage(Request $request)
+    {
+        if (!$request->query("image")) {
+            return response()->json(["error" => "image query need to get image"], 400);
+        }
+
+
+        $productImage = ProductImage::where("image", $request->query("image"))->first();
+
+        if (!$productImage) {
+            return response()->json(["error" => "Image not found"], 404);
+        }
+
+        $imagePath = $productImage->image;
+
+        if (!Storage::disk("public")->exists($imagePath)) {
+            return response()->json(["error" => "Image not found on disk storage"], 404);
+        };
+
+        return response()->file(Storage::disk("public")->path($imagePath));
     }
 
     public function vendorlogout(Request $request)
