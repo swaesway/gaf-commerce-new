@@ -3,9 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-
-use function PHPUnit\Framework\isArray;
 
 class Product extends Model
 {
@@ -21,33 +18,18 @@ class Product extends Model
         'frozen' => 'boolean'
     ];
 
+    protected $hidden = [
+        "productid",
+        "frozen",
+        "created_at",
+        "updated_at"
+    ];
 
-    public function scopeSearchItem($query, string $value)
-    {
-        return $query->orWhere("title", "like", "%" . trim($value) . "%")
-            ->orWhere("category", "like", "%" . trim($value) . "%")
-            ->orWhere("description", "like", "%" . trim($value) . "%");
-    }
-
-    public function scopeSearchCategory($query, array $categories)
-    {
-
-        return $query->whereIn("category", $categories);
-    }
-
-    public function scopeSearchPrice($query, array $prices, string $allPrices = "")
+    public function scopeWishListProduct($query,  $wishList)
     {
 
-        if ($allPrices === "all") {
-            return $query->where("price", ">", 0);
-        }
-
-        foreach ($prices as $price) {
-            $range = explode("-", $price);
-
-            if (count($range) === 2) {
-                $query->orWhereBetween("price", [$range[0], $range[1]]);
-            }
+        foreach ($wishList as $wishlist) {
+            $query->orWhere("id", $wishlist["product_id"]);
         }
 
         return $query;
@@ -56,5 +38,10 @@ class Product extends Model
     public function shopvendor()
     {
         $this->belongsTo(shopvendor::class, 'shopvendor_id');
+    }
+
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class, "product_id");
     }
 }

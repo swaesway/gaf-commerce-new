@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\admin;
-use App\Models\loginModel;
-use App\Models\Serviceinfo;
-use App\Models\ShopVendor;
 use App\Models\User;
+use App\Models\admin;
+use App\Models\Wishlist;
+use App\Models\loginModel;
+use App\Models\ShopVendor;
+use App\Models\Serviceinfo;
 use Illuminate\Http\Request;
+use Framework\Session\Session;
+use function Pest\Laravel\json;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
-use function Pest\Laravel\json;
 
 class LoginModelController extends Controller
 {
@@ -83,8 +85,11 @@ class LoginModelController extends Controller
     //if credential are true, verify token to continue
     public function verify(Request $request)
     {
-        //validate input request
 
+        $session = new Session();
+        $session->start();
+
+        //validate input request
         $validate = Validator::make($request->all(), [
             'token' => 'required|digits:4'
         ]);
@@ -114,9 +119,30 @@ class LoginModelController extends Controller
             // Generate a new access token for the user
             $accessToken = $tokendata->createToken('User Login Token')->plainTextToken;
 
+            $session->isUserAuthenticated = true;
+            $session->serviceNumber = $tokendata->id;
+
+            $wishList = (array) $session->wishList;
+
+            if ($wishList && count($wishList) > 0) {
+                foreach ($wishList as $wishlist) {
+                    $foundWishList = Wishlist::where("servicenumber", $session->serviceNumber)
+                        ->where("product_id", $wishlist["product_id"])
+                        ->first();
+
+                    if (!$foundWishList) {
+                        $wishlist["servicenumber"] = $session->serviceNumber;
+                        Wishlist::create($wishlist);
+                    }
+                }
+
+                $session->remove("wishList");
+            }
+
             //return response with access token 
             return response()->json([
-                'accesstoken' => $accessToken
+                'accesstoken' => $accessToken,
+
             ], 200);
         }
         //if false
