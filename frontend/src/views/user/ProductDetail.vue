@@ -1,3 +1,22 @@
+<style>
+.bg-green {
+  background-color: #318e2b !important;
+}
+.bg-red {
+  background-color: #8e2b2b !important;
+}
+.bg-yellow {
+  background-color: #ffd333 !important;
+}
+
+.text-green {
+  color: #318e2b !important;
+}
+.text-white {
+  color: #fcfcfc !important;
+}
+</style>
+
 <template lang="">
   <div>
     <!-- Breadcrumb Start -->
@@ -83,156 +102,39 @@
               </div>
               <small class="pt-1">(99 Reviews)</small>
             </div>
-            <h3 class="font-weight-semi-bold mb-4">$150.00</h3>
+            <h3 class="font-weight-semi-bold mb-4">₵150.00</h3>
             <p class="mb-4">
               Volup erat ipsum diam elitr rebum et dolor. Est nonumy elitr erat
               diam stet sit clita ea. Sanc ipsum et, labore clita lorem magna
               duo dolor no sea Nonumy
             </p>
-            <div class="d-flex mb-3">
-              <strong class="text-dark mr-3">Sizes:</strong>
-              <form>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    class="custom-control-input"
-                    id="size-1"
-                    name="size"
-                  />
-                  <label class="custom-control-label" for="size-1">XS</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    class="custom-control-input"
-                    id="size-2"
-                    name="size"
-                  />
-                  <label class="custom-control-label" for="size-2">S</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    class="custom-control-input"
-                    id="size-3"
-                    name="size"
-                  />
-                  <label class="custom-control-label" for="size-3">M</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    class="custom-control-input"
-                    id="size-4"
-                    name="size"
-                  />
-                  <label class="custom-control-label" for="size-4">L</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    class="custom-control-input"
-                    id="size-5"
-                    name="size"
-                  />
-                  <label class="custom-control-label" for="size-5">XL</label>
-                </div>
-              </form>
-            </div>
-            <div class="d-flex mb-4">
-              <strong class="text-dark mr-3">Colors:</strong>
-              <form>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    class="custom-control-input"
-                    id="color-1"
-                    name="color"
-                  />
-                  <label class="custom-control-label" for="color-1"
-                    >Black</label
-                  >
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    class="custom-control-input"
-                    id="color-2"
-                    name="color"
-                  />
-                  <label class="custom-control-label" for="color-2"
-                    >White</label
-                  >
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    class="custom-control-input"
-                    id="color-3"
-                    name="color"
-                  />
-                  <label class="custom-control-label" for="color-3">Red</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    class="custom-control-input"
-                    id="color-4"
-                    name="color"
-                  />
-                  <label class="custom-control-label" for="color-4">Blue</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    class="custom-control-input"
-                    id="color-5"
-                    name="color"
-                  />
-                  <label class="custom-control-label" for="color-5"
-                    >Green</label
-                  >
-                </div>
-              </form>
-            </div>
+            <div class="d-flex mb-3"></div>
+            <div class="d-flex mb-4"></div>
             <div class="d-flex align-items-center mb-4 pt-2">
-              <div class="input-group quantity mr-3" style="width: 130px">
-                <div class="input-group-btn">
-                  <button class="btn btn-primary btn-minus">
-                    <i class="fa fa-minus"></i>
-                  </button>
-                </div>
-                <input
-                  type="text"
-                  class="form-control bg-secondary border-0 text-center"
-                  value="1"
-                />
-                <div class="input-group-btn">
-                  <button class="btn btn-primary btn-plus">
-                    <i class="fa fa-plus"></i>
-                  </button>
-                </div>
-              </div>
-              <button class="btn btn-primary px-3">
+              <button class="btn bg-green px-3 mr-3 text-white">
+                <i class="fa fa-arrows-rotate mr-1"></i> Request Callback
+              </button>
+              <button class="btn bg-yellow px-3 mr-3 text-white">
                 <i class="fa fa-heart mr-1"></i> Add To Wishlist
+              </button>
+
+              <button class="btn bg-red px-3 mr-3 text-white">
+                <i class="fa-solid fa-flag mr-1"></i>Report Content
               </button>
             </div>
             <div class="d-flex pt-2">
-              <strong class="text-dark mr-2">Share on:</strong>
-              <div class="d-inline-flex">
-                <a class="text-dark px-2" href="">
-                  <i class="fab fa-facebook-f"></i>
-                </a>
-                <a class="text-dark px-2" href="">
-                  <i class="fab fa-twitter"></i>
-                </a>
-                <a class="text-dark px-2" href="">
-                  <i class="fab fa-linkedin-in"></i>
-                </a>
-                <a class="text-dark px-2" href="">
-                  <i class="fab fa-pinterest"></i>
-                </a>
-              </div>
+              <strong class="text-dark mr-2"
+                ><i class="fa-sharp fa-solid fa-shop mr-4"></i>Adwoa Uzumaki
+                Stores</strong
+              >
+
+              <small class="pt-1"> uploaded on 2024-11-09 22:20:06</small>
+            </div>
+
+            <div class="d-flex align-items-center mb-4 pt-2">
+              <button class="btn btn-primary px-3 text-white">
+                <i class="fa fa-comment mr-1"></i> Chat with Vendor
+              </button>
             </div>
           </div>
         </div>
