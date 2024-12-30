@@ -1,3 +1,13 @@
+<style>
+.section.register {
+  background-image: url("/assets/img/gafbg.jpg"); /* Replace with your image path */
+  background-size: cover; /* Ensures the image covers the entire page */
+  background-position: top center; /* Keeps the image centered horizontally and aligned to the top */
+  background-repeat: repeat; /* Prevents image repetition */
+  background-attachment: fixed; /* Optional: Creates a parallax scrolling effect */
+}
+</style>
+
 <script>
 export default {};
 </script>
@@ -12,7 +22,6 @@ export default {};
           <div
             class="col-lg-5 col-md-6 d-flex flex-column align-items-center justify-content-center"
           >
-            
             <!-- End Logo -->
 
             <div class="card mb-3">
@@ -26,9 +35,7 @@ export default {};
                   </p>
                 </div>
 
-                <form
-                  class="row g-3 needs-validation"
-                >
+                <form class="row g-3 needs-validation">
                   <div class="col-12">
                     <label for="yourUsername" class="form-label">Email</label>
                     <div class="input-group has-validation">
@@ -84,4 +91,3 @@ export default {};
     </section>
   </div>
 </template>
-
