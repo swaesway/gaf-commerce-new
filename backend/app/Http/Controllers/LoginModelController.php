@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\admin;
 use App\Models\Wishlist;
 use App\Models\loginModel;
+use App\Models\ProofOfBusiness;
 use App\Models\ShopVendor;
 use App\Models\Serviceinfo;
 use Illuminate\Http\Request;
@@ -165,6 +166,8 @@ class LoginModelController extends Controller
             'location' => 'required|string',
             'region' => 'required|string',
             'password' => 'required|string|min:8|confirmed',
+            "pob" => 'required|string|max:1',
+            "pob" => "image|mimes:png,jpeg,jpg|max:2048"
         ]);
 
         if ($validate->fails()) {
@@ -174,21 +177,39 @@ class LoginModelController extends Controller
             );
         }
 
-        //if validated, register vendor
-        $vendordata = ShopVendor::create([
-            'shopname' => $request->shopname,
-            'email' => $request->email,
-            'telephone' => $request->telephone,
-            'location' => $request->location,
-            'region' => $request->region,
-            'password' => Hash::make($request->password)
+
+        if ($request->hasFile("pob")) {
+            $pathTUploadFile = $request->file("pob")->store("proof_of_business", "public");
+        }
+
+
+        $vendor_pob = new ProofOfBusiness();
+
+        $saveVendor = ShopVendor::create([
+            "shopname" => $request->shopname,
+            "email" => $request->email,
+            "telephone" => $request->telephone,
+            "location" => $request->location,
+            "region" => $request->region,
+            "password" => Hash::make($request->password)
         ]);
 
+
+
         //if registration successfull
-        if ($vendordata) {
-            # code...
+        if ($saveVendor) {
+
+            $vendor_pob->shopvendor_id = $saveVendor->id;
+            $vendor_pob->proof_of_business = $pathTUploadFile;
+
+            $save_vendor_pob = $vendor_pob->save();
+
+            if (!$save_vendor_pob) {
+                return response()->json(["error" => "failed to register vendor"], 500);
+            }
 
             return response()->json([
+                "vendor" => $saveVendor,
                 'message' => 'Account has been registered and waiting for verification'
             ], 201);
         }
