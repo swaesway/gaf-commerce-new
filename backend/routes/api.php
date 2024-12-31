@@ -68,7 +68,6 @@ Route::post("user/product/{productId}/add-wishlist", [buyerController::class, "a
 Route::delete("user/product/{productId}/remove-wishlist", [buyerController::class, "removeProductFromWishlist"]);
 
 
-
 Route::post("/vendor/product/search-all", [vendorController::class, "searchByProduct"]);
 Route::post("/vendor/product/search-category", [vendorController::class, "searchProductByCategory"]);
 Route::get("/vendor/product/search-price", [vendorController::class, "searchProductByPriceRange"]);
@@ -79,4 +78,8 @@ Route::get("/product/preview-image", [vendorController::class, "previewProductIm
 //search option  
 Route::get('/test/image-upload', function () {
     return view('productForm');
+});
+
+Route::get('/test/vendor/register', function () {
+    return view('registerVendor');
 });
