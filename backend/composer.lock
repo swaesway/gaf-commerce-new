@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d36a8bffc1fd5098df1372a2d051efb6",
+    "content-hash": "635ac6410188617c1bcc0b4baa6826d2",
     "packages": [
         {
             "name": "aplus/database",

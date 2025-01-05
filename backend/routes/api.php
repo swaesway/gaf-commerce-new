@@ -4,6 +4,8 @@ use App\Http\Controllers\adminController;
 use App\Http\Controllers\buyerController;
 use App\Http\Controllers\LoginModelController;
 use App\Http\Controllers\vendorController;
+use App\Http\Middleware\VerifyToken;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
@@ -17,13 +19,29 @@ Route::post('user/login/verify', [LoginModelController::class, 'verify']);
 Route::post('vendor/register', [LoginModelController::class, 'registervendor']);
 Route::post('vendor/login', [LoginModelController::class, 'vendorlogin']);
 
+
+
+
+// Route::get("/vendor/status", [LoginModelController::class, 'checkAuthenticationStatus']);
+// Route::post("/vendor/test", [LoginModelController::class, 'test']);
+
+Route::get("/verify/token", function (Request $request) {
+    return response()->json(['message' => 'Token verified successfully', "vendor" => $request->vendor]);
+})->middleware(VerifyToken::class);
+
+Route::get("/verified", function () {
+    return 1;
+});
+
+
+
 //admin endpoints
 Route::post('admin/login', [LoginModelController::class, 'adminlogin']);
 Route::post('admin/logout', [LoginModelController::class, 'adminlogout']);
 
 //auth sanctum routes for vendor
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('vendor/dashboard', [vendorController::class, 'dashboard']);
+    Route::get('vendor/owner/dashboard', [vendorController::class, 'Vendor']);
     Route::post('vendor/addproduct', [vendorController::class, 'addproduct']);
     Route::get('vendor/viewproduct/{id}', [vendorController::class, 'viewproduct']);
     Route::get('vendor/viewproducts', [vendorController::class, 'viewproducts']);

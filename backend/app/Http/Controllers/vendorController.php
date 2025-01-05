@@ -7,11 +7,25 @@ use App\Models\ProductImage;
 use App\Models\ShopVendor;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use PhpParser\Builder\Function_;
 
 class vendorController extends Controller
 {
+
+    public function Vendor(Request $request)
+    {
+        $vendor = $request->user();
+
+        if (!$vendor) {
+            return response()->json([
+                'message' => 'User not authenticated',
+            ], 401);
+        }
+
+        return response()->json($vendor, 200);
+    }
     //function to add products
     public function addproduct(Request $request)
     {

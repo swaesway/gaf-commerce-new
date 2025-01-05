@@ -11,6 +11,8 @@ use App\Models\ShopVendor;
 use App\Models\Serviceinfo;
 use Illuminate\Http\Request;
 use Framework\Session\Session;
+use Illuminate\Support\Facades\Cookie;
+
 use function Pest\Laravel\json;
 
 use Illuminate\Support\Facades\Hash;
@@ -166,8 +168,7 @@ class LoginModelController extends Controller
             'location' => 'required|string',
             'region' => 'required|string',
             'password' => 'required|string|min:8|confirmed',
-            "pob" => 'required|string|max:1',
-            "pob" => "image|mimes:png,jpeg,jpg|max:2048"
+            "pob" => "required|image|mimes:png,jpeg,jpg|max:2048"
         ]);
 
         if ($validate->fails()) {
@@ -209,7 +210,6 @@ class LoginModelController extends Controller
             }
 
             return response()->json([
-                "vendor" => $saveVendor,
                 'message' => 'Account has been registered and waiting for verification'
             ], 201);
         }
@@ -226,6 +226,10 @@ class LoginModelController extends Controller
     //function for vendor login
     public function vendorlogin(Request $request)
     {
+
+        $session = new Session();
+        $session->start();
+
         $validate = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string|min:8'
@@ -269,7 +273,7 @@ class LoginModelController extends Controller
             return response()->json([
 
                 'message' => 'Account blocked, contact admin!',
-            ], 401);
+            ], 403);
         }
 
 
@@ -280,6 +284,7 @@ class LoginModelController extends Controller
         //generate token for vendor
 
         $accessToken = $vendordata->createToken($request->email)->plainTextToken;
+
         return response()->json([
             "message" => "Vendor logged in successfully",
             "access_token" => $accessToken
@@ -330,6 +335,7 @@ class LoginModelController extends Controller
         }
 
         $admindata->tokens()->delete();
+
         return  $admindata->createToken('admintoken')->plainTextToken;
 
         return response()->json([

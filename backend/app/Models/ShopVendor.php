@@ -20,6 +20,10 @@ class ShopVendor extends Model
         'password'
     ];
 
+    protected $hidden = [
+        'password',
+    ];
+
     public function products()
     {
         return $this->hasMany(Product::class, 'shopvendor_id');
