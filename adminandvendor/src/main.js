@@ -1,9 +1,22 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
 
-const app = createApp(App)
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
 
-app.use(router)
+import { createPinia } from "pinia";
 
-app.mount('#app')
+const app = createApp(App);
+const pinia = createPinia();
+
+// @desc allow route access in pinia
+pinia.use(() => {
+  router;
+});
+
+app.use(Toast);
+app.use(router);
+app.use(pinia);
+
+app.mount("#app");

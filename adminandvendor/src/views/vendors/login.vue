@@ -1,3 +1,32 @@
+<script setup>
+import { reactive, onBeforeMount } from 'vue';
+import { useToast } from 'vue-toastification';
+
+import { useVendorStore } from "@/stores/vendor";
+
+
+const { vendor,  loginFn  } = useVendorStore();
+
+const form = reactive({
+ email: "",
+ password: "",
+});
+
+
+function loginVendor(){
+  const { email, password } = form;
+  const credentials = {email, password}
+  
+   loginFn(credentials);
+
+  return;
+
+}
+
+
+
+
+</script>
 <template>
     <div>
         <main>
@@ -8,7 +37,7 @@
           <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
-                <div v-if="Object.keys(errorlist).length > 0" class="alert alert-danger">
+                <!-- <div v-if="Object.keys(errorlist).length > 0" class="alert alert-danger">
                     <ul class="mb-0 ps-3">
                         <li v-for="(errors, field) in errorlist" :key="field">
                             <span v-for="error in errors" :key="error">{{ error }}</span>
@@ -19,10 +48,10 @@
 
                 <div v-if="SuccessMessage" class="alert alert-primary">
                     {{ SuccessMessage }}
-                </div>
+                </div> -->
 
               <div class="d-flex justify-content-center py-4">
-                <a href="index.html" class="logo d-flex align-items-center w-auto">
+                <a href="/" class="logo d-flex align-items-center w-auto">
                   <img src="/assets/img/logo.png" alt="">
                   <span class="d-none d-lg-block">NiceAdmin</span>
                 </a>
@@ -37,25 +66,25 @@
                     <p class="text-center small">Enter your username & password to login</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" @submit.prevent="ValidateVendor" novalidate>
+                  <form class="row g-3 needs-validation" @submit.prevent="loginVendor" novalidate>
 
                     <div class="col-12">
                       <label for="email" class="form-label">Email</label>
                       <div class="input-group has-validation">
-                        <input type="text" name="email" class="form-control" v-model="loginvendor.email" required>
+                        <input type="text" name="email" class="form-control" v-model="form.email">
                       </div>
                     </div>
 
                     <div class="col-12">
                       <label for="Password" class="form-label">Password</label>
-                      <input type="password" name="password" class="form-control" id="Password" v-model="loginvendor.password" required>
+                      <input type="password" name="password" class="form-control" id="Password" v-model="form.password">
                     </div>
 
                     <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit">Login</button>
                     </div>
                     <div class="col-12">
-                      <p class="small mb-0">Don't have account? <router-link to="/vendorRegister">Create an account</router-link></p>
+                      <p class="small mb-0">Don't have account? <router-link to="/vendor/register">Create an account</router-link></p>
                     </div>
                   </form>
 
@@ -77,8 +106,11 @@
     </div>
 </template>
 
-<script>
+<!-- <script>
 import axios from 'axios';
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 export default{
     data(){
@@ -103,8 +135,10 @@ export default{
                     email: '',
                     password: ''
                 };
+             
             }).catch((error) => {
-
+                
+              console.log(error)
                 if(error.response && error.response.status === 401){
                     this.errorlist = error.response.data;
                 }
@@ -114,4 +148,4 @@ export default{
     }
 }
 
-</script>
+</script> -->

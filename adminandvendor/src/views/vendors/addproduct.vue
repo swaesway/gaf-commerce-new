@@ -1,3 +1,79 @@
+<script setup>
+
+import { reactive,  ref, useTemplateRef } from "vue";
+import { useToast } from "vue-toastification";
+
+import { useRouter } from "vue-router";
+
+import { useVendorStore } from "@/stores/vendor";
+
+
+
+const { addProduct } = useVendorStore();
+const toast = useToast();
+
+const product = reactive({
+        title: "",
+        price: "",
+        category: "",
+        description: "",
+        images: [],
+});
+
+const previewImages = ref([]);
+const fileInput = useTemplateRef("fileInput");
+
+ function triggerFileUpload() {
+    fileInput.value.click();
+}
+
+function handleFileUpload(event) {
+      const files = event.target.files;
+      if (files.length > 4) {
+        toast.error("You can upload up to 4 images.")
+        previewImages.value = [];
+        return;
+      }
+
+      product.images = Array.from(files);
+      previewImages.value = product.images.map((file) => URL.createObjectURL(file));
+    }
+
+    function resetForm() {
+       product.title = "";
+       product.price = "";
+       product.category = "";
+       product.description = "";
+       product.images = [];
+
+       previewImages.value = [];
+    }
+
+function uploadProduct() {
+
+  const data =  {
+    title: product.title,
+    price: product.price,
+    category: product.category,
+    description: product.description,
+  }
+
+  addProduct(data, product.images)
+
+  return 
+}
+
+
+
+
+</script>
+
+
+
+
+
+
+
 <template>
     <div>
       <div class="pagetitle">
@@ -25,20 +101,20 @@
                         type="text"
                         class="form-control"
                         v-model="product.title"
-                        required
+                    
                       />
                       <label for="productName">Title*</label>
-                      <small class="text-danger" v-if="errors.title">{{ errors.title }}</small>
+                      <!-- <small class="text-danger" v-if="errors.title">{{ errors.title }}</small> -->
                     </div>
                     <div class="form-floating col-sm-6">
                       <input
                         type="number"
                         class="form-control"
                         v-model="product.price"
-                        required
+                     
                       />
                       <label for="productPrice">Price*</label>
-                      <small class="text-danger" v-if="errors.price">{{ errors.price }}</small>
+                      <!-- <small class="text-danger" v-if="errors.price">{{ errors.price }}</small> -->
                     </div>
                   </div>
   
@@ -48,7 +124,7 @@
                       <select
                         class="form-select"
                         v-model="product.category"
-                        required
+                       
                       >
                         <option value="" disabled>Select a Category</option>
                         <option value="Electronics">Electronics</option>
@@ -59,7 +135,7 @@
                         <option value="Home Appliances">Home Appliances</option>
                       </select>
                       <label for="productCategory">Category*</label>
-                      <small class="text-danger" v-if="errors.category">{{ errors.category }}</small>
+                      <!-- <small class="text-danger" v-if="errors.category">{{ errors.category }}</small> -->
                     </div>
                   </div>
   
@@ -70,13 +146,13 @@
                         v-model="product.description"
                         class="form-control"
                         rows="3"
-                        required
+                     
                       ></textarea>
                       <label for="productDescription">Description*</label>
-                      <small
+                      <!-- <small
                         class="text-danger"
                         v-if="errors.description"
-                      >{{ errors.description }}</small>
+                      >{{ errors.description }}</small> -->
                     </div>
                   </div>
   
@@ -98,7 +174,7 @@
                       accept="image/*"
                       @change="handleFileUpload"
                     />
-                    <small class="text-danger" v-if="errors.files">{{ errors.files }}</small>
+                    <!-- <small class="text-danger" v-if="errors.files">{{ errors.files }}</small> -->
                     <div id="preview-container" class="mt-3 d-flex flex-wrap">
                       <img
                         v-for="(img, index) in previewImages"
@@ -127,82 +203,7 @@
     </div>
   </template>
   
-  <script>
-  export default {
-    data() {
-      return {
-        product: {
-          title: "",
-          price: "",
-          category: "",
-          description: "",
-          images: [],
-        },
-        previewImages: [],
-        errors: {},
-      };
-    },
-    methods: {
-      triggerFileUpload() {
-        this.$refs.fileInput.click();
-      },
-      handleFileUpload(event) {
-        const files = event.target.files;
-        if (files.length > 4) {
-          this.errors.files = "You can upload up to 4 images.";
-          this.previewImages = [];
-          return;
-        }
-        this.errors.files = "";
-        this.product.images = Array.from(files);
-        this.previewImages = this.product.images.map((file) => URL.createObjectURL(file));
-      },
-      uploadProduct() {
-        // Clear previous errors
-        this.errors = {};
-  
-        // Basic validation
-        if (!this.product.title) this.errors.title = "Title is required.";
-        if (!this.product.price) this.errors.price = "Price is required.";
-        if (!this.product.category) this.errors.category = "Category is required.";
-        if (!this.product.description) this.errors.description = "Description is required.";
-        if (this.product.images.length === 0)
-          this.errors.files = "Please upload at least one image.";
-  
-        // If there are errors, stop submission
-        if (Object.keys(this.errors).length > 0) return;
-  
-        // Prepare form data
-        const formData = new FormData();
-        formData.append("title", this.product.title);
-        formData.append("price", this.product.price);
-        formData.append("category", this.product.category);
-        formData.append("description", this.product.description);
-        this.product.images.forEach((file, index) => {
-          formData.append(`images[${index}]`, file);
-        });
-  
-        // Send data to the backend
-        this.$axios
-          .post("/api/upload-product", formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-          })
-          .then((response) => {
-            alert("Product uploaded successfully!");
-            this.resetForm();
-          })
-          .catch((error) => {
-            console.error("Error uploading product:", error);
-            alert("There was an error uploading the product.");
-          });
-      },
-      resetForm() {
-        this.product = { title: "", price: "", category: "", description: "", images: [] };
-        this.previewImages = [];
-      },
-    },
-  };
-  </script>
+
   
   <style scoped>
   .add-product-card {
