@@ -13,14 +13,13 @@ const axiosPrivate = axios.create({
 
 axiosPrivate.interceptors.request.use(
   async (config) => {
-    const token = Cookies.get("token"); // Retrieve token from cookies or local storage
+    const token = Cookies.get("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
   (err) => {
-    // Handle errors in the request setup phase
     return Promise.reject(err);
   }
 );

@@ -1,13 +1,13 @@
 <script setup>
 
-import { reactive,  ref, useTemplateRef } from "vue";
+import { reactive,  ref, useTemplateRef, onMounted } from "vue";
 import { useToast } from "vue-toastification";
 
 import { useRouter } from "vue-router";
 
 import { useVendorStore } from "@/stores/vendor";
 
-
+import axiosPrivate from "@/api/axiosPrivate"
 
 const { addProduct } = useVendorStore();
 const toast = useToast();
@@ -64,6 +64,9 @@ function uploadProduct() {
 }
 
 
+onMounted(async () => {
+  await axiosPrivate.get("/verify/token");
+});
 
 
 </script>

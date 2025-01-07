@@ -7,7 +7,6 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "aplus/session": "^2.5",
         "illuminate/session": "*",
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",
