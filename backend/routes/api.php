@@ -21,7 +21,6 @@ Route::post('vendor/login', [LoginModelController::class, 'vendorlogin']);
 
 
 
-
 // Route::get("/vendor/status", [LoginModelController::class, 'checkAuthenticationStatus']);
 // Route::post("/vendor/test", [LoginModelController::class, 'test']);
 
