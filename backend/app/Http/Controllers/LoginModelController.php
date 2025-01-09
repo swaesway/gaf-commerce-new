@@ -4,18 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\admin;
+use Twilio\Rest\Client;
 use App\Models\Wishlist;
 use App\Models\loginModel;
-use App\Models\ProofOfBusiness;
 use App\Models\ShopVendor;
 use App\Models\Serviceinfo;
 use Illuminate\Http\Request;
 use Framework\Session\Session;
-use Illuminate\Support\Facades\Cookie;
+use App\Models\ProofOfBusiness;
 
 use function Pest\Laravel\json;
 
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Validator;
 
 class LoginModelController extends Controller
@@ -30,6 +31,11 @@ class LoginModelController extends Controller
             'telephone' => 'required|digits:10'
         ]);
 
+        $sid = env("TWILIO_SID");
+        $twilio_token = env('TWILIO_AUTH_TOKEN');
+
+        $client = new Client($sid, $twilio_token);
+
         if ($validate->fails()) {
             return response()->json(
                 $validate->errors(),
@@ -40,13 +46,15 @@ class LoginModelController extends Controller
         $servicenumber = $request->servicenumber;
         $telephone = $request->telephone;
 
+        $serializeTele = explode("0", $request->telephone, 2);
+
         //check if input requests exist in database
         $servicedata = Serviceinfo::where('servicenumber', $servicenumber)
             ->where('telephone', $telephone)
             ->first();
         //if true
         if ($servicedata) {
-            $token = rand(1111, 9999);
+            $token = rand(010210, 999999);
 
             //check if service number already exists in users db
             $userdata = User::where('servicenumber', $servicenumber)->first();
@@ -54,6 +62,14 @@ class LoginModelController extends Controller
             //if true update only token
             if ($userdata) {
                 # code...
+                $client->messages->create(
+                    "+233" . $serializeTele[1],
+                    [
+                        'from' => '+15594713650',
+                        'body' => $token
+                    ]
+                );
+
                 $userdata->update([
                     'token' => $token
                 ]);
@@ -79,7 +95,7 @@ class LoginModelController extends Controller
         } else {
             //return response if false, no user found with current inputs
             return response()->json([
-                'message' => 'No data was found, try again!',
+                'message' => 'Invalid Credentials',
 
             ],  401);
         }
@@ -89,8 +105,8 @@ class LoginModelController extends Controller
     public function verify(Request $request)
     {
 
-        $session = new Session();
-        $session->start();
+        // $session = new Session();
+        // $session->start();
 
         //validate input request
         $validate = Validator::make($request->all(), [
@@ -122,25 +138,25 @@ class LoginModelController extends Controller
             // Generate a new access token for the user
             $accessToken = $tokendata->createToken('User Login Token')->plainTextToken;
 
-            $session->isUserAuthenticated = true;
-            $session->serviceNumber = $tokendata->id;
+            // $session->isUserAuthenticated = true;
+            // $session->serviceNumber = $tokendata->id;
 
-            $wishList = (array) $session->wishList;
+            // $wishList = (array) $session->wishList;
 
-            if ($wishList && count($wishList) > 0) {
-                foreach ($wishList as $wishlist) {
-                    $foundWishList = Wishlist::where("servicenumber", $session->serviceNumber)
-                        ->where("product_id", $wishlist["product_id"])
-                        ->first();
+            // if ($wishList && count($wishList) > 0) {
+            //     foreach ($wishList as $wishlist) {
+            //         $foundWishList = Wishlist::where("servicenumber", $session->serviceNumber)
+            //             ->where("product_id", $wishlist["product_id"])
+            //             ->first();
 
-                    if (!$foundWishList) {
-                        $wishlist["servicenumber"] = $session->serviceNumber;
-                        Wishlist::create($wishlist);
-                    }
-                }
+            //         if (!$foundWishList) {
+            //             $wishlist["servicenumber"] = $session->serviceNumber;
+            //             Wishlist::create($wishlist);
+            //         }
+            //     }
 
-                $session->remove("wishList");
-            }
+            //     $session->remove("wishList");
+            // }
 
             //return response with access token 
             return response()->json([
@@ -227,8 +243,8 @@ class LoginModelController extends Controller
     public function vendorlogin(Request $request)
     {
 
-        $session = new Session();
-        $session->start();
+        // $session = new Session();
+        // $session->start();
 
         $validate = Validator::make($request->all(), [
             'email' => 'required|email',

@@ -8,7 +8,8 @@ use App\Models\Wishlist;
 use App\Models\ShopVendor;
 use App\Models\Serviceinfo;
 use Illuminate\Http\Request;
-use Framework\Session\Session;
+use Illuminate\Support\Facades\Auth;
+// use Framework\Session\Session;
 
 use Illuminate\Support\Facades\Validator;
 
@@ -53,11 +54,11 @@ class buyerController extends Controller
 
     public function userlogout(Request $request)
     {
-        $session = new Session();
-        $session->start();
+        // $session = new Session();
+        // $session->start();
 
         $request->user()->currentAccessToken()->delete();
-        $session->destroy();
+        // $session->destroy();
 
         return response()->json([
             "message" => "User logged out successfully"
@@ -74,41 +75,50 @@ class buyerController extends Controller
 
     public function getWishList()
     {
-        $session = new Session();
-        $session->start();
+        // $session = new Session();
+        // $session->start();
 
-        if (!$session->isUserAuthenticated && $session->wishList) {
+        // if (!$session->isUserAuthenticated && $session->wishList) {
 
-            $wishList = (array) $session->get("wishList");
+        //     $wishList = (array) $session->get("wishList");
 
-            $product = Product::wishListProduct($wishList)->get();
+        //     $product = Product::wishListProduct($wishList)->get();
 
-            if ($product->isEmpty()) {
-                return response()->json(["error" => "Product not found"], 400);
-            }
+        //     if ($product->isEmpty()) {
+        //         return response()->json(["error" => "Product not found"], 400);
+        //     }
 
-            return response()->json([
-                "wishList" => $product
-            ], 200);
+        //     return response()->json([
+        //         "wishList" => $product
+        //     ], 200);
+        // }
+
+        // if ($session->isUserAuthenticated && !$session->wishList) {
+        //     $wishList =  Serviceinfo::find($session->isUserAuthenticated)->wishlist;
+
+        //     $product = Product::wishListProduct($wishList)->get();
+
+        //     if ($product->isEmpty()) {
+        //         return response()->json(["error" => "Product not found"], 400);
+        //     }
+
+
+        //     return response()->json([
+        //         "wishList" => $product
+        //     ], 200);
+        // }
+
+        $wishList =  Serviceinfo::find(Auth::id())->wishlist;
+
+        $product = Product::wishListProduct($wishList)->get();
+
+        if ($product->isEmpty()) {
+            return response()->json(["error" => "Product not found"], 400);
         }
 
-        if ($session->isUserAuthenticated && !$session->wishList) {
-            $wishList =  Serviceinfo::find($session->isUserAuthenticated)->wishlist;
-
-            $product = Product::wishListProduct($wishList)->get();
-
-            if ($product->isEmpty()) {
-                return response()->json(["error" => "Product not found"], 400);
-            }
-
-
-            return response()->json([
-                "wishList" => $product
-            ], 200);
-        }
 
         return response()->json([
-            "wishList" => []
+            "wishList" => $product
         ], 200);
     }
 
@@ -132,8 +142,19 @@ class buyerController extends Controller
 
     public function addProductToWishlist(Request $request, $productId)
     {
-        $session = new Session();
-        $session->start();
+        // $session = new Session();
+        // $session->start();
+
+        $validate = Validator::make($request->all(), [
+            'servicenumber' => 'required|size:6',
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json(
+                $validate->errors(),
+                400
+            );
+        }
 
         if (empty($productId)) {
             return response()->json(['message' => 'Product ID is required.'], 400);
@@ -145,71 +166,97 @@ class buyerController extends Controller
             return response()->json(['message' => 'Product not found.'], 404);
         }
 
-        $storeWishList = $session->get("wishList", []);
+        // $storeWishList = $session->get("wishList", []);
 
 
 
-        if (!$session->isUserAuthenticated) {
+        // if (!$session->isUserAuthenticated) {
 
-            $wishlist = [
-                "servicenumber" => null,
-                "product_id" => $product->id
-            ];
+        //     $wishlist = [
+        //         "servicenumber" => null,
+        //         "product_id" => $product->id
+        //     ];
 
-            if (!in_array($wishlist, (array) $storeWishList)) {
-                $storeWishList[] = $wishlist;
-                $session->set("wishList", $storeWishList);
+        //     if (!in_array($wishlist, (array) $storeWishList)) {
+        //         $storeWishList[] = $wishlist;
+        //         $session->set("wishList", $storeWishList);
 
-                return response()->json("$product->title added to wishlist", 201);
-            }
+        //         return response()->json("$product->title added to wishlist", 201);
+        //     }
 
-            return response()->json("$product->title already added to wishlist", 400);
+        //     return response()->json("$product->title already added to wishlist", 400);
+        // }
+
+        // if ($session->isUserAuthenticated && $session->wishList) {
+        //     foreach ($session->wishList as $wishList) {
+        //         $wishList["servicenumber"] = $session->serviceNumber;
+        //         Wishlist::create($wishList);
+        //     }
+
+        //     $session->remove("wishList");
+
+        //     $isWishListPresent = Wishlist::where("servicenumber", $session->serviceNumber)
+        //         ->where("product_id", $product->id)
+        //         ->first();
+
+        //     if ($isWishListPresent) {
+        //         return response()->json("Wishlist is available already in your wishlist", 400);
+        //     }
+
+        //     Wishlist::create([
+        //         "servicenumber" => $session->serviceNumber,
+        //         "product_id" => $product->id
+        //     ]);
+        // } else {
+
+        //     $isWishListPresent = Wishlist::where("servicenumber", $session->serviceNumber)
+        //         ->where("product_id", $product->id)
+        //         ->first();
+
+        //     if ($isWishListPresent) {
+        //         return response()->json("Wishlist is available already in your wishlist", 400);
+        //     }
+
+        //     Wishlist::create([
+        //         "servicenumber" => $session->serviceNumber,
+        //         "product_id" => $product->id
+        //     ]);
+
+        //     return response()->json("$product->title added to wishlist", 201);
+        // }
+
+        $isWishListPresent = Wishlist::where("servicenumber", $request->serviceNumber)
+            ->where("product_id", $product->id)
+            ->first();
+
+        if ($isWishListPresent) {
+            return response()->json("Wishlist is available already in your wishlist", 400);
         }
 
-        if ($session->isUserAuthenticated && $session->wishList) {
-            foreach ($session->wishList as $wishList) {
-                $wishList["servicenumber"] = $session->serviceNumber;
-                Wishlist::create($wishList);
-            }
+        Wishlist::create([
+            "servicenumber" => $request->serviceNumber,
+            "product_id" => $product->id
+        ]);
 
-            $session->remove("wishList");
-
-            $isWishListPresent = Wishlist::where("servicenumber", $session->serviceNumber)
-                ->where("product_id", $product->id)
-                ->first();
-
-            if ($isWishListPresent) {
-                return response()->json("Wishlist is available already in your wishlist", 400);
-            }
-
-            Wishlist::create([
-                "servicenumber" => $session->serviceNumber,
-                "product_id" => $product->id
-            ]);
-        } else {
-
-            $isWishListPresent = Wishlist::where("servicenumber", $session->serviceNumber)
-                ->where("product_id", $product->id)
-                ->first();
-
-            if ($isWishListPresent) {
-                return response()->json("Wishlist is available already in your wishlist", 400);
-            }
-
-            Wishlist::create([
-                "servicenumber" => $session->serviceNumber,
-                "product_id" => $product->id
-            ]);
-
-            return response()->json("$product->title added to wishlist", 201);
-        }
+        return response()->json("$product->title added to wishlist", 201);
     }
 
-    public function removeProductFromWishlist($productId)
+    public function removeProductFromWishlist(Request $request, $productId)
     {
 
-        $session = new Session();
-        $session->start();
+        // $session = new Session();
+        // $session->start();
+
+        $validate = Validator::make($request->all(), [
+            'servicenumber' => 'required|size:6',
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json(
+                $validate->errors(),
+                400
+            );
+        }
 
         if (empty($productId)) {
             return response()->json("Product ID required", 400);
@@ -222,41 +269,55 @@ class buyerController extends Controller
         }
 
 
-        if ($session->isUserAuthenticated && $session->serviceNumber && !$session->wishList) {
+        // if ($session->isUserAuthenticated && $session->serviceNumber && !$session->wishList) {
 
-            $foundWishList = Wishlist::where("servicenumber", $session->serviceNumber)
-                ->where("product_id", $product->id)
-                ->first();
+        //     $foundWishList = Wishlist::where("servicenumber", $session->serviceNumber)
+        //         ->where("product_id", $product->id)
+        //         ->first();
 
-            if (!$foundWishList) {
-                return response()->json(["error" => "Wishlist not found"], 404);
-            }
+        //     if (!$foundWishList) {
+        //         return response()->json(["error" => "Wishlist not found"], 404);
+        //     }
 
-            $foundWishList->delete();
+        //     $foundWishList->delete();
 
-            return response()->json(["message" => "Wishlist deleted successfully"], 200);
+        //     return response()->json(["message" => "Wishlist deleted successfully"], 200);
+        // }
+
+        // $wishlistStore = (array) $session->get("wishList");
+
+        // $deleteWishList = array_filter($wishlistStore, function ($wishList) use ($product) {
+        //     return $wishList["product_id"] !== $product->id;
+        // });
+
+        // $session->set("wishList", $deleteWishList);
+
+        // return response()->json($session->get("wishList"), 200);
+
+        $foundWishList = Wishlist::where("servicenumber", $request->serviceNumber)
+            ->where("product_id", $product->id)
+            ->first();
+
+        if (!$foundWishList) {
+            return response()->json(["error" => "Wishlist not found"], 404);
         }
 
-        $wishlistStore = (array) $session->get("wishList");
+        $foundWishList->delete();
 
-        $deleteWishList = array_filter($wishlistStore, function ($wishList) use ($product) {
-            return $wishList["product_id"] !== $product->id;
-        });
-
-        $session->set("wishList", $deleteWishList);
-
-        return response()->json($session->get("wishList"), 200);
+        return response()->json(["message" => "Wishlist deleted successfully"], 200);
     }
 
     public function productRating(Request $request, $productId)
     {
-        $session = new Session();
-        $session->start();
+        // $session = new Session();
+        // $session->start();
 
         $validate = Validator::make($request->all(), [
+            'servicenumber' => 'required|size:6',
             'rating' => 'required|numeric|between:1,5',
             "comment" => "required|string"
         ]);
+
 
         if ($validate->fails()) {
             return response()->json($validate->errors(), 400);
@@ -268,7 +329,7 @@ class buyerController extends Controller
             return response()->json(["error" => "Product not found"], 404);
         }
 
-        $foundRatedUser = Rating::where("servicenumber", $session->serviceNumber)
+        $foundRatedUser = Rating::where("servicenumber", $request->serviceNumber)
             ->where("product_id", $product->id)
             ->first();
 
@@ -280,7 +341,7 @@ class buyerController extends Controller
 
         $rateProduct = new Rating();
 
-        $rateProduct->servicenumber = $session->serviceNumber;
+        $rateProduct->servicenumber = $request->serviceNumber;
         $rateProduct->product_id = $product->id;
         $rateProduct->rating = $request->rating;
         $rateProduct->comment = $request->comment;
