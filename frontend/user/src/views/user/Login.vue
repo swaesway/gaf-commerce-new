@@ -1,15 +1,29 @@
-<style>
-.section.register {
-  background-image: url("/assets/img/gafbg.jpg"); /* Replace with your image path */
-  background-size: cover; /* Ensures the image covers the entire page */
-  background-position: top center; /* Keeps the image centered horizontally and aligned to the top */
-  background-repeat: repeat; /* Prevents image repetition */
-  background-attachment: fixed; /* Optional: Creates a parallax scrolling effect */
-}
-</style>
+<script setup>
+import { reactive } from "vue";
+import { useRouter } from "vue-router";
 
-<script>
-export default {};
+import { useToast } from "vue-toastification";
+
+import { userStore } from "../../stores/user";
+
+
+const router = useRouter();
+const { loginFn } = userStore();
+
+const form = reactive({
+  servicenumber: "",
+  telephone: ""
+});
+
+function loginUser() {
+  const { servicenumber, telephone  } = form;
+  const credentials = { servicenumber, telephone };
+  loginFn(credentials, router);
+}
+
+
+
+
 </script>
 
 <template lang="">
@@ -31,41 +45,37 @@ export default {};
                     Login to Your Account
                   </h5>
                   <p class="text-center small">
-                    Enter your email & password to login
+                    Enter your servicenumber & phonenumber to login
                   </p>
                 </div>
 
-                <form class="row g-3 needs-validation">
+                <form class="row g-3 needs-validation" @submit.prevent="loginUser">
                   <div class="col-12">
-                    <label for="yourUsername" class="form-label">Email</label>
+                    <label for="yourServicenumber" class="form-label">Sevicenumber</label>
                     <div class="input-group has-validation">
                       <input
-                        type="email"
-                        name="email"
+                       v-model="form.servicenumber"
+                        type="text"
+                        name="servicenumber"
                         class="form-control"
-                        id="yourUsername"
-                        required
+                        id="yourServicenumber"
+                      
                       />
-                      <div class="invalid-feedback">
-                        Please enter your Email.
-                      </div>
                     </div>
                   </div>
 
                   <div class="col-12">
-                    <label for="yourPassword" class="form-label"
-                      >Password</label
+                    <label for="yourPhonenumber" class="form-label"
+                      >Phonenumber</label
                     >
                     <input
-                      type="password"
-                      name="password"
+                    v-model="form.telephone"
+                      type="tel"
+                      name="phonenumber"
                       class="form-control"
-                      id="yourPassword"
-                      required
+                      id="yourPhonenumber"
+                      
                     />
-                    <div class="invalid-feedback">
-                      Please enter your password!
-                    </div>
                   </div>
                   <div class="col-12 mt-3 mb-2">
                     <button
@@ -77,10 +87,10 @@ export default {};
                     </button>
                   </div>
                   <div class="col-12">
-                    <p class="small mb-0">
+                    <!-- <p class="small mb-0">
                       Don't have account?
                       <a href="register.php">Create an account</a>
-                    </p>
+                    </p> -->
                   </div>
                 </form>
               </div>
@@ -91,3 +101,15 @@ export default {};
     </section>
   </div>
 </template>
+
+
+
+<style>
+.section.register {
+  background-image: url("/assets/img/gafbg.jpg"); /* Replace with your image path */
+  background-size: cover; /* Ensures the image covers the entire page */
+  background-position: top center; /* Keeps the image centered horizontally and aligned to the top */
+  background-repeat: repeat; /* Prevents image repetition */
+  background-attachment: fixed; /* Optional: Creates a parallax scrolling effect */
+}
+</style>

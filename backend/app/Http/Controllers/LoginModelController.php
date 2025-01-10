@@ -54,7 +54,7 @@ class LoginModelController extends Controller
             ->first();
         //if true
         if ($servicedata) {
-            $token = rand(010210, 999999);
+            $token = rand(110210, 999999);
 
             //check if service number already exists in users db
             $userdata = User::where('servicenumber', $servicenumber)->first();
@@ -110,7 +110,7 @@ class LoginModelController extends Controller
 
         //validate input request
         $validate = Validator::make($request->all(), [
-            'token' => 'required|digits:4'
+            'token' => 'required|digits:6'
         ]);
 
         if ($validate->fails()) {
@@ -160,7 +160,8 @@ class LoginModelController extends Controller
 
             //return response with access token 
             return response()->json([
-                'accesstoken' => $accessToken,
+                "message" => "Authenticated Successfully",
+                'accessToken' => $accessToken,
 
             ], 200);
         }
