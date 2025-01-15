@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use PhpParser\Builder\Function_;
 
+use function Illuminate\Log\log;
+
 class vendorController extends Controller
 {
 
@@ -254,20 +256,20 @@ class vendorController extends Controller
     public function previewProductImage(Request $request)
     {
         if (!$request->query("image")) {
-            return response()->json(["error" => "image query need to get image"], 400);
+            return response()->json(["message" => "image query needed to get image"], 400);
         }
 
 
         $productImage = ProductImage::where("image", $request->query("image"))->first();
 
         if (!$productImage) {
-            return response()->json(["error" => "Image not found"], 404);
+            return response()->json(["message" => "Image not found"], 404);
         }
 
         $imagePath = $productImage->image;
 
         if (!Storage::disk("public")->exists($imagePath)) {
-            return response()->json(["error" => "Image not found on disk storage"], 404);
+            return response()->json(["messge" => "Image not found on disk storage"], 404);
         };
 
         return response()->file(Storage::disk("public")->path($imagePath));
@@ -325,6 +327,32 @@ class vendorController extends Controller
         ], 201);
     }
 
+    public function searchProductByPriceAndCategory(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'price_range' => 'array',
+            'categories' => 'array'
+        ]);
+
+        // if (!$request->price_range && !$request->categories) {
+        //     $products = Product::all();
+
+        //     return response()->json($products, 200);
+        // }
+
+
+        if ($validate->fails()) {
+            return response()->json($validate->errors(), 400);
+        }
+
+        $product = Product::with("images")->filterByPriceAndCategory($request->price_range, $request->categories)->get();
+
+        if (!$product) {
+            return response()->json(["message" => "No Product found in this price range and categories"], 404);
+        }
+
+        return response()->json($product, 200);
+    }
     public function searchByProduct(Request $request)
     {
         $validate = Validator::make($request->all(), [
@@ -353,6 +381,8 @@ class vendorController extends Controller
         if ($validate->fails()) {
             return response()->json($validate->errors(), 400);
         }
+
+
 
         $products = Product::searchCategory($request->categories)->get();
 

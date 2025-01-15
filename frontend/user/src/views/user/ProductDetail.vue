@@ -1,21 +1,19 @@
-<style>
-.bg-green {
-  background-color: #318e2b !important;
-}
-.bg-red {
-  background-color: #8e2b2b !important;
-}
-.bg-yellow {
-  background-color: #ffd333 !important;
-}
+<script setup>
+import { useRoute } from 'vue-router';
 
-.text-green {
-  color: #318e2b !important;
-}
-.text-white {
-  color: #fcfcfc !important;
-}
-</style>
+import { productStore } from '@/stores/product';
+import { onBeforeMount } from 'vue';
+
+const route = useRoute();
+const { product, getProductById } = productStore();
+
+onBeforeMount(() => {
+  getProductById(route.params.id);
+})
+
+console.log(product.singleProduct)
+// product.singleProduct.shopvendor.shopname
+</script>
 
 <template lang="">
   <div>
@@ -43,31 +41,10 @@
             data-ride="carousel"
           >
             <div class="carousel-inner bg-light">
-              <div class="carousel-item active">
+              <div v-for="(productImage, index) in product.singleProduct.images" :key="index" class="carousel-item" :class='{active: index === 0}'>
                 <img
                   class="w-100 h-100"
-                  src="/assets/img/product-1.jpg"
-                  alt="Image"
-                />
-              </div>
-              <div class="carousel-item">
-                <img
-                  class="w-100 h-100"
-                  src="/assets/img/product-2.jpg"
-                  alt="Image"
-                />
-              </div>
-              <div class="carousel-item">
-                <img
-                  class="w-100 h-100"
-                  src="/assets/img/product-3.jpg"
-                  alt="Image"
-                />
-              </div>
-              <div class="carousel-item">
-                <img
-                  class="w-100 h-100"
-                  src="/assets/img/product-4.jpg"
+                  :src="`http://127.0.0.1:8000/api/product/preview-image?image=${productImage.image}`"
                   alt="Image"
                 />
               </div>
@@ -91,7 +68,7 @@
 
         <div class="col-lg-7 h-auto mb-30">
           <div class="h-100 bg-light p-30">
-            <h3>Product Name Goes Here</h3>
+            <h3>{{ product.singleProduct.title }}</h3>
             <div class="d-flex mb-3">
               <div class="text-primary mr-2">
                 <small class="fas fa-star"></small>
@@ -102,11 +79,9 @@
               </div>
               <small class="pt-1">(99 Reviews)</small>
             </div>
-            <h3 class="font-weight-semi-bold mb-4">₵150.00</h3>
+            <h3 class="font-weight-semi-bold mb-4">₵{{ product.singleProduct.price }}</h3>
             <p class="mb-4">
-              Volup erat ipsum diam elitr rebum et dolor. Est nonumy elitr erat
-              diam stet sit clita ea. Sanc ipsum et, labore clita lorem magna
-              duo dolor no sea Nonumy
+             {{ product.singleProduct.description}}
             </p>
             <div class="d-flex mb-3"></div>
             <div class="d-flex mb-4"></div>
@@ -124,11 +99,10 @@
             </div>
             <div class="d-flex pt-2">
               <strong class="text-dark mr-2"
-                ><i class="fa-sharp fa-solid fa-shop mr-4"></i>Adwoa Uzumaki
-                Stores</strong
+                ><i class="fa-sharp fa-solid fa-shop mr-4"></i>{{product.singleProduct?.shopvendor?.shopname}}</strong
               >
 
-              <small class="pt-1"> uploaded on 2024-11-09 22:20:06</small>
+              <small class="pt-1"> uploaded on {{product.singleProduct.created_at}}</small>
             </div>
 
             <div class="d-flex align-items-center mb-4 pt-2">
@@ -166,25 +140,7 @@
               <div class="tab-pane fade show active" id="tab-pane-1">
                 <h4 class="mb-3">Product Description</h4>
                 <p>
-                  Eos no lorem eirmod diam diam, eos elitr et gubergren diam
-                  sea. Consetetur vero aliquyam invidunt duo dolores et duo sit.
-                  Vero diam ea vero et dolore rebum, dolor rebum eirmod
-                  consetetur invidunt sed sed et, lorem duo et eos elitr,
-                  sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed
-                  tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing,
-                  eos dolores sit no ut diam consetetur duo justo est, sit
-                  sanctus diam tempor aliquyam eirmod nonumy rebum dolor
-                  accusam, ipsum kasd eos consetetur at sit rebum, diam kasd
-                  invidunt tempor lorem, ipsum lorem elitr sanctus eirmod
-                  takimata dolor ea invidunt.
-                </p>
-                <p>
-                  Dolore magna est eirmod sanctus dolor, amet diam et eirmod et
-                  ipsum. Amet dolore tempor consetetur sed lorem dolor sit lorem
-                  tempor. Gubergren amet amet labore sadipscing clita clita diam
-                  clita. Sea amet et sed ipsum lorem elitr et, amet et labore
-                  voluptua sit rebum. Ea erat sed et diam takimata sed justo.
-                  Magna takimata justo et amet magna et.
+                  {{ product.singleProduct.description}}
                 </p>
               </div>
               <div class="tab-pane fade" id="tab-pane-2">
@@ -559,8 +515,24 @@
     </div>
     <!-- Products End -->
   </div>
+ 
 </template>
-<script>
-export default {};
-</script>
-<style lang=""></style>
+
+<style>
+.bg-green {
+  background-color: #318e2b !important;
+}
+.bg-red {
+  background-color: #8e2b2b !important;
+}
+.bg-yellow {
+  background-color: #ffd333 !important;
+}
+
+.text-green {
+  color: #318e2b !important;
+}
+.text-white {
+  color: #fcfcfc !important;
+}
+</style>

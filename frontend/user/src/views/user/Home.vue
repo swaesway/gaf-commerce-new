@@ -1,13 +1,23 @@
-<script>
+<script setup>
 import CategoryCard from "@/components/CategoryCard.vue";
 import ProductCard from "@/components/ProductCard.vue";
+import { productStore } from "@/stores/product";
 
-export default {
-  components: {
-    CategoryCard,
-    ProductCard,
-  },
-};
+import FadeLoader  from 'vue-spinner/src/FadeLoader.vue'
+
+
+
+
+// export default {
+//   components: {
+//     CategoryCard,
+//     ProductCard,
+//   },
+// };
+
+const { product } = productStore();
+
+
 </script>
 
 <template>
@@ -179,56 +189,23 @@ export default {
       <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
         <span class="bg-secondary pr-3">Featured Products</span>
       </h2>
-      <div class="row px-xl-5">
+      
+      <div v-if="!product.isLoading" class="row px-xl-5">
         <ProductCard
-          name="Product 1"
-          image="../assets/img/product-1.jpg"
-          price="₵123.00"
-          :reviews="99"
-        />
-        <ProductCard
-          name="Product 2"
-          image="../assets/img/product-2.jpg"
-          price="₵123.00"
-          :reviews="99"
-        />
-        <ProductCard
-          name="Product 3"
-          image="../assets/img/product-3.jpg"
-          price="₵123.00"
-          :reviews="99"
-        />
-        <ProductCard
-          name="Product 4"
-          image="../assets/img/product-4.jpg"
-          price="₵123.00"
-          :reviews="99"
-        />
-        <ProductCard
-          name="Product 5"
-          image="../assets/img/product-5.jpg"
-          price="₵123.00"
-          :reviews="99"
-        />
-        <ProductCard
-          name="Product 6"
-          image="../assets/img/product-6.jpg"
-          price="₵123.00"
-          :reviews="99"
-        />
-        <ProductCard
-          name="Product 7"
-          image="../assets/img/product-7.jpg"
-          price="₵123.00"
-          :reviews="99"
-        />
-        <ProductCard
-          name="Product 8"
-          image="../assets/img/product-8.jpg"
-          price="₵123.00"
+          v-for="product in product.all_product" :key="product.id"
+          :id="product.id"
+          :name="product.title"
+          :image="`http://127.0.0.1:8000/api/product/preview-image?image=${product.images[0].image}`"
+          :price="`₵${product.price}`"
           :reviews="99"
         />
       </div>
+      <div v-else class="row px-xl-5 justify-content-center">
+        <FadeLoader :loading="true" :color="'rgb(204 208 207)'" />
+        <span>loading ... </span>
+
+      </div>
+
     </div>
     <!-- Products End -->
 
@@ -269,54 +246,23 @@ export default {
         <span class="bg-secondary pr-3">Recent Products</span>
       </h2>
       <div class="row px-xl-5">
+       
+        <div v-if="!product.isLoading" class="row px-xl-5">
         <ProductCard
-          name="Product 1"
-          image="../assets/img/product-1.jpg"
-          price="₵123.00"
+          v-for="product in product.latestProduct" :key="product.id"
+          :id="product.id"
+          :name="product.title"
+          :image="`http://127.0.0.1:8000/api/product/preview-image?image=${product.images[0].image}`"
+          :price="`₵${product.price}`"
           :reviews="99"
         />
-        <ProductCard
-          name="Product 2"
-          image="../assets/img/product-2.jpg"
-          price="₵123.00"
-          :reviews="99"
-        />
-        <ProductCard
-          name="Product 3"
-          image="../assets/img/product-3.jpg"
-          price="₵123.00"
-          :reviews="99"
-        />
-        <ProductCard
-          name="Product 4"
-          image="../assets/img/product-4.jpg"
-          price="₵123.00"
-          :reviews="99"
-        />
-        <ProductCard
-          name="Product 5"
-          image="../assets/img/product-5.jpg"
-          price="₵123.00"
-          :reviews="99"
-        />
-        <ProductCard
-          name="Product 6"
-          image="../assets/img/product-6.jpg"
-          price="₵123.00"
-          :reviews="99"
-        />
-        <ProductCard
-          name="Product 7"
-          image="../assets/img/product-7.jpg"
-          price="₵123.00"
-          :reviews="99"
-        />
-        <ProductCard
-          name="Product 8"
-          image="../assets/img/product-8.jpg"
-          price="₵123.00"
-          :reviews="99"
-        />
+      </div>
+      <div v-else class="" style="margin:0 auto;">
+        <FadeLoader :loading="true" :color="'rgb(204 208 207)'" />
+        <span>loading ... </span>
+
+      </div>
+       
       </div>
     </div>
     <!-- Products End -->

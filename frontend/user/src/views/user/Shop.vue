@@ -1,11 +1,123 @@
-<script>
+<script setup>
 import ProductCard from "@/components/ProductCard.vue";
 
-export default {
-  components: {
-    ProductCard,
-  },
-};
+import { productStore } from "@/stores/product";
+import { onMounted, reactive, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+import FadeLoader  from 'vue-spinner/src/FadeLoader.vue'
+
+
+const { product, filterByPricesAndCategories } = productStore();
+
+const route = useRoute();
+const router = useRouter();
+
+const state = reactive({
+ price_range: [],
+ catgeories: []
+});
+
+const formPrices = ref([
+{isChecked: false, price: "All"},
+{isChecked: false, price: "0-100"},
+{isChecked: false, price: "100-200"} ,
+{isChecked: false, price: "200-300"},
+{isChecked: false, price: "300-400"},
+{isChecked: false, price: "500-600"}])
+
+const formCategories = ref([
+{isChecked: false, category: "All category"},
+{isChecked: false, category: "Uniforms"},
+{isChecked: false, category: "Clothes"} ,
+{isChecked: false, category: "Electronics"},
+{isChecked: false, category: "Cosmetics"},
+{isChecked: false, category: "Footwear"},
+{isChecked: false, category: "Headgear"},
+{isChecked: false, category: "Books & Stationary"},
+{isChecked: false, category: "Food & Beverages"}]);
+
+
+const prices = ref([]);
+const categories = ref([]);
+
+function isPriceChecked(price){
+  return  route.query.price_range?.includes(price);
+}
+
+function isCategoryChecked(category){
+  return  route.query.categories?.includes(category);
+}
+
+function addPriceRange(data){
+ 
+  if(prices.value.includes(data.price)){
+     prices.value =  prices.value.filter((price) => price !== data.price)
+  }else{
+    prices.value.push(data.price);
+  }
+
+  // console.log(categories.value)
+  // console.log(prices.value)
+  
+  filterByPricesAndCategories({
+    price_range: prices.value,
+    categories: categories.value
+  });
+
+  router.push({
+    name: "Shop",
+    query: {price_range: [...prices.value], categories:[...categories.value]},
+    
+  });
+
+}
+
+
+function addCategories(data){
+ 
+  if(categories.value.includes(data.category)){
+  categories.value =  categories.value.filter((category) => category !== data.category)
+ }else{
+  categories.value.push(data.category);
+ }
+//   console.log(categories.value)
+//  console.log(prices.value)
+ filterByPricesAndCategories({
+   price_range: prices.value,
+   categories: categories.value
+ });
+ 
+
+
+ router.push({
+   name: "Shop",
+   query: {price_range: [...prices.value], categories:[...categories.value]},
+   
+ });
+
+
+}
+
+onMounted(() => {
+  
+  prices.value = route.query.price_range
+        ? Array.isArray(route.query.price_range)
+          ? route.query.price_range
+          : [route.query.price_range]
+        : [];
+
+
+categories.value = route.query.categories
+        ? Array.isArray(route.query.categories)
+          ? route.query.categories
+          : [route.query.categories]
+        : [];
+    });
+
+
+
+
 </script>
 <template>
   <div>
@@ -32,86 +144,24 @@ export default {
             <span class="bg-secondary pr-3">Filter by price</span>
           </h5>
           <div class="bg-light p-4 mb-30">
-            <form>
+            <form v-for="(data, index) in formPrices" :key="index">
               <div
                 class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
               >
                 <input
                   type="checkbox"
                   class="custom-control-input"
-                  checked
-                  id="price-all"
+                  :checked="isPriceChecked(data.price, route.query?.price_range)"
+                  :id="index"
+                  @click="addPriceRange(data)"
                 />
-                <label class="custom-control-label" for="price-all"
-                  >All Price</label
+                <label class="custom-control-label" :for="index"
+                  >₵{{data.price}}</label
+                 
                 >
                 <span class="badge border font-weight-normal">1000</span>
               </div>
-              <div
-                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
-              >
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="price-1"
-                />
-                <label class="custom-control-label" for="price-1"
-                  >₵0 - ₵100</label
-                >
-                <span class="badge border font-weight-normal">150</span>
-              </div>
-              <div
-                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
-              >
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="price-2"
-                />
-                <label class="custom-control-label" for="price-2"
-                  >₵100 - ₵200</label
-                >
-                <span class="badge border font-weight-normal">295</span>
-              </div>
-              <div
-                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
-              >
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="price-3"
-                />
-                <label class="custom-control-label" for="price-3"
-                  >₵200 - ₵300</label
-                >
-                <span class="badge border font-weight-normal">246</span>
-              </div>
-              <div
-                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
-              >
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="price-4"
-                />
-                <label class="custom-control-label" for="price-4"
-                  >₵300 - ₵400</label
-                >
-                <span class="badge border font-weight-normal">145</span>
-              </div>
-              <div
-                class="custom-control custom-checkbox d-flex align-items-center justify-content-between"
-              >
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="price-5"
-                />
-                <label class="custom-control-label" for="price-5"
-                  >₵400 - ₵500</label
-                >
-                <span class="badge border font-weight-normal">168</span>
-              </div>
+              
             </form>
           </div>
           <!-- Price End -->
@@ -120,127 +170,24 @@ export default {
             <span class="bg-secondary pr-3">Filter by category</span>
           </h5>
           <div class="bg-light p-4 mb-30">
-            <form>
+            <form v-for="(data, index) in formCategories" :key="index">
               <div
                 class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
               >
                 <input
                   type="checkbox"
                   class="custom-control-input"
-                  checked
-                  id="color-all"
+                  :checked="isCategoryChecked(data.category, route.query?.categories)"
+                  :id="data.category"
+                  @click="addCategories(data)"
                 />
-                <label class="custom-control-label" for="price-all"
-                  >All category</label
+                <label class="custom-control-label" :for="data.category"
+                  >{{data.category}}</label
+                 
                 >
                 <span class="badge border font-weight-normal">1000</span>
               </div>
-              <div
-                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
-              >
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="color-1"
-                />
-                <label class="custom-control-label" for="color-1"
-                  >Uniforms</label
-                >
-                <span class="badge border font-weight-normal">150</span>
-              </div>
-              <div
-                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
-              >
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="color-2"
-                />
-                <label class="custom-control-label" for="color-2"
-                  >Clothes</label
-                >
-                <span class="badge border font-weight-normal">295</span>
-              </div>
-              <div
-                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
-              >
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="color-3"
-                />
-                <label class="custom-control-label" for="color-3"
-                  >Electronics</label
-                >
-                <span class="badge border font-weight-normal">246</span>
-              </div>
-              <div
-                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
-              >
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="color-1"
-                />
-                <label class="custom-control-label" for="color-1"
-                  >Cosmetics</label
-                >
-                <span class="badge border font-weight-normal">150</span>
-              </div>
-              <div
-                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
-              >
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="color-2"
-                />
-                <label class="custom-control-label" for="color-2"
-                  >Footwear</label
-                >
-                <span class="badge border font-weight-normal">295</span>
-              </div>
-              <div
-                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
-              >
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="color-4"
-                />
-                <label class="custom-control-label" for="color-4"
-                  >Headgear</label
-                >
-                <span class="badge border font-weight-normal">145</span>
-              </div>
-
-              <div
-                class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
-              >
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="color-2"
-                />
-                <label class="custom-control-label" for="color-2"
-                  >Books & Stationary</label
-                >
-                <span class="badge border font-weight-normal">295</span>
-              </div>
-
-              <div
-                class="custom-control custom-checkbox d-flex align-items-center justify-content-between"
-              >
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="color-5"
-                />
-                <label class="custom-control-label" for="color-5"
-                  >Food & Beverages</label
-                >
-                <span class="badge border font-weight-normal">168</span>
-              </div>
+              
             </form>
           </div>
 
@@ -373,56 +320,24 @@ export default {
               </div>
             </div>
 
-            <ProductCard
-              name="Product 1"
-              image="../assets/img/product-1.jpg"
-              price="₵123.00"
-              :reviews="99"
-            />
-            <ProductCard
-              name="Product 2"
-              image="../assets/img/product-2.jpg"
-              price="₵123.00"
-              :reviews="99"
-            />
-            <ProductCard
-              name="Product 3"
-              image="../assets/img/product-3.jpg"
-              price="₵123.00"
-              :reviews="99"
-            />
-            <ProductCard
-              name="Product 4"
-              image="../assets/img/product-4.jpg"
-              price="₵123.00"
-              :reviews="99"
-            />
-            <ProductCard
-              name="Product 5"
-              image="../assets/img/product-5.jpg"
-              price="₵123.00"
-              :reviews="99"
-            />
-            <ProductCard
-              name="Product 6"
-              image="../assets/img/product-6.jpg"
-              price="₵123.00"
-              :reviews="99"
-            />
-            <ProductCard
-              name="Product 7"
-              image="../assets/img/product-7.jpg"
-              price="₵123.00"
-              :reviews="99"
-            />
-            <ProductCard
-              name="Product 8"
-              image="../assets/img/product-8.jpg"
-              price="₵123.00"
-              :reviews="99"
-            />
+        <div v-if="!product.isLoading" class="row px-xl-5">
+        <ProductCard
+          v-for="product in product.filteredProduct" :key="product.id"
+          :id="product.id"
+          :name="product.title"
+          :image="`http://127.0.0.1:8000/api/product/preview-image?image=${product.images[0].image}`"
+          :price="`₵${product.price}`"
+          :reviews="99"
+        />
+      </div>
+      <div v-else class="" style="margin:0 auto;">
+        <FadeLoader :loading="true" :color="'rgb(204 208 207)'" />
+        <span>loading ... </span>
 
-            <div class="col-12">
+      </div>
+            
+
+            <div v-if="!product.isLoading" class="col-12">
               <nav>
                 <ul class="pagination justify-content-center">
                   <li class="page-item disabled">

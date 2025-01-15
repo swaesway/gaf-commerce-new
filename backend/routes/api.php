@@ -73,8 +73,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //admin to add categories 
 });
 
+
+Route::get("/products-latest", [buyerController::class, "latestProducts"]);
+
 // @desc Get all products
 Route::get("/products-all", [buyerController::class, "getAllProducts"]);
+// @desc GEt single product
+Route::get("/product/single/{productId}", [buyerController::class, "getProduct"]);
 // @desc Get product Ratings
 Route::get("/product/{productId}/ratings", [buyerController::class, "getProductRatings"]);
 // @desc Get User wishlist
@@ -85,10 +90,11 @@ Route::post("user/product/{productId}/add-wishlist", [buyerController::class, "a
 Route::delete("user/product/{productId}/remove-wishlist", [buyerController::class, "removeProductFromWishlist"]);
 
 
-Route::post("/vendor/product/search-all", [vendorController::class, "searchByProduct"]);
-Route::post("/vendor/product/search-category", [vendorController::class, "searchProductByCategory"]);
-Route::get("/vendor/product/search-price", [vendorController::class, "searchProductByPriceRange"]);
-
+Route::post("/product/search-all", [vendorController::class, "searchByProduct"]);
+Route::post("/product/search-category", [vendorController::class, "searchProductByCategory"]);
+Route::get("/product/search-price", [vendorController::class, "searchProductByPriceRange"]);
+// Route::get("/product/filter-by-price-and-category/result", [buyerController::class, "getFilteredProducts"]);
+Route::post("/product/filter-by-price-and-category", [vendorController::class, "searchProductByPriceAndCategory"]);
 
 Route::get("/product/preview-image", [vendorController::class, "previewProductImage"]);
 
