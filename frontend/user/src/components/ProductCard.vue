@@ -2,6 +2,9 @@
 export default {
   name: "ProductCard",
   props: {
+    id: {
+      type: Number,
+    },
     name: {
       type: String,
       required: true,
@@ -26,7 +29,7 @@ export default {
   <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
     <div class="product-item bg-light mb-4">
       <div class="product-img position-relative overflow-hidden">
-        <img class="img-fluid w-100" :src="image" :alt="name" />
+        <img class="img-fluid w-100"  :src="image" :alt="name" />
         <div class="product-action">
           <a class="btn btn-outline-dark btn-square" href=""
             ><i class="fas fa-comment"></i
@@ -34,9 +37,9 @@ export default {
           <a class="btn btn-outline-dark btn-square" href=""
             ><i class="far fa-heart"></i
           ></a>
-          <a class="btn btn-outline-dark btn-square" href="/productdetails"
+          <RouterLink class="btn btn-outline-dark btn-square" :to="'/product-details/' + id "
             ><i class="far fa-eye"></i
-          ></a>
+          ></RouterLink>
         </div>
       </div>
       <div class="text-center py-4">

@@ -69,8 +69,65 @@ class buyerController extends Controller
 
     public function getAllProducts()
     {
-        $products = Product::all();
-        return response()->json(['products' => $products]);
+        $products = Product::with("images", "ratings")->get();
+
+        if ($products->isEmpty()) {
+            return response()->json(["message" => "No products"], 403);
+        }
+
+        return response()->json($products, 200);
+    }
+
+    public function getProduct($productId)
+    {
+
+        if (empty($productId)) {
+            return response()->json(['message' => 'Product ID is required.'], 400);
+        }
+
+        $product = Product::with("shopvendor", "images", "ratings")->find($productId);
+
+        if (!$product) {
+            return response()->json(['message' => 'Product Not Found'], 404);
+        }
+
+        // $data = [
+        //     "product" => $product,
+        //     "shopvendor" => $product->shopvendor,
+        //     "images" => $product->images,
+        //     "ratings" => $product->ratings,
+        //     "reviews" => $product->reviews,
+        //     "relatedProducts" => Product::where("shopvendor_id", $product->shopvendor_id)->take(3)->get(),
+        //     "similarProducts" => Product::where("category", $product->category)->take(3)->get()
+        // ];
+
+        return response()->json($product, 200);
+    }
+
+
+    public function latestProducts()
+    {
+        $products = Product::with("images", "ratings")->latest()->take(8)->get();
+
+        if ($products->isEmpty()) {
+            return response()->json(["message" => "No products"], 403);
+        }
+
+        return response()->json($products, 200);
+    }
+
+    public function getFilteredProducts(Request $request)
+    {
+        if ($request->price_range || $request->categories) {
+
+            $products = Product::filterByPriceAndCategory($request->price_range, $request->categories)->get();
+
+            if ($products->isEmpty()) {
+                return response()->json(["message" => "No products found in this price range and categories"], 404);
+            }
+
+            return response()->json($products, 200);
+        }
     }
 
     public function getWishList()

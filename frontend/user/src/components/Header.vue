@@ -1,4 +1,12 @@
-<script></script>
+<script setup>
+
+import { userStore } from '@/stores/user';
+
+const { user } = userStore();
+
+</script>
+
+
 <template>
   <div>
     <div class="container-fluid">
@@ -48,12 +56,14 @@
             >
               My Account
             </button>
-            <div class="dropdown-menu dropdown-menu-right">
-              <a href="/login"
-                ><button class="dropdown-item" type="button">Sign in</button></a
+            <div v-if="user.isAuthenticated" class="dropdown-menu dropdown-menu-right">
+              <RouterLink to="/login"
+                ><button class="dropdown-item" type="button">Sign out</button></RouterLink
               >
-              <a href="/register"
-                ><button class="dropdown-item" type="button">Sign up</button></a
+            </div>
+            <div v-else class="dropdown-menu dropdown-menu-right">
+              <RouterLink href="/login"
+                ><button class="dropdown-item" type="button">Sign in</button></RouterLink
               >
             </div>
           </div>
