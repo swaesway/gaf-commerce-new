@@ -3,17 +3,17 @@ import { userStore } from '@/stores/user';
 import { onBeforeMount, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-
+import FadeLoader  from 'vue-spinner/src/FadeLoader.vue'
 
 
 const router = useRouter();
 const { user, getWishlist } = userStore();
 
 
-onMounted(() => {
-  setInterval(() => {
+onBeforeMount(() => {
+ 
     getWishlist();
-  }, 3600)
+ 
 })
 </script>
 <template lang="">
@@ -48,12 +48,17 @@ onMounted(() => {
               </tr>
             </thead>
             <tbody class="align-middle">
-              <tr v-if="!user.wishList.length">
-                <td colspan="5" class="text-center">
-                  No products in your wishlist.
+              
+              <tr v-if="user.isLoading">
+                <td colspan="5" class="row justify-content-center">
+                  <FadeLoader :loading="true" :color="'rgb(204 208 207)'" />
+                  <span>loading ... </span>
                 </td>
               </tr>
               <tr v-else v-for="wishList in user.wishList" :key="wishList.id">
+                <td v-if="!user.wishList.length" colspan="5" class="text-center">
+                    <span>you have no wishlist  <RouterLink to="/shop?price_range=All&categories=All">try to add some</RouterLink></span>
+                </td>
                 <td class="align-middle">
                   <!-- <img
                     :src="`http://127.0.0.1:8000/api/product/preview-image?image=${wishList.images[0].image}`"
