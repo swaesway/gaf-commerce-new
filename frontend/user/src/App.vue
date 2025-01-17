@@ -9,11 +9,9 @@ const { getAllProduct, getLatestProducts } = productStore();
 const { getWishlist } = userStore();
 
 onBeforeMount(() => {
-  setInterval(() => {
+
     getAllProduct();
     getLatestProducts();
-   
-}, 5000)
   
 });
 

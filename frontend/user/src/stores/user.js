@@ -24,6 +24,7 @@ export const userStore = defineStore("user", () => {
     },
     wishList: [],
     isAuthenticated: Cookies.get("token_u") || false,
+    isLoading: true,
   });
 
   /*
@@ -106,8 +107,9 @@ export const userStore = defineStore("user", () => {
     try {
       const response = await axiosPrivate.get("/user/product-wishlist");
       if (response.data && response.status === 200) {
+        user.isLoading = false;
         user.wishList = response.data;
-        // console.log(response.data);
+        console.log(response.data);
       }
       // return response.data;
     } catch (err) {
