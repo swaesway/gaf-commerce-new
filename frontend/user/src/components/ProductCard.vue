@@ -1,7 +1,10 @@
-<script>
-export default {
-  name: "ProductCard",
-  props: {
+<script setup>
+
+import { userStore } from '@/stores/user';
+import { defineProps } from 'vue';
+import { useRouter } from 'vue-router';
+
+defineProps({
     id: {
       type: Number,
     },
@@ -21,10 +24,17 @@ export default {
       type: Number,
       default: 0,
     },
-  },
-};
-</script>
+});
 
+
+const router = useRouter();
+const { addProductToWishlist } = userStore();
+
+function addToWishlist(id){
+  addProductToWishlist(id, router);
+}
+
+</script>
 <template>
   <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
     <div class="product-item bg-light mb-4">
@@ -34,7 +44,7 @@ export default {
           <a class="btn btn-outline-dark btn-square" href=""
             ><i class="fas fa-comment"></i
           ></a>
-          <a class="btn btn-outline-dark btn-square" href=""
+          <a @click="addToWishlist(id)" class="btn btn-outline-dark btn-square"
             ><i class="far fa-heart"></i
           ></a>
           <RouterLink class="btn btn-outline-dark btn-square" :to="'/product-details/' + id "

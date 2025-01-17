@@ -1,3 +1,17 @@
+<script setup>
+import { userStore } from '@/stores/user';
+import { onBeforeMount, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+
+
+
+const router = useRouter();
+const { user } = userStore();
+
+
+
+</script>
 <template lang="">
   <div>
     <!-- Breadcrumb Start -->
@@ -5,7 +19,7 @@
       <div class="row px-xl-5">
         <div class="col-12">
           <nav class="breadcrumb bg-light mb-30">
-            <a class="breadcrumb-item text-dark" href="/">Home</a>
+            <RouterLink class="breadcrumb-item text-dark" to="/">Home</RouterLink>
             <span class="breadcrumb-item active">Wishlist</span>
           </nav>
         </div>
@@ -30,40 +44,21 @@
               </tr>
             </thead>
             <tbody class="align-middle">
-              <tr>
-                <td class="align-middle">
-                  <img
-                    src="/assets/img/product-1.jpg"
-                    alt=""
-                    style="width: 50px"
-                  />
-                  Product Name
-                </td>
-                <td class="align-middle">₵150</td>
-                <td class="align-middle">
-                  <small
-                    v-for="n in 5"
-                    :key="n"
-                    class="fa fa-star text-primary mr-1"
-                  ></small>
-                </td>
-                <td class="align-middle">Electronics</td>
-                <td class="align-middle">
-                  <button class="btn btn">
-                    <i class="fa fa-heart text-primary"></i>
-                  </button>
+              <tr v-if="!user.wishList.length">
+                <td colspan="5" class="text-center">
+                  No products in your wishlist.
                 </td>
               </tr>
-              <tr>
+              <tr v-else v-for="wishList in user.wishList" :key="wishList.id">
                 <td class="align-middle">
-                  <img
-                    src="/assets/img/product-2.jpg"
+                  <!-- <img
+                    :src="`http://127.0.0.1:8000/api/product/preview-image?image=${wishList.images[0].image}`"
                     alt=""
                     style="width: 50px"
-                  />
-                  Product Name
+                  /> -->
+                  {{wishList.title}}
                 </td>
-                <td class="align-middle">₵150</td>
+                <td class="align-middle">₵{{wishList.price}}</td>
                 <td class="align-middle">
                   <small
                     v-for="n in 5"
@@ -71,79 +66,7 @@
                     class="fa fa-star text-primary mr-1"
                   ></small>
                 </td>
-                <td class="align-middle">Clothes</td>
-                <td class="align-middle">
-                  <button class="btn btn">
-                    <i class="fa fa-heart text-primary"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td class="align-middle">
-                  <img
-                    src="/assets/img/product-3.jpg"
-                    alt=""
-                    style="width: 50px"
-                  />
-                  Product Name
-                </td>
-                <td class="align-middle">₵150</td>
-                <td class="align-middle">
-                  <small
-                    v-for="n in 5"
-                    :key="n"
-                    class="fa fa-star text-primary mr-1"
-                  ></small>
-                </td>
-                <td class="align-middle">Electronics</td>
-                <td class="align-middle">
-                  <button class="btn btn">
-                    <i class="fa fa-heart text-primary"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td class="align-middle">
-                  <img
-                    src="/assets/img/product-4.jpg"
-                    alt=""
-                    style="width: 50px"
-                  />
-                  Product Name
-                </td>
-                <td class="align-middle">₵150</td>
-                <td class="align-middle">
-                  <small
-                    v-for="n in 5"
-                    :key="n"
-                    class="fa fa-star text-primary mr-1"
-                  ></small>
-                </td>
-                <td class="align-middle">Footwear</td>
-                <td class="align-middle">
-                  <button class="btn btn">
-                    <i class="fa fa-heart text-primary"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td class="align-middle">
-                  <img
-                    src="/assets/img/product-5.jpg"
-                    alt=""
-                    style="width: 50px"
-                  />
-                  Product Name
-                </td>
-                <td class="align-middle">₵150</td>
-                <td class="align-middle">
-                  <small
-                    v-for="n in 5"
-                    :key="n"
-                    class="fa fa-star text-primary mr-1"
-                  ></small>
-                </td>
-                <td class="align-middle">Electronics</td>
+                <td class="align-middle">{{wishList?.category}}</td>
                 <td class="align-middle">
                   <button class="btn btn">
                     <i class="fa fa-heart text-primary"></i>
@@ -290,7 +213,4 @@
     <!-- Cart End -->
   </div>
 </template>
-<script>
-export default {};
-</script>
-<style lang=""></style>
+

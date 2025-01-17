@@ -7,6 +7,7 @@ import axiosInstance from "@/api/axiosInstance";
 import { useToast } from "vue-toastification";
 
 import CryptoJS from "crypto-js";
+import axiosPrivate from "@/api/axiosPrivate";
 
 export const userStore = defineStore("user", () => {
   /*
@@ -84,7 +85,7 @@ export const userStore = defineStore("user", () => {
 
         user.isAuthenticated = Cookies.get("token_u");
         toast.success(response.data.message);
-        router.push({ name: "Home" });
+        router.push("/");
       }
 
       return;
@@ -101,9 +102,57 @@ export const userStore = defineStore("user", () => {
     }
   }
 
+  async function getWishlist(router) {
+    try {
+      const response = await axiosPrivate.get("/user/product-wishlist");
+      if (response.data && response.status === 200) {
+        user.wishList = response.data;
+        // console.log(response.data);
+      }
+      // return response.data;
+    } catch (err) {
+      if (!err?.response?.status) {
+        return err?.message;
+      } else {
+        toast.error("Internal Sever Error");
+      }
+    }
+  }
+
+  async function addProductToWishlist(productId, router) {
+    try {
+      const response = await axiosPrivate.post(
+        `/user/product/${productId}/add-wishlist`
+      );
+
+      if (response.data && response.status === 201) {
+        toast.success(response.data);
+      }
+
+      return;
+    } catch (err) {
+      if (err?.response?.status === 401) {
+        router.push({ name: "Login" });
+        return;
+      }
+
+      if (!err?.response?.status) {
+        return err?.message;
+      } else if (err?.response?.status === 400) {
+        toast.error(err?.response?.data.message);
+      } else if (err?.response?.status === 404) {
+        toast.error(err?.response?.data.message);
+      } else {
+        toast.error("Internal Server Error");
+      }
+    }
+  }
+
   return {
     user,
     loginFn,
     verifyTokenFn,
+    getWishlist,
+    addProductToWishlist,
   };
 });

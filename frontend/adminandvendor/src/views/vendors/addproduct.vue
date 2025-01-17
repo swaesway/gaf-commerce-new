@@ -133,7 +133,7 @@ onMounted(async () => {
                         <option value="Electronics">Electronics</option>
                         <option value="Footwear">Footwear</option>
                         <option value="Food Stuffs">Food Stuffs</option>
-                        <option value="Clothing">Clothing</option>
+                        <option value="Clothes">Clothes</option>
                         <option value="Grocery">Grocery</option>
                         <option value="Home Appliances">Home Appliances</option>
                       </select>

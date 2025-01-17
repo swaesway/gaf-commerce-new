@@ -1,18 +1,26 @@
 <script setup>
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import { productStore } from '@/stores/product';
 import { onBeforeMount } from 'vue';
+import { userStore } from '@/stores/user';
 
 const route = useRoute();
+const router = useRouter();
 const { product, getProductById } = productStore();
+const { addProductToWishlist } = userStore();
+
+
+function addToWishlist(){
+  addProductToWishlist(route.params?.id, router);
+}
+
 
 onBeforeMount(() => {
   getProductById(route.params.id);
 })
 
-console.log(product.singleProduct)
-// product.singleProduct.shopvendor.shopname
+
 </script>
 
 <template lang="">
@@ -22,8 +30,8 @@ console.log(product.singleProduct)
       <div class="row px-xl-5">
         <div class="col-12">
           <nav class="breadcrumb bg-light mb-30">
-            <a class="breadcrumb-item text-dark" href="#">Home</a>
-            <a class="breadcrumb-item text-dark" href="#">Shop</a>
+            <RouterLink class="breadcrumb-item text-dark" href="#">Home</RouterLink>
+            <RouterLink class="breadcrumb-item text-dark" to="/shop?price_range=All&categories=All">Shop</RouterLink>
             <span class="breadcrumb-item active">Shop Detail</span>
           </nav>
         </div>
@@ -89,7 +97,7 @@ console.log(product.singleProduct)
               <button class="btn bg-green px-3 mr-3 text-white">
                 <i class="fa fa-arrows-rotate mr-1"></i> Request Callback
               </button>
-              <button class="btn bg-yellow px-3 mr-3 text-white">
+              <button @click="addToWishlist" class="btn bg-yellow px-3 mr-3 text-white">
                 <i class="fa fa-heart mr-1"></i> Add To Wishlist
               </button>
 

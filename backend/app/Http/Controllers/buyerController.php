@@ -174,9 +174,7 @@ class buyerController extends Controller
         }
 
 
-        return response()->json([
-            "wishList" => $product
-        ], 200);
+        return response()->json($product, 200);
     }
 
     public function getProductRatings($productId)
@@ -199,19 +197,17 @@ class buyerController extends Controller
 
     public function addProductToWishlist(Request $request, $productId)
     {
-        // $session = new Session();
-        // $session->start();
 
-        $validate = Validator::make($request->all(), [
-            'servicenumber' => 'required|size:6',
-        ]);
+        // $validate = Validator::make($request->all(), [
+        //     'servicenumber' => 'required|size:6',
+        // ]);
 
-        if ($validate->fails()) {
-            return response()->json(
-                $validate->errors(),
-                400
-            );
-        }
+        // if ($validate->fails()) {
+        //     return response()->json(
+        //         $validate->errors(),
+        //         400
+        //     );
+        // }
 
         if (empty($productId)) {
             return response()->json(['message' => 'Product ID is required.'], 400);
@@ -282,20 +278,20 @@ class buyerController extends Controller
         //     return response()->json("$product->title added to wishlist", 201);
         // }
 
-        $isWishListPresent = Wishlist::where("servicenumber", $request->serviceNumber)
+        $isWishListPresent = Wishlist::where("servicenumber", Auth::id())
             ->where("product_id", $product->id)
             ->first();
 
         if ($isWishListPresent) {
-            return response()->json("Wishlist is available already in your wishlist", 400);
+            return response()->json(["message" => "product already in wishlist"], 400);
         }
 
         Wishlist::create([
-            "servicenumber" => $request->serviceNumber,
+            "servicenumber" => Auth::id(),
             "product_id" => $product->id
         ]);
 
-        return response()->json("$product->title added to wishlist", 201);
+        return response()->json("added to wishlist", 201);
     }
 
     public function removeProductFromWishlist(Request $request, $productId)

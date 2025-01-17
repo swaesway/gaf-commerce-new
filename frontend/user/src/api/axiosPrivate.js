@@ -13,7 +13,7 @@ const axiosPrivate = axios.create({
 
 axiosPrivate.interceptors.request.use(
   async (config) => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("token_u");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -28,7 +28,7 @@ axiosPrivate.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      Cookies.remove("token", {
+      Cookies.remove("token_u", {
         expires: 2 * 60 * 1000,
         path: "/",
         secure: true,

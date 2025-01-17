@@ -141,28 +141,28 @@ const { user } = userStore();
               id="navbarCollapse"
             >
               <div class="navbar-nav mr-auto py-0">
-                <a href="/" class="nav-item nav-link active">Home</a>
-                <a href="/shop" class="nav-item nav-link">Products</a>
-                <a href="/wishlist" class="nav-item nav-link">Wishlist</a>
-                <a href="/contact" class="nav-item nav-link">Contact</a>
+                <RouterLink to="/" class="nav-item nav-link active">Home</RouterLink>
+                <RouterLink to="/shop?price_range=All&categories=All" class="nav-item nav-link">Products</RouterLink>
+                <RouterLink to="/wishlist" class="nav-item nav-link">Wishlist</RouterLink>
+                <RouterLink to="/contact" class="nav-item nav-link">Contact</RouterLink>
               </div>
               <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
-                <a href="/wishlist" class="btn px-0">
+                <RouterLink to="/wishlist" class="btn px-0">
                   <i class="fas fa-heart text-primary"></i>
                   <span
                     class="badge text-secondary border border-secondary rounded-circle"
                     style="padding-bottom: 2px"
                     >0</span
                   >
-                </a>
-                <a href="/chat" class="btn px-0 ml-3">
+                </RouterLink>
+                <RouterLink to="/chat" class="btn px-0 ml-3">
                   <i class="fas fa-comment text-primary"></i>
                   <span
                     class="badge text-secondary border border-secondary rounded-circle"
                     style="padding-bottom: 2px"
                     >0</span
                   >
-                </a>
+                </RouterLink>
               </div>
             </div>
           </nav>
