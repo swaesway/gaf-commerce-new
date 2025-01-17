@@ -7,10 +7,14 @@ import { useRouter } from 'vue-router';
 
 
 const router = useRouter();
-const { user } = userStore();
+const { user, getWishlist } = userStore();
 
 
-
+onMounted(() => {
+  setInterval(() => {
+    getWishlist();
+  }, 3600)
+})
 </script>
 <template lang="">
   <div>
