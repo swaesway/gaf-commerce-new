@@ -26,9 +26,8 @@ export const productStore = defineStore("product", () => {
     try {
       const response = await axiosInstance.get("/products-all");
 
-      if (response.status === 200) {
+      if (response.data && response.status === 200) {
         product.all_product = response.data;
-        product.filteredProduct = response.data;
         product.isLoading = false;
       }
     } catch (err) {
@@ -91,10 +90,11 @@ export const productStore = defineStore("product", () => {
       if (response.data && response.status === 200) {
         product.isLoading = false;
         product.filteredProduct = response.data;
+        console.log(response.data);
       }
     } catch (err) {
       if (!err?.response?.status) {
-        toast.error(err?.message);
+        return err?.message;
       } else if (err?.response?.status === 400) {
         if (err.response?.data?.price_range)
           toast.error(err.response?.data?.price_range[0]);

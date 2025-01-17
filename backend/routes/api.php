@@ -58,6 +58,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('user/home', [buyerController::class, 'home']);
     Route::post('user/viewmoreinfo/{id}', [buyerController::class, 'viewmoreinfo']);
     Route::Post('users/chatvendor', [buyerController::class, 'chatvendor']);
+    // @desc Get User wishlist
+    Route::get("/user/product-wishlist", [buyerController::class, "getWishList"]);
+    // @desc Add Product to guest or users wishlist
+    Route::post("/user/product/{productId}/add-wishlist", [buyerController::class, "addProductToWishlist"]);
     Route::post('user/logout', [buyerController::class, 'userlogout']);
 });
 
@@ -82,10 +86,8 @@ Route::get("/products-all", [buyerController::class, "getAllProducts"]);
 Route::get("/product/single/{productId}", [buyerController::class, "getProduct"]);
 // @desc Get product Ratings
 Route::get("/product/{productId}/ratings", [buyerController::class, "getProductRatings"]);
-// @desc Get User wishlist
-Route::get("/user/product-wishlist", [buyerController::class, "getWishList"]);
-// @desc Add Product to guest or users wishlist
-Route::post("user/product/{productId}/add-wishlist", [buyerController::class, "addProductToWishlist"]);
+
+
 // @desc Remove Product from guest or users wishlist
 Route::delete("user/product/{productId}/remove-wishlist", [buyerController::class, "removeProductFromWishlist"]);
 

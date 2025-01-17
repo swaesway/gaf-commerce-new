@@ -27,7 +27,7 @@ const formPrices = ref([
 {isChecked: false, price: "500-600"}])
 
 const formCategories = ref([
-{isChecked: false, category: "All category"},
+{isChecked: false, category: "All"},
 {isChecked: false, category: "Uniforms"},
 {isChecked: false, category: "Clothes"} ,
 {isChecked: false, category: "Electronics"},
@@ -58,7 +58,7 @@ function addPriceRange(data){
   }
 
   // console.log(categories.value)
-  // console.log(prices.value)
+  console.log(prices.value)
   
   filterByPricesAndCategories({
     price_range: prices.value,
@@ -81,7 +81,7 @@ function addCategories(data){
  }else{
   categories.value.push(data.category);
  }
-//   console.log(categories.value)
+  console.log(categories.value)
 //  console.log(prices.value)
  filterByPricesAndCategories({
    price_range: prices.value,
@@ -100,7 +100,6 @@ function addCategories(data){
 }
 
 onMounted(() => {
-  
   prices.value = route.query.price_range
         ? Array.isArray(route.query.price_range)
           ? route.query.price_range
@@ -113,6 +112,12 @@ categories.value = route.query.categories
           ? route.query.categories
           : [route.query.categories]
         : [];
+
+        filterByPricesAndCategories({
+         price_range: prices.value,
+         categories: categories.value
+       });
+
     });
 
 
@@ -274,7 +279,7 @@ categories.value = route.query.categories
 
         <!-- Shop Product Start -->
         <div class="col-lg-9 col-md-8">
-          <div class="row pb-3">
+          <div class=""> <!-- edited, causing content shrinking   -->
             <div class="col-12 pb-1">
               <div
                 class="d-flex align-items-center justify-content-between mb-4"
@@ -322,7 +327,7 @@ categories.value = route.query.categories
 
         <div v-if="!product.isLoading" class="row px-xl-5">
         <ProductCard
-          v-for="product in product.filteredProduct" :key="product.id"
+          v-for="(product, index) in product.filteredProduct" :key="index"
           :id="product.id"
           :name="product.title"
           :image="`http://127.0.0.1:8000/api/product/preview-image?image=${product.images[0].image}`"
@@ -330,14 +335,14 @@ categories.value = route.query.categories
           :reviews="99"
         />
       </div>
-      <div v-else class="" style="margin:0 auto;">
+      <div v-else class="row justify-content-center" style="margin:0 auto;">
         <FadeLoader :loading="true" :color="'rgb(204 208 207)'" />
         <span>loading ... </span>
 
       </div>
             
 
-            <div v-if="!product.isLoading" class="col-12">
+            <!-- <div v-if="!product.isLoading" class="col-12">
               <nav>
                 <ul class="pagination justify-content-center">
                   <li class="page-item disabled">
@@ -353,7 +358,7 @@ categories.value = route.query.categories
                   </li>
                 </ul>
               </nav>
-            </div>
+            </div> -->
           </div>
         </div>
         <!-- Shop Product End -->

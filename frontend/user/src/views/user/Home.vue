@@ -245,7 +245,7 @@ const { product } = productStore();
       <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
         <span class="bg-secondary pr-3">Recent Products</span>
       </h2>
-      <div class="row px-xl-5">
+      <!-- <div class="row px-xl-5"> -->
        
         <div v-if="!product.isLoading" class="row px-xl-5">
         <ProductCard
@@ -263,7 +263,7 @@ const { product } = productStore();
 
       </div>
        
-      </div>
+      <!-- </div> -->
     </div>
     <!-- Products End -->
 

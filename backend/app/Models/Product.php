@@ -60,6 +60,20 @@ class Product extends Model
 
     public function scopeFilterByPriceAndCategory($query, array $prices = [], array $categories = [])
     {
+
+
+        foreach ($prices as $price) {
+            if ($price === "All") {
+                return $query->where("price", ">", 0);
+            }
+        }
+
+        foreach ($categories as $category) {
+            if ($category === "All") {
+                return $query->where("price", ">", 0);
+            }
+        }
+
         if (!empty($categories)) {
             $query->whereIn('category', $categories);
         }

@@ -12,6 +12,7 @@ const form = reactive({
   toke: ""
 });
 
+
 function verifyToken(){
   const { token } = form;
   verifyTokenFn({token}, router);

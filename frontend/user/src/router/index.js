@@ -58,7 +58,7 @@ const routes = [
     name: "Login",
     component: Login,
     beforeEnter: (to, from, next) => {
-      const { user } = userStore(pinia);
+      const { user } = userStore();
 
       if (to.path === "/login" && user.isAuthenticated) {
         return next({ name: "Home" });
@@ -72,7 +72,7 @@ const routes = [
     name: "verify",
     component: Verify,
     beforeEnter: (to, from, next) => {
-      const { user } = userStore(pinia);
+      const { user } = userStore();
 
       if (to.path === "/verify" && user.isAuthenticated) {
         return next({ name: "Home" });
@@ -89,9 +89,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const { user } = userStore(pinia);
+  const { user } = userStore();
+
   if (to.path !== "/login" && to.path !== "/verify" && !user.isAuthenticated) {
-    return next({ name: "Login" });
+    return next({ name: "Login" || "verify" });
   }
   next();
 });
