@@ -45,13 +45,13 @@ function loginUser() {
                     Login to Your Account
                   </h5>
                   <p class="text-center small">
-                    Enter your servicenumber & phonenumber to login
+                    Enter your service number & phone number to login
                   </p>
                 </div>
 
                 <form class="row g-3 needs-validation" @submit.prevent="loginUser">
                   <div class="col-12">
-                    <label for="yourServicenumber" class="form-label">Sevicenumber</label>
+                    <label for="yourServicenumber" class="form-label">Sevice number</label>
                     <div class="input-group has-validation">
                       <input
                        v-model="form.servicenumber"
@@ -66,7 +66,7 @@ function loginUser() {
 
                   <div class="col-12">
                     <label for="yourPhonenumber" class="form-label"
-                      >Phonenumber</label
+                      >Phone number</label
                     >
                     <input
                     v-model="form.telephone"
