@@ -257,7 +257,7 @@ const { product } = productStore();
           :reviews="99"
         />
       </div>
-      <div v-else class="" style="margin:0 auto;">
+      <div v-else class="row px-xl-5 justify-content-center" style="margin:0 auto;">
         <FadeLoader :loading="true" :color="'rgb(204 208 207)'" />
         <span>loading ... </span>
 
