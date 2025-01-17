@@ -1,11 +1,8 @@
 <script setup>
-
-import { userStore } from '@/stores/user';
+import { userStore } from "@/stores/user";
 
 const { user } = userStore();
-
 </script>
-
 
 <template>
   <div>
@@ -15,12 +12,7 @@ const { user } = userStore();
       >
         <div class="col-lg-4">
           <a href="/" class="text-decoration-none poppins-bold text-green">
-            <!-- <span class="h1 text-uppercase text-primary bg-green px-2">GAF</span>
-            <span class="h1 text-uppercase text-green bg-primary px-2 ml-n1"
-              >MARKET</span
-            > -->
-
-            GAF MARKET
+            <img src="/assets/img/logo.png" alt="logo" class="logo" />
           </a>
         </div>
         <div class="col-lg-4 col-6 text-left">
@@ -56,14 +48,21 @@ const { user } = userStore();
             >
               My Account
             </button>
-            <div v-if="user.isAuthenticated" class="dropdown-menu dropdown-menu-right">
+            <div
+              v-if="user.isAuthenticated"
+              class="dropdown-menu dropdown-menu-right"
+            >
               <RouterLink to="/login"
-                ><button class="dropdown-item" type="button">Sign out</button></RouterLink
+                ><button class="dropdown-item" type="button">
+                  Sign out
+                </button></RouterLink
               >
             </div>
             <div v-else class="dropdown-menu dropdown-menu-right">
               <RouterLink href="/login"
-                ><button class="dropdown-item" type="button">Sign in</button></RouterLink
+                ><button class="dropdown-item" type="button">
+                  Sign in
+                </button></RouterLink
               >
             </div>
           </div>
@@ -122,29 +121,42 @@ const { user } = userStore();
           <nav
             class="navbar navbar-expand-lg bg-green navbar-dark py-3 py-lg-0 px-0"
           >
-            <a href="" class="text-decoration-none d-block d-lg-none">
-              <span class="h1 text-uppercase text-dark bg-light px-2">GAF</span>
-              <span class="h1 text-uppercase text-light bg-primary px-2 ml-n1"
-                >Market</span
+            <div class="d-flex">
+              <a href="" class="d-block d-lg-none">
+                <img
+                  src="/assets/img/m-logo.png"
+                  alt="gaf logo"
+                  class="logo d-inline"
+                />
+              </a>
+              <button
+                type="button"
+                class="navbar-toggler"
+                data-toggle="collapse"
+                data-target="#navbarCollapse"
               >
-            </a>
-            <button
-              type="button"
-              class="navbar-toggler"
-              data-toggle="collapse"
-              data-target="#navbarCollapse"
-            >
-              <span class="navbar-toggler-icon"></span>
-            </button>
+                <span class="navbar-toggler-icon"></span>
+              </button>
+            </div>
             <div
               class="collapse navbar-collapse justify-content-between"
               id="navbarCollapse"
             >
-              <div class="navbar-nav mr-auto py-0">
-                <RouterLink to="/" class="nav-item nav-link active">Home</RouterLink>
-                <RouterLink to="/shop?price_range=All&categories=All" class="nav-item nav-link">Products</RouterLink>
-                <RouterLink to="/wishlist" class="nav-item nav-link">Wishlist</RouterLink>
-                <RouterLink to="/contact" class="nav-item nav-link">Contact</RouterLink>
+              <div class="navbar-nav mr-auto py-0 mt-3">
+                <RouterLink to="/" class="nav-item nav-link active"
+                  >Home</RouterLink
+                >
+                <RouterLink
+                  to="/shop?price_range=All&categories=All"
+                  class="nav-item nav-link"
+                  >Products</RouterLink
+                >
+                <RouterLink to="/wishlist" class="nav-item nav-link"
+                  >Wishlist</RouterLink
+                >
+                <RouterLink to="/contact" class="nav-item nav-link"
+                  >Contact</RouterLink
+                >
               </div>
               <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
                 <RouterLink to="/wishlist" class="btn px-0">
@@ -177,15 +189,13 @@ const { user } = userStore();
   background-color: #318e2b !important;
 }
 
-.text-green {
-  color: #318e2b !important;
+.logo {
+  width: 75% !important;
+  height: auto !important;
 }
 
-.poppins-bold {
-  font-family: "Poppins", serif;
-  font-size: 2.5rem;
-  font-weight: 700;
-  font-style: normal;
+.text-green {
+  color: #318e2b !important;
 }
 
 .input-group {
