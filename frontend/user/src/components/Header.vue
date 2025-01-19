@@ -1,7 +1,7 @@
 <script setup>
 import { productStore } from '@/stores/product';
 import { userStore } from '@/stores/user';
-import { onMounted, reactive } from 'vue';
+import {  reactive } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
