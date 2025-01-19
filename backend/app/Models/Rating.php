@@ -12,4 +12,20 @@ class Rating extends Model
         "rating",
         "comment"
     ];
+
+    protected $hidden = [
+        "servicenumber",
+        "product_id",
+        "updated_at"
+    ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function serviceinfos()
+    {
+        return $this->hasOne(Serviceinfo::class, "id", "servicenumber");
+    }
 }

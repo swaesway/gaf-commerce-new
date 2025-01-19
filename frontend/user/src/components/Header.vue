@@ -1,8 +1,45 @@
 <script setup>
 
+import { productStore } from '@/stores/product';
 import { userStore } from '@/stores/user';
+import { onMounted, reactive } from 'vue';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 
-const { user } = userStore();
+
+const route = useRoute();
+const router = useRouter();
+
+const { product, searchProduct } = productStore();
+const { user, logOut } = userStore();
+
+const form = reactive({
+  search: ""
+})
+
+
+// console.log(user.wishList)
+
+function logOutFn(){
+  logOut(router);
+}
+
+function searchBtnTriggered(){
+  router.replace("/Shop?search=true?q=null");
+}
+
+function searchFn(){
+
+  searchProduct({search: form.search});
+
+  router.push({
+    name: "Shop",
+    query: {search: true, q: form.search}
+  });
+
+}
+
+
+
 
 </script>
 
@@ -24,9 +61,10 @@ const { user } = userStore();
           </a>
         </div>
         <div class="col-lg-4 col-6 text-left">
-          <form action="">
+         
             <div class="input-group" style="width: 150%">
               <input
+              v-model="form.search"
                 type="text"
                 class="form-control rounded-pill"
                 placeholder="Search for products"
@@ -36,6 +74,8 @@ const { user } = userStore();
                   padding-right: 40px;
                   width: 100%;
                 "
+                @click="searchBtnTriggered"
+                @keyup="searchFn"
               />
               <div class="input-group-append">
                 <span
@@ -45,7 +85,7 @@ const { user } = userStore();
                 </span>
               </div>
             </div>
-          </form>
+         
         </div>
         <div class="col-lg-4 col-6 text-right">
           <div class="btn-group">
@@ -58,7 +98,7 @@ const { user } = userStore();
             </button>
             <div v-if="user.isAuthenticated" class="dropdown-menu dropdown-menu-right">
               <RouterLink to="/login"
-                ><button class="dropdown-item" type="button">Sign out</button></RouterLink
+                ><button @click="logOutFn" class="dropdown-item" type="button">Sign out</button></RouterLink
               >
             </div>
             <div v-else class="dropdown-menu dropdown-menu-right">
@@ -93,7 +133,11 @@ const { user } = userStore();
             style="width: calc(100% - 30px); z-index: 999"
           >
             <div class="navbar-nav w-100">
-              <div class="nav-item dropdown dropright">
+              <div v-if="route.path === '/shop'">
+
+              </div>
+              <div v-else>
+                <div class="nav-item dropdown dropright">
                 <a
                   href="/shop"
                   class="nav-link dropdown-toggle"
@@ -108,14 +152,15 @@ const { user } = userStore();
                   <a href="/shop" class="dropdown-item">Air Forces</a>
                 </div>
               </div>
-              <a href="" class="nav-item nav-link">Clothes</a>
-              <a href="" class="nav-item nav-link">Electronics</a>
-              <a href="" class="nav-item nav-link">Cosmetics</a>
-              <a href="" class="nav-item nav-link">Footwear</a>
-              <a href="" class="nav-item nav-link">Headgear</a>
-              <a href="" class="nav-item nav-link">Books & Stationery</a>
-              <a href="" class="nav-item nav-link">Food & Beverages</a>
-            </div>
+              <RouterLink to="/shop?categories=Clothes" class="nav-item nav-link">Clothes</RouterLink>
+              <RouterLink to="/shop?categories=Electronics" class="nav-item nav-link">Electronics</RouterLink>
+              <RouterLink to="/shop?categories=Cosmetics" class="nav-item nav-link">Cosmetics</RouterLink>
+              <RouterLink to="/shop?categories=Footwear" class="nav-item nav-link">Footwear</RouterLink>
+              <RouterLink to="/shop?categories=Headgear" class="nav-item nav-link">Headgear</RouterLink>
+              <RouterLink to="/shop?categories=Books and Stationary" class="nav-item nav-link">Books & Stationary</RouterLink>
+              <RouterLink to="/shop?categories=Food and Beverages" class="nav-item nav-link">Food & Beverages</RouterLink>
+              </div>
+          </div>
           </nav>
         </div>
         <div class="col-lg-9">
@@ -143,7 +188,7 @@ const { user } = userStore();
               <div class="navbar-nav mr-auto py-0">
                 <RouterLink to="/" class="nav-item nav-link active">Home</RouterLink>
                 <RouterLink to="/shop?price_range=All&categories=All" class="nav-item nav-link">Products</RouterLink>
-                <RouterLink to="/wishlist" class="nav-item nav-link">Wishlist</RouterLink>
+                <RouterLink to="/wishlist?categories=All" class="nav-item nav-link">Wishlist</RouterLink>
                 <RouterLink to="/contact" class="nav-item nav-link">Contact</RouterLink>
               </div>
               <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
@@ -152,7 +197,7 @@ const { user } = userStore();
                   <span
                     class="badge text-secondary border border-secondary rounded-circle"
                     style="padding-bottom: 2px"
-                    >0</span
+                    >{{ user.wishList.length }}</span
                   >
                 </RouterLink>
                 <RouterLink to="/chat" class="btn px-0 ml-3">

@@ -2,13 +2,13 @@
 import ProductCard from "@/components/ProductCard.vue";
 
 import { productStore } from "@/stores/product";
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, onUnmounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import FadeLoader  from 'vue-spinner/src/FadeLoader.vue'
 
 
-const { product, filterByPricesAndCategories } = productStore();
+const { product, filterByPricesAndCategories, searchProduct } = productStore();
 
 const route = useRoute();
 const router = useRouter();
@@ -34,8 +34,8 @@ const formCategories = ref([
 {isChecked: false, category: "Cosmetics"},
 {isChecked: false, category: "Footwear"},
 {isChecked: false, category: "Headgear"},
-{isChecked: false, category: "Books & Stationary"},
-{isChecked: false, category: "Food & Beverages"}]);
+{isChecked: false, category: "Books and Stationary"},
+{isChecked: false, category: "Food and Beverages"}]);
 
 
 const prices = ref([]);
@@ -63,7 +63,7 @@ function addPriceRange(data){
   filterByPricesAndCategories({
     price_range: prices.value,
     categories: categories.value
-  });
+  }, router);
 
   router.push({
     name: "Shop",
@@ -86,7 +86,7 @@ function addCategories(data){
  filterByPricesAndCategories({
    price_range: prices.value,
    categories: categories.value
- });
+ }, router);
  
 
 
@@ -99,8 +99,13 @@ function addCategories(data){
 
 }
 
+
+// let interval;
+
+
 onMounted(() => {
-  prices.value = route.query.price_range
+
+prices.value = route.query.price_range
         ? Array.isArray(route.query.price_range)
           ? route.query.price_range
           : [route.query.price_range]
@@ -113,12 +118,27 @@ categories.value = route.query.categories
           : [route.query.categories]
         : [];
 
+        if(route.query.q){
+          searchProduct({search: route.query.q})
+        }
+        
         filterByPricesAndCategories({
          price_range: prices.value,
          categories: categories.value
-       });
+       }, router);
+
+      //  interval = setInterval(() => {
+      //   filterByPricesAndCategories({
+      //    price_range: prices.value,
+      //    categories: categories.value
+      //  });
+      //  }, 5000);
 
     });
+
+  // onUnmounted(() => {
+  //   clearInterval(interval);
+  // })
 
 
 
@@ -131,7 +151,7 @@ categories.value = route.query.categories
       <div class="row px-xl-5">
         <div class="col-12">
           <nav class="breadcrumb bg-light mb-30">
-            <a class="breadcrumb-item text-dark" href="/">Home</a>
+            <RouterLink class="breadcrumb-item text-dark" to="/">Home</RouterLink>
             <span class="breadcrumb-item active">Products</span>
           </nav>
         </div>
@@ -187,9 +207,7 @@ categories.value = route.query.categories
                   @click="addCategories(data)"
                 />
                 <label class="custom-control-label" :for="data.category"
-                  >{{data.category}}</label
-                 
-                >
+                  >{{data.category}}</label>
                 <span class="badge border font-weight-normal">1000</span>
               </div>
               
