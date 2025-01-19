@@ -355,21 +355,15 @@ class vendorController extends Controller
     }
     public function searchByProduct(Request $request)
     {
-        $validate = Validator::make($request->all(), [
-            'search' => 'required|string',
-        ]);
+        $products = Product::with("images")->get();
 
-        if ($validate->fails()) {
-            return response()->json($validate->errors(), 400);
+        if ($request->search == "") {
+            return response()->json($products, 200);
         }
 
-        $products = Product::searchItem($request->search)->get();
+        $products = Product::with("images")->searchItem($request->search)->get();
 
-        if ($products->isEmpty()) {
-            return response()->json(["message" => "No Product found for this search $request->search "], 404);
-        }
-
-        return response()->json(["products" => $products]);
+        return response()->json($products, 200);
     }
 
     public function searchProductByCategory(Request $request)

@@ -36,6 +36,11 @@ class Product extends Model
 
     public function scopeSearchCategory($query, array $categories)
     {
+        foreach ($categories as $category) {
+            if ($category === "All") {
+                return $query->where("price", ">", 0);
+            }
+        }
 
         return $query->whereIn("category", $categories);
     }

@@ -1,27 +1,67 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
 
+import FadeLoader  from 'vue-spinner/src/FadeLoader.vue'
+
 import { productStore } from '@/stores/product';
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, onMounted, reactive, ref } from 'vue';
 import { userStore } from '@/stores/user';
 
 const route = useRoute();
 const router = useRouter();
-const { product, getProductById } = productStore();
-const { addProductToWishlist } = userStore();
+const { product, getProductById, getProductReviews } = productStore();
+const { addProductToWishlist, getWishlist, rateProduct } = userStore();
 
+const totalStars = ref(5);
+const currentRating = ref(0)
+const hoverRating = ref(0);
+const showRatingText = ref(false)
+
+const form = reactive({
+  rating: hoverRating.value,
+  comment: ""
+})
+
+  function hoverStar(star) {
+      hoverRating.value = star;
+  }
+
+  function resetHover() {
+      hoverRating.value = 0;
+    }
+
+    function rates(star) {
+      currentRating.value = star;
+      showRatingText.value = true;
+    }
 
 function addToWishlist(){
   addProductToWishlist(route.params?.id, router);
+  getWishlist();
 }
 
+function rateProductFn(){
+   rateProduct(route.params?.id, {rating: currentRating.value, comment: form.comment }, router);
+   getProductReviews(route.params?.id);
+   getProductReviews(route.params?.id);
+   form.comment = "";
+}
 
-onBeforeMount(() => {
+onMounted(() => {
+  getProductReviews(route.params?.id);
+})
+
+onMounted(() => {
+  getWishlist();
   getProductById(route.params.id);
+  
 })
 
 
+
 </script>
+
+
 
 <template lang="">
   <div>
@@ -30,7 +70,7 @@ onBeforeMount(() => {
       <div class="row px-xl-5">
         <div class="col-12">
           <nav class="breadcrumb bg-light mb-30">
-            <RouterLink class="breadcrumb-item text-dark" href="#">Home</RouterLink>
+            <RouterLink class="breadcrumb-item text-dark" to="/">Home</RouterLink>
             <RouterLink class="breadcrumb-item text-dark" to="/shop?price_range=All&categories=All">Shop</RouterLink>
             <span class="breadcrumb-item active">Shop Detail</span>
           </nav>
@@ -39,8 +79,12 @@ onBeforeMount(() => {
     </div>
     <!-- Breadcrumb End -->
 
-    <!-- Shop Detail Start -->
-    <div class="container-fluid pb-5">
+   <div v-if="product.isLoading" class="row justify-content-center">
+    <FadeLoader :loading="true" :color="'rgb(204 208 207)'" />
+    <span>loading ... </span>
+   </div>
+       <!-- Shop Detail Start -->
+  <div v-else class="container-fluid pb-5">
       <div class="row px-xl-5">
         <div class="col-lg-5 mb-30">
           <div
@@ -141,7 +185,7 @@ onBeforeMount(() => {
                 class="nav-item nav-link text-dark"
                 data-toggle="tab"
                 href="#tab-pane-3"
-                >Reviews (0)</a
+                >Reviews ({{product.productRatings.length}})</a
               >
             </div>
             <div class="tab-content">
@@ -209,68 +253,73 @@ onBeforeMount(() => {
               </div>
               <div class="tab-pane fade" id="tab-pane-3">
                 <div class="row">
-                  <div class="col-md-6">
-                    <h4 class="mb-4">1 review for "Product Name"</h4>
-                    <div class="media mb-4">
-                      <img
-                        src="/assets/img/user.jpg"
-                        alt="Image"
-                        class="img-fluid mr-3 mt-1"
-                        style="width: 45px"
-                      />
-                      <div class="media-body">
+                  
+                  <div class="col-md-6" >
+                   <h4 class="mb-4">{{product.productRatings.length}} review for "{{product.productRatings[0]?.product.title || product.singleProduct.title}}"</h4>
+                    <div v-for="rating in product.productRatings" class="media mb-2">
+                      <i class="fa fa-user" style="font-size:20px"></i>
+                      <div class="media-body" style="margin-left:5px">
                         <h6>
-                          John Doe<small> - <i>01 Jan 2045</i></small>
+                          {{rating.serviceinfos.name}}<small> - <i>{{rating.created_at}}</i></small>
                         </h6>
-                        <div class="text-primary mb-2">
+                        <div v-if="rating.rating === 1" class="text-primary mb-2">
+                          <i class="fas fa-star"></i>
+                        </div>
+                        <div v-if="rating.rating === 2" class="text-primary mb-2">
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div v-if="rating.rating === 3" class="text-primary mb-2">
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div v-if="rating.rating === 4" class="text-primary mb-2">
                           <i class="fas fa-star"></i>
                           <i class="fas fa-star"></i>
                           <i class="fas fa-star"></i>
                           <i class="fas fa-star-half-alt"></i>
-                          <i class="far fa-star"></i>
+                        </div>
+                        <div v-if="rating.rating === 5" class="text-primary mb-2">
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star-half-alt"></i>
                         </div>
                         <p>
-                          Diam amet duo labore stet elitr ea clita ipsum, tempor
-                          labore accusam ipsum et no at. Kasd diam tempor rebum
-                          magna dolores sed sed eirmod ipsum.
+                          {{rating.comment}}
                         </p>
                       </div>
                     </div>
                   </div>
+
+
                   <div class="col-md-6">
                     <h4 class="mb-4">Leave a review</h4>
-                    <small
-                      >Your email address will not be published. Required fields
-                      are marked *</small
-                    >
-                    <div class="d-flex my-3">
-                      <p class="mb-0 mr-2">Your Rating * :</p>
-                      <div class="text-primary">
-                        <i class="far fa-star"></i>
-                        <i class="far fa-star"></i>
-                        <i class="far fa-star"></i>
-                        <i class="far fa-star"></i>
-                        <i class="far fa-star"></i>
+                    <div class="rating-system">
+                      <div class="stars">
+                          <i v-for="star in totalStars" :key="star" class="fa fa-star"
+                             :class="star <= currentRating ? 'fa-star text-warning' : 'fa-star-o text-muted'"
+                             @mouseover="hoverStar(star)"
+                             @mouseleave="resetHover"
+                             @click="rates(star)"
+                          ></i>
+                        </div>
+                       <p v-if="showRatingText"> {{ currentRating }} out of {{ totalStars }}</p>
                       </div>
-                    </div>
-                    <form>
+                    <form @submit.prevent="rateProductFn">
                       <div class="form-group">
                         <label for="message">Your Review *</label>
                         <textarea
+                        v-model="form.comment"
                           id="message"
                           cols="30"
                           rows="5"
                           class="form-control"
                         ></textarea>
                       </div>
-                      <div class="form-group">
-                        <label for="name">Your Name *</label>
-                        <input type="text" class="form-control" id="name" />
-                      </div>
-                      <div class="form-group">
-                        <label for="email">Your Email *</label>
-                        <input type="email" class="form-control" id="email" />
-                      </div>
+                      
                       <div class="form-group mb-0">
                         <input
                           type="submit"

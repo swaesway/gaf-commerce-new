@@ -116,6 +116,8 @@ class buyerController extends Controller
         return response()->json($products, 200);
     }
 
+
+
     public function getFilteredProducts(Request $request)
     {
         if ($request->price_range || $request->categories) {
@@ -130,7 +132,7 @@ class buyerController extends Controller
         }
     }
 
-    public function getWishList()
+    public function getWishList(Request $request)
     {
         // $session = new Session();
         // $session->start();
@@ -167,12 +169,17 @@ class buyerController extends Controller
 
         $wishList =  Serviceinfo::find(Auth::id())->wishlist;
 
-        $product = Product::wishListProduct($wishList)->get();
+        if ($wishList->isEmpty()) {
+            return response()->json($wishList, 200);
+        }
+
+        $product = Product::with("images")->wishListProduct($wishList)->get();
+
+
 
         if ($product->isEmpty()) {
             return response()->json(["error" => "Product not found"], 400);
         }
-
 
         return response()->json($product, 200);
     }
@@ -184,15 +191,13 @@ class buyerController extends Controller
             return response()->json(['message' => 'Product ID is required.'], 400);
         }
 
-        $product = Product::find($productId)->ratings;
+        $product = Rating::with("product", "serviceinfos")->where('product_id', $productId)->get();
 
         if (!$product) {
             return response()->json(['message' => 'No ratings found for this product.'], 404);
         }
 
-        return response()->json([
-            "ratings" => $product
-        ], 200);
+        return response()->json($product, 200);
     }
 
     public function addProductToWishlist(Request $request, $productId)
@@ -300,16 +305,16 @@ class buyerController extends Controller
         // $session = new Session();
         // $session->start();
 
-        $validate = Validator::make($request->all(), [
-            'servicenumber' => 'required|size:6',
-        ]);
+        // $validate = Validator::make($request->all(), [
+        //     'servicenumber' => 'required|size:6',
+        // ]);
 
-        if ($validate->fails()) {
-            return response()->json(
-                $validate->errors(),
-                400
-            );
-        }
+        // if ($validate->fails()) {
+        //     return response()->json(
+        //         $validate->errors(),
+        //         400
+        //     );
+        // }
 
         if (empty($productId)) {
             return response()->json("Product ID required", 400);
@@ -347,7 +352,7 @@ class buyerController extends Controller
 
         // return response()->json($session->get("wishList"), 200);
 
-        $foundWishList = Wishlist::where("servicenumber", $request->serviceNumber)
+        $foundWishList = Wishlist::where("servicenumber", Auth::id())
             ->where("product_id", $product->id)
             ->first();
 
@@ -365,8 +370,12 @@ class buyerController extends Controller
         // $session = new Session();
         // $session->start();
 
+        if (empty($productId)) {
+            return response()->json(["message" => "Product ID is required."], 400);
+        }
+
         $validate = Validator::make($request->all(), [
-            'servicenumber' => 'required|size:6',
+            // 'servicenumber' => 'required|size:6',
             'rating' => 'required|numeric|between:1,5',
             "comment" => "required|string"
         ]);
@@ -382,29 +391,34 @@ class buyerController extends Controller
             return response()->json(["error" => "Product not found"], 404);
         }
 
-        $foundRatedUser = Rating::where("servicenumber", $request->serviceNumber)
+        $foundRatedUser = Rating::where("servicenumber", Auth::id())
             ->where("product_id", $product->id)
             ->first();
 
         if ($foundRatedUser) {
-            return response()->json(["error" => "You have already rated this product"], 400);
+            return response()->json(["message" => "You have already rated this product"], 400);
         }
 
-
+        // return "jshhs";
 
         $rateProduct = new Rating();
 
-        $rateProduct->servicenumber = $request->serviceNumber;
+
+
+        $rateProduct->servicenumber = Auth::id();
         $rateProduct->product_id = $product->id;
         $rateProduct->rating = $request->rating;
         $rateProduct->comment = $request->comment;
 
+
         $saveRatedProduct = $rateProduct->save();
 
         if (!$saveRatedProduct) {
-            return response()->json(["error" => "Failed to rate the product"], 500);
+            return response()->json(["message" => "Failed to rate the product"], 500);
         }
 
-        return response()->json(["message" => "Product rated successfully"], 200);
+        return response()->json(["message" => "Product rated successfully"], 201);
     }
+
+    public function requestCallback() {}
 }

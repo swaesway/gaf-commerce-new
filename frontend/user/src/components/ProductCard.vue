@@ -28,10 +28,11 @@ defineProps({
 
 
 const router = useRouter();
-const { addProductToWishlist } = userStore();
+const { addProductToWishlist, getWishlist } = userStore();
 
 function addToWishlist(id){
   addProductToWishlist(id, router);
+  getWishlist();
 }
 
 </script>

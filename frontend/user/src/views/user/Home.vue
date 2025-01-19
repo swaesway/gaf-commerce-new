@@ -2,6 +2,8 @@
 import CategoryCard from "@/components/CategoryCard.vue";
 import ProductCard from "@/components/ProductCard.vue";
 import { productStore } from "@/stores/product";
+import { userStore } from "@/stores/user";
+import { onMounted, onUnmounted } from "vue";
 
 import FadeLoader  from 'vue-spinner/src/FadeLoader.vue'
 
@@ -16,6 +18,20 @@ import FadeLoader  from 'vue-spinner/src/FadeLoader.vue'
 // };
 
 const { product } = productStore();
+const { getWishlist } = userStore();
+
+// let interval;
+
+onMounted(() => {
+ getWishlist();
+//  interval = setInterval(() => {
+//   getWishlist();
+//   }, 100)
+})
+
+// onUnmounted(() => {
+//   clearInterval(interval)
+// });
 
 
 </script>
@@ -171,15 +187,16 @@ const { product } = productStore();
       <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
         <span class="bg-secondary pr-3">Categories</span>
       </h2>
+
       <div class="row px-xl-5 pb-3">
-        <CategoryCard name="Uniform" image="../assets/img/uniform-1.jpeg" />
+        <CategoryCard name="Uniforms" image="../assets/img/uniform-1.jpeg" />
         <CategoryCard name="Clothes" image="../assets/img/clothes.jpg" />
         <CategoryCard name="Electronics" image="../assets/img/cat-2.jpg" />
         <CategoryCard name="Cosmetics" image="../assets/img/cat-4.jpg" />
         <CategoryCard name="Footwear" image="../assets/img/cat-3.jpg" />
         <CategoryCard name="Headgear" image="../assets/img/headgear.jpg" />
-        <CategoryCard name="Books & Stationery" image="../assets/img/books.jpg" />
-        <CategoryCard name="Food & Beverages" image="../assets/img/drinks.png" />
+        <CategoryCard name="Books and Stationary" image="../assets/img/books.jpg" />
+        <CategoryCard name="Food and Beverages" image="../assets/img/drinks.png" />
       </div>
     </div>
     <!-- Categories End -->

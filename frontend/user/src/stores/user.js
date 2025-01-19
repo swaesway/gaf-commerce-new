@@ -103,16 +103,49 @@ export const userStore = defineStore("user", () => {
     }
   }
 
+  async function logOut(router) {
+    try {
+      const response = await axiosPrivate.post("/user/logout");
+
+      if (response.data && response.status === 200) {
+        user.isAuthenticated = false;
+        Cookies.remove("token_u", {
+          expires: 2 * 60 * 1000,
+          path: "/",
+          secure: true,
+          sameSite: "Strict",
+        });
+        toast.success(response?.data?.message);
+        router.push({ name: "Login" });
+      }
+    } catch (err) {
+      if (err?.response?.status === 401) {
+        router.push({ name: "Login" });
+        return;
+      }
+      if (!err?.response?.status) {
+        return err?.message;
+      } else {
+        return "Internal Server Error";
+      }
+    }
+  }
+
   async function getWishlist(router) {
     try {
       const response = await axiosPrivate.get("/user/product-wishlist");
       if (response.data && response.status === 200) {
         user.isLoading = false;
         user.wishList = response.data;
-        console.log(response.data);
+        // console.log(response.data);
       }
       // return response.data;
     } catch (err) {
+      if (err?.response?.status === 401) {
+        user.isAuthenticated = false;
+        router.push({ name: "Login" });
+        return;
+      }
       if (!err?.response?.status) {
         return err?.message;
       } else {
@@ -128,12 +161,20 @@ export const userStore = defineStore("user", () => {
       );
 
       if (response.data && response.status === 201) {
+        getWishlist(router);
         toast.success(response.data);
       }
 
       return;
     } catch (err) {
       if (err?.response?.status === 401) {
+        user.isAuthenticated = false;
+        Cookies.remove("token_u", {
+          expires: 2 * 60 * 1000,
+          path: "/",
+          secure: true,
+          sameSite: "Strict",
+        });
         router.push({ name: "Login" });
         return;
       }
@@ -145,7 +186,86 @@ export const userStore = defineStore("user", () => {
       } else if (err?.response?.status === 404) {
         toast.error(err?.response?.data.message);
       } else {
-        toast.error("Internal Server Error");
+        return "Internal Server Error";
+      }
+    }
+  }
+
+  async function deleteProductFromWishlist(productId, router) {
+    try {
+      const response = await axiosPrivate.delete(
+        `/user/product/${productId}/remove-wishlist`
+      );
+
+      if (response.data && response.status === 200) {
+        user.wishList = user.wishList.filter(
+          (product) => product.id !== productId
+        );
+        toast.success(response.data?.message);
+      }
+
+      return;
+    } catch (err) {
+      if (err?.response?.status === 401) {
+        user.isAuthenticated = false;
+        Cookies.remove("token_u", {
+          expires: 2 * 60 * 1000,
+          path: "/",
+          secure: true,
+          sameSite: "Strict",
+        });
+        router.push({ name: "Login" });
+        return;
+      }
+
+      if (!err?.response?.status) {
+        return err?.message;
+      } else if (err?.response?.status === 400) {
+        return err?.message;
+      } else if (err?.response?.status === 404) {
+        toast.error(err?.response?.data?.message);
+      } else {
+        return "Internal Error";
+      }
+    }
+  }
+
+  async function rateProduct(productId, data, router) {
+    try {
+      const response = await axiosPrivate.post(
+        `/user/product/${productId}/rate`,
+        data
+      );
+
+      if (response.data && response.status === 201) {
+        toast.success(response?.data?.message);
+      }
+    } catch (err) {
+      if (err.response?.status === 401) {
+        user.isAuthenticated = false;
+        Cookies.remove("token_u", {
+          expires: 2 * 60 * 1000,
+          path: "/",
+          secure: true,
+          sameSite: "Strict",
+        });
+        router.push({ name: "Login" });
+        return;
+      }
+
+      if (!err?.response?.status) {
+        return err?.message;
+      } else if (err?.response?.status === 400) {
+        if (err?.response?.data?.message)
+          toast.error(err?.response?.data?.message);
+        if (err.response?.data?.rating)
+          toast.error(err.response?.data?.rating[0]);
+        if (err.response?.data?.comment)
+          toast.error(err.response?.data?.comment[0]);
+      } else if (err.response?.status === 404) {
+        toast.error(err.response?.data?.message);
+      } else {
+        return "Interal Server Error: " + err.response;
       }
     }
   }
@@ -154,7 +274,10 @@ export const userStore = defineStore("user", () => {
     user,
     loginFn,
     verifyTokenFn,
+    logOut,
     getWishlist,
     addProductToWishlist,
+    deleteProductFromWishlist,
+    rateProduct,
   };
 });
