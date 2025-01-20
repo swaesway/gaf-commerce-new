@@ -270,6 +270,74 @@ export const userStore = defineStore("user", () => {
     }
   }
 
+  async function requestCallback(productId) {
+    try {
+      const response = await axiosPrivate.post(
+        `/user/product/${productId}/request-callback`
+      );
+      if (
+        response.data &&
+        (response.status === 201 || response.status === 200)
+      ) {
+        if (response.data?.message) toast.success(response.data?.message);
+      }
+    } catch (err) {
+      if (err.response?.status === 401) {
+        user.isAuthenticated = false;
+        Cookies.remove("token_u", {
+          expires: 2 * 60 * 1000,
+          path: "/",
+          secure: true,
+          sameSite: "Strict",
+        });
+        router.push({ name: "Login" });
+        return;
+      }
+
+      if (!err?.response?.status) {
+        return err?.message;
+      } else if (err.response?.status === 400 || err.response?.status === 404) {
+        toast.success(err.response.data?.message);
+      } else {
+        return "Internal Server Error " + err.response;
+      }
+    }
+  }
+
+  async function reportProduct(productId) {
+    try {
+      const response = await axiosPrivate.post(
+        `/user/product/${productId}/report`
+      );
+      if (
+        response.data &&
+        (response.status === 201 || response.status === 200)
+      ) {
+        if (response.data?.message) toast.success(response.data?.message);
+      }
+    } catch (err) {
+      if (err.response?.status === 401) {
+        user.isAuthenticated = false;
+        Cookies.remove("token_u", {
+          expires: 2 * 60 * 1000,
+          path: "/",
+          secure: true,
+          sameSite: "Strict",
+        });
+        router.push({ name: "Login" });
+        return;
+      }
+
+      if (!err?.response?.status) {
+        return err?.message;
+      } else if (err.response?.status === 400 || err.response?.status === 404) {
+        toast.success(err.response.data?.message);
+      } else {
+        return "Internal Server Error " + err.response;
+      }
+    }
+  }
+
   return {
     user,
     loginFn,
@@ -279,5 +347,7 @@ export const userStore = defineStore("user", () => {
     addProductToWishlist,
     deleteProductFromWishlist,
     rateProduct,
+    requestCallback,
+    reportProduct,
   };
 });

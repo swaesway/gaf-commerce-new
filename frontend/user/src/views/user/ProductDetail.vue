@@ -10,12 +10,15 @@ import { userStore } from '@/stores/user';
 const route = useRoute();
 const router = useRouter();
 const { product, getProductById, getProductReviews } = productStore();
-const { addProductToWishlist, getWishlist, rateProduct } = userStore();
+const { addProductToWishlist, getWishlist, rateProduct, requestCallback, reportProduct } = userStore();
 
 const totalStars = ref(5);
 const currentRating = ref(0)
 const hoverRating = ref(0);
 const showRatingText = ref(false)
+
+const callbackText = ref("Request Callback");
+const reportText = ref("Report Content");
 
 const form = reactive({
   rating: hoverRating.value,
@@ -45,6 +48,16 @@ function rateProductFn(){
    getProductReviews(route.params?.id);
    getProductReviews(route.params?.id);
    form.comment = "";
+}
+
+function requestCallbackFn(){
+  requestCallback(route.params?.id);
+  callbackText.value = "Callback Request"
+}
+
+function reportProductFn(){
+  reportProduct(route.params?.id);
+  reportText.value = "Content Reported"
 }
 
 onMounted(() => {
@@ -138,15 +151,15 @@ onMounted(() => {
             <div class="d-flex mb-3"></div>
             <div class="d-flex mb-4"></div>
             <div class="d-flex align-items-center mb-4 pt-2">
-              <button class="btn bg-green px-3 mr-3 text-white">
-                <i class="fa fa-arrows-rotate mr-1"></i> Request Callback
+              <button @click="requestCallbackFn" class="btn bg-green px-3 mr-3 text-white">
+                <i class="fa fa-arrows-rotate mr-1"></i> {{ callbackText}}
               </button>
               <button @click="addToWishlist" class="btn bg-yellow px-3 mr-3 text-white">
                 <i class="fa fa-heart mr-1"></i> Add To Wishlist
               </button>
 
-              <button class="btn bg-red px-3 mr-3 text-white">
-                <i class="fa-solid fa-flag mr-1"></i>Report Content
+              <button @click="reportProductFn" class="btn bg-red px-3 mr-3 text-white">
+                <i class="fa-solid fa-flag mr-1"></i>{{reportText}}
               </button>
             </div>
             <div class="d-flex pt-2">
