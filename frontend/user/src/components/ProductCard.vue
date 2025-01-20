@@ -2,7 +2,7 @@
 
 import { userStore } from '@/stores/user';
 import { defineProps } from 'vue';
-import { useRouter } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
 
 defineProps({
     id: {
@@ -54,7 +54,7 @@ function addToWishlist(id){
         </div>
       </div>
       <div class="text-center py-4">
-        <a class="h6 text-decoration-none text-truncate" href="">{{ name }}</a>
+        <RouterLink class="h6 text-decoration-none text-truncate" :to="'/product-details/' + id ">{{ name }}</RouterLink>
         <div class="d-flex align-items-center justify-content-center mt-2">
           <h5>{{ price }}</h5>
           <!-- Uncomment and pass oldPrice prop for a discounted price -->

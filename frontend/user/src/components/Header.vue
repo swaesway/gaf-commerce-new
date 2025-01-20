@@ -1,8 +1,8 @@
 <script setup>
-import { productStore } from '@/stores/product';
-import { userStore } from '@/stores/user';
-import {  reactive } from 'vue';
-import { RouterLink, useRoute, useRouter } from 'vue-router';
+import { productStore } from "@/stores/product";
+import { userStore } from "@/stores/user";
+import { reactive } from "vue";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
@@ -11,7 +11,7 @@ const { product, searchProduct } = productStore();
 const { user, logOut } = userStore();
 
 const form = reactive({
-  search: ""
+  search: "",
 });
 
 function logOutFn() {
@@ -27,7 +27,7 @@ function searchFn() {
 
   router.push({
     name: "Shop",
-    query: { search: true, q: form.search }
+    query: { search: true, q: form.search },
   });
 }
 </script>
@@ -203,18 +203,36 @@ function searchFn() {
               id="navbarCollapse"
             >
               <div class="navbar-nav mr-auto py-0">
-                <RouterLink to="/" class="nav-item nav-link active">Home</RouterLink>
+                <!-- Active class will dynamically highlight the active link -->
+                <RouterLink
+                  to="/"
+                  class="nav-item nav-link"
+                  active-class="active"
+                  exact-active-class="active"
+                >
+                  Home
+                </RouterLink>
                 <RouterLink
                   to="/shop?price_range=All&categories=All"
                   class="nav-item nav-link"
-                  >Products</RouterLink
+                  active-class="active"
                 >
+                  Products
+                </RouterLink>
                 <RouterLink
                   to="/wishlist?categories=All"
                   class="nav-item nav-link"
-                  >Wishlist</RouterLink
+                  active-class="active"
                 >
-                <RouterLink to="/contact" class="nav-item nav-link">Contact</RouterLink>
+                  Wishlist
+                </RouterLink>
+                <RouterLink
+                  to="/contact"
+                  class="nav-item nav-link"
+                  active-class="active"
+                >
+                  Contact
+                </RouterLink>
               </div>
               <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
                 <RouterLink to="/wishlist" class="btn px-0">
