@@ -167,6 +167,11 @@ onMounted(async () => {
                   <h6 class="fw-bold mb-2">
                     Add up to 4 photos for this category
                   </h6>
+
+                  <p>
+                    First picture - is the title picture. You can change the
+                    order of photos: just grab your photos and drag
+                  </p>
                   <button
                     type="button"
                     class="btn btn-outline-success"
