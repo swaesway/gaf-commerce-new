@@ -10,12 +10,12 @@ export default {};
         <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
           <h5 class="text-secondary text-uppercase mb-4">Get In Touch</h5>
           <p class="mb-4">
-            No dolore ipsum accusam no lorem. Invidunt sed clita kasd clita et
-            et dolor sed dolor. Rebum tempor no vero est magna amet no
+            Stay connected with us! Have questions or need assistance? We’d love
+            to hear from you.
           </p>
           <p class="mb-2">
-            <i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street,
-            New York, USA
+            <i class="fa fa-map-marker-alt text-primary mr-3"></i>Burma Camp,
+            Accra
           </p>
           <p class="mb-2">
             <i class="fa fa-envelope text-primary mr-3"></i>info@example.com
@@ -27,25 +27,19 @@ export default {};
         <div class="col-lg-8 col-md-12">
           <div class="row">
             <div class="col-md-4 mb-5">
-              <h5 class="text-secondary text-uppercase mb-4">Quick Shop</h5>
+              <h5 class="text-secondary text-uppercase mb-4">GAF MARKET</h5>
               <div class="d-flex flex-column justify-content-start">
                 <a class="text-secondary mb-2" href="#"
                   ><i class="fa fa-angle-right mr-2"></i>Home</a
                 >
                 <a class="text-secondary mb-2" href="#"
-                  ><i class="fa fa-angle-right mr-2"></i>Our Shop</a
+                  ><i class="fa fa-angle-right mr-2"></i>Products</a
                 >
                 <a class="text-secondary mb-2" href="#"
-                  ><i class="fa fa-angle-right mr-2"></i>Shop Detail</a
+                  ><i class="fa fa-angle-right mr-2"></i>Wishlist</a
                 >
                 <a class="text-secondary mb-2" href="#"
-                  ><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a
-                >
-                <a class="text-secondary mb-2" href="#"
-                  ><i class="fa fa-angle-right mr-2"></i>Checkout</a
-                >
-                <a class="text-secondary" href="#"
-                  ><i class="fa fa-angle-right mr-2"></i>Contact Us</a
+                  ><i class="fa fa-angle-right mr-2"></i>Contact</a
                 >
               </div>
             </div>
@@ -74,7 +68,10 @@ export default {};
             </div>
             <div class="col-md-4 mb-5">
               <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
-              <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
+              <p>
+                Subscribe to our newsletter for the latest updates, exclusive
+                offers, and more delivered straight to your inbox!
+              </p>
               <form action="">
                 <div class="input-group">
                   <input
@@ -135,6 +132,4 @@ export default {};
 .text-green {
   color: #318e2b !important;
 }
-
 </style>
-

@@ -5,10 +5,7 @@ import { productStore } from "@/stores/product";
 import { userStore } from "@/stores/user";
 import { onMounted, onUnmounted } from "vue";
 
-import FadeLoader  from 'vue-spinner/src/FadeLoader.vue'
-
-
-
+import FadeLoader from "vue-spinner/src/FadeLoader.vue";
 
 // export default {
 //   components: {
@@ -23,17 +20,15 @@ const { getWishlist } = userStore();
 // let interval;
 
 onMounted(() => {
- getWishlist();
-//  interval = setInterval(() => {
-//   getWishlist();
-//   }, 100)
-})
+  getWishlist();
+  //  interval = setInterval(() => {
+  //   getWishlist();
+  //   }, 100)
+});
 
 // onUnmounted(() => {
 //   clearInterval(interval)
 // });
-
-
 </script>
 
 <template>
@@ -192,11 +187,17 @@ onMounted(() => {
         <CategoryCard name="Uniforms" image="../assets/img/uniform-1.jpeg" />
         <CategoryCard name="Clothes" image="../assets/img/clothes.jpg" />
         <CategoryCard name="Electronics" image="../assets/img/cat-2.jpg" />
-        <CategoryCard name="Cosmetics" image="../assets/img/cat-4.jpg" />
-        <CategoryCard name="Footwear" image="../assets/img/cat-3.jpg" />
+        <CategoryCard name="Accessories" image="../assets/img/sbag.jpeg" />
+        <CategoryCard name="Footwear" image="../assets/img/sboot.png" />
         <CategoryCard name="Headgear" image="../assets/img/headgear.jpg" />
-        <CategoryCard name="Books and Stationary" image="../assets/img/books.jpg" />
-        <CategoryCard name="Food and Beverages" image="../assets/img/drinks.png" />
+        <CategoryCard
+          name="Books and Stationary"
+          image="../assets/img/books.jpg"
+        />
+        <CategoryCard
+          name="Food and Beverages"
+          image="../assets/img/drinks.png"
+        />
       </div>
     </div>
     <!-- Categories End -->
@@ -206,10 +207,11 @@ onMounted(() => {
       <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
         <span class="bg-secondary pr-3">Featured Products</span>
       </h2>
-      
+
       <div v-if="!product.isLoading" class="row px-xl-5">
         <ProductCard
-          v-for="product in product.all_product" :key="product.id"
+          v-for="product in product.all_product"
+          :key="product.id"
           :id="product.id"
           :name="product.title"
           :image="`http://127.0.0.1:8000/api/product/preview-image?image=${product.images[0].image}`"
@@ -220,9 +222,7 @@ onMounted(() => {
       <div v-else class="row px-xl-5 justify-content-center">
         <FadeLoader :loading="true" :color="'rgb(204 208 207)'" />
         <span>loading ... </span>
-
       </div>
-
     </div>
     <!-- Products End -->
 
@@ -245,7 +245,11 @@ onMounted(() => {
         </div>
         <div class="col-md-6">
           <div class="product-offer mb-30" style="height: 300px">
-            <img class="img-fluid" src="../../assets/img/suniforms.jpg" alt="" />
+            <img
+              class="img-fluid"
+              src="../../assets/img/suniforms.jpg"
+              alt=""
+            />
             <div class="offer-text">
               <h6 class="text-white text-uppercase">Save 30%</h6>
               <h3 class="text-white mb-3">Discount</h3>
@@ -263,10 +267,11 @@ onMounted(() => {
         <span class="bg-secondary pr-3">Recent Products</span>
       </h2>
       <!-- <div class="row px-xl-5"> -->
-       
-        <div v-if="!product.isLoading" class="row px-xl-5">
+
+      <div v-if="!product.isLoading" class="row px-xl-5">
         <ProductCard
-          v-for="product in product.latestProduct" :key="product.id"
+          v-for="product in product.latestProduct"
+          :key="product.id"
           :id="product.id"
           :name="product.title"
           :image="`http://127.0.0.1:8000/api/product/preview-image?image=${product.images[0].image}`"
@@ -274,12 +279,15 @@ onMounted(() => {
           :reviews="99"
         />
       </div>
-      <div v-else class="row px-xl-5 justify-content-center" style="margin:0 auto;">
+      <div
+        v-else
+        class="row px-xl-5 justify-content-center"
+        style="margin: 0 auto"
+      >
         <FadeLoader :loading="true" :color="'rgb(204 208 207)'" />
         <span>loading ... </span>
-
       </div>
-       
+
       <!-- </div> -->
     </div>
     <!-- Products End -->
