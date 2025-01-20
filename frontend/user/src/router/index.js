@@ -58,8 +58,9 @@ const routes = [
     name: "Login",
     component: Login,
     beforeEnter: (to, from, next) => {
-      const { user } = userStore();
+      const { user } = userStore(pinia);
 
+      // console.log(user.isAuthenticated);
       if (to.path === "/login" && user.isAuthenticated) {
         return next({ name: "Home" });
       }
@@ -72,7 +73,7 @@ const routes = [
     name: "verify",
     component: Verify,
     beforeEnter: (to, from, next) => {
-      const { user } = userStore();
+      const { user } = userStore(pinia);
 
       if (to.path === "/verify" && user.isAuthenticated) {
         return next({ name: "Home" });

@@ -1,3 +1,26 @@
+<script setup>
+import { onMounted } from 'vue';
+import { userStore } from '@/stores/user';
+
+const { getWishlist } = userStore();
+
+onMounted(() => {
+  getWishlist();
+})
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
 <template lang="">
   <div>
     <!-- Breadcrumb Start -->

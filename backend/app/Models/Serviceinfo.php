@@ -16,6 +16,16 @@ class Serviceinfo extends Model
         'name'
     ];
 
+    protected $hidden = [
+        "id",
+        "servicenumber",
+        "telephone",
+        "created_at",
+        "updated_at",
+
+    ];
+
+
     public function wishlist()
     {
         return $this->hasMany(Wishlist::class, "servicenumber");

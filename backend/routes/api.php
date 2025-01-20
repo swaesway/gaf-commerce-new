@@ -62,7 +62,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get("/user/product-wishlist", [buyerController::class, "getWishList"]);
     // @desc Add Product to guest or users wishlist
     Route::post("/user/product/{productId}/add-wishlist", [buyerController::class, "addProductToWishlist"]);
-    Route::post('user/logout', [buyerController::class, 'userlogout']);
+    // @desc Remove Product from guest or users wishlist
+    Route::delete("/user/product/{productId}/remove-wishlist", [buyerController::class, "removeProductFromWishlist"]);
+    // @desc rating of product
+    Route::post("/user/product/{productId}/rate", [buyerController::class, "productRating"]);
+    // @desc request callback for the product
+    Route::post("/user/product/{productId}/request-callback", [buyerController::class, "requestCallback"]);
+    // @desc report product
+    Route::post("/user/product/{productId}/report", [buyerController::class, "reportProduct"]);
+
+    Route::post('/user/logout', [buyerController::class, 'userlogout']);
 });
 
 
@@ -86,10 +95,6 @@ Route::get("/products-all", [buyerController::class, "getAllProducts"]);
 Route::get("/product/single/{productId}", [buyerController::class, "getProduct"]);
 // @desc Get product Ratings
 Route::get("/product/{productId}/ratings", [buyerController::class, "getProductRatings"]);
-
-
-// @desc Remove Product from guest or users wishlist
-Route::delete("user/product/{productId}/remove-wishlist", [buyerController::class, "removeProductFromWishlist"]);
 
 
 Route::post("/product/search-all", [vendorController::class, "searchByProduct"]);

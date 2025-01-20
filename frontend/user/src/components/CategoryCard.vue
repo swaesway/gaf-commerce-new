@@ -1,4 +1,6 @@
 <script>
+import { RouterLink } from 'vue-router';
+
 export default {
   name: "CategoryCard",
   props: {
@@ -16,7 +18,7 @@ export default {
 
 <template>
   <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-    <a class="text-decoration-none" href="/productdetails">
+    <RouterLink class="text-decoration-none" :to="'/Shop?categories=' + name">
       <div class="cat-item d-flex align-items-center mb-4">
         <div class="overflow-hidden" style="width: 100px; height: 100px">
           <img class="img-fluid" :src="image" :alt="name" />
@@ -26,6 +28,6 @@ export default {
           <small class="text-body">100 Products</small>
         </div>
       </div>
-    </a>
+    </RouterLink>
   </div>
 </template>
