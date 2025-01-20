@@ -66,6 +66,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete("/user/product/{productId}/remove-wishlist", [buyerController::class, "removeProductFromWishlist"]);
     // @desc rating of product
     Route::post("/user/product/{productId}/rate", [buyerController::class, "productRating"]);
+    // @desc request callback for the product
+    Route::post("/user/product/{productId}/request-callback", [buyerController::class, "requestCallback"]);
+    // @desc report product
+    Route::post("/user/product/{productId}/report", [buyerController::class, "reportProduct"]);
 
     Route::post('/user/logout', [buyerController::class, 'userlogout']);
 });

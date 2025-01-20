@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Models\Rating;
+use App\Models\Report;
+use App\Models\Product;
+use App\Models\Callback;
 use App\Models\Wishlist;
 use App\Models\ShopVendor;
 use App\Models\Serviceinfo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 // use Framework\Session\Session;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -420,5 +422,71 @@ class buyerController extends Controller
         return response()->json(["message" => "Product rated successfully"], 201);
     }
 
-    public function requestCallback() {}
+    public function requestCallback($productId)
+    {
+
+
+        if (empty($productId)) {
+            return response()->json(["message" => "Product is required"], 400);
+        }
+
+        $product = Product::find($productId);
+
+        if (!$product) {
+            return response()->json(["message" => "Product not found"], 404);
+        }
+
+
+        $foundCallback = Callback::where("servicenumber", Auth::id())->where("product_id", $product->id)->first();
+
+        if ($foundCallback) {
+
+            $removeCallback = $foundCallback->delete();
+
+            if (!$removeCallback) {
+                return response()->json(["message" => "Failed to cancel callback"], 500);
+            }
+
+            return response()->json(["message" => "Callback cancelled successfully"], 200);
+        }
+
+        $callback = new Callback();
+        $callback->servicenumber = Auth::id();
+        $callback->product_id = $product->id;
+
+        $saveCallback = $callback->save();
+
+        if (!$saveCallback) return response()->json(["message" => "Failed to request callback"], 500);
+
+        return response()->json(["message" => "callback requested successfully"], 201);
+    }
+
+    public function reportProduct($productId)
+    {
+        if (empty($productId)) {
+            return response()->json(["message" => "Product is required"], 400);
+        }
+
+        $product = Product::find($productId);
+
+        if (!$product) {
+            return response()->json(["message" => "Product not found"], 404);
+        }
+
+        $foundReport = Report::where("servicenumber", Auth::id())->where("product_id", $product->id)->first();
+
+        if ($foundReport) {
+            return response()->json(["message" => "product have been reported already"], 200);
+        }
+
+        $report = new Report();
+        $report->servicenumber = Auth::id();
+        $report->product_id = $product->id;
+
+        $saveReport = $report->save();
+
+        if (!$saveReport) return response()->json(["message" => "Failed to report product"], 500);
+
+        return response()->json(["message" => "product report has been recorded"], 201);
+    }
 }
