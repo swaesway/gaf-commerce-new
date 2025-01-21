@@ -58,7 +58,7 @@ onMounted(() => {
               >
                 <img
                   class="position-absolute w-100 h-100"
-                  src="/assets/img/Army.jpg"
+                  src="/assets/img/Army.png"
                   style="object-fit: cover"
                 />
                 <div
@@ -92,7 +92,7 @@ onMounted(() => {
               >
                 <img
                   class="position-absolute w-100 h-100"
-                  src="/assets/img/Navy.jpg"
+                  src="/assets/img/Navy.png"
                   style="object-fit: cover"
                 />
                 <div
@@ -126,7 +126,7 @@ onMounted(() => {
               >
                 <img
                   class="position-absolute w-100 h-100"
-                  src="/assets/img/Air Force.jpg"
+                  src="/assets/img/Air Force.png"
                   style="object-fit: cover"
                 />
                 <div
@@ -158,17 +158,17 @@ onMounted(() => {
         </div>
         <div class="col-lg-4">
           <div class="product-offer mb-30" style="height: 200px">
-            <img class="img-fluid" src="/assets/img/casual_wear.jpg" alt="" />
+            <img class="img-fluid" src="/assets/img/accessories.jpg" alt="" />
             <div class="offer-text">
-              <h3 class="text-white mb-3">Casual Wears</h3>
+              <h3 class="text-white mb-3">Accessories</h3>
               <a href="" class="btn btn-primary">Shop Now</a>
             </div>
           </div>
           <div class="product-offer mb-30" style="height: 200px">
-            <img class="img-fluid" src="/assets/img/electronics.jpg" alt="" />
+            <img class="img-fluid" src="/assets/img/knife.jpeg" alt="" />
             <div class="offer-text">
               <h6 class="text-white text-uppercase">Save 30%</h6>
-              <h3 class="text-white mb-3">Electronics</h3>
+              <h3 class="text-white mb-3">Tactical</h3>
               <a href="" class="btn btn-primary">Shop Now</a>
             </div>
           </div>
