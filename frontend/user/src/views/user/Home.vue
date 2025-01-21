@@ -185,7 +185,7 @@ onMounted(() => {
 
       <div class="row px-xl-5 pb-3">
         <CategoryCard name="Uniforms" image="../assets/img/uniform-1.jpeg" />
-        <CategoryCard name="Clothes" image="../assets/img/clothes.jpg" />
+        <CategoryCard name="Fabrics" image="../assets/img/Fabric.jpeg" />
         <CategoryCard name="Electronics" image="../assets/img/cat-2.jpg" />
         <CategoryCard name="Accessories" image="../assets/img/sbag.jpeg" />
         <CategoryCard name="Footwear" image="../assets/img/sboot.png" />
