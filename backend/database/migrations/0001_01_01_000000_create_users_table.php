@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->unique(["servicenumber"]);
             $table->string('servicenumber');
             $table->string('token')->unique()->nullable();
-            
+
             $table->timestamps();
         });
 

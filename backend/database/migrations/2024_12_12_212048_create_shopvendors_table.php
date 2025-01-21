@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('shopvendors', function (Blueprint $table) {
             $table->id();
+            $table->unique(["email", "telephone"]);
             $table->string('shopname')->unique();
             $table->string('email');
             $table->string('telephone');

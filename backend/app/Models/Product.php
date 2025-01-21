@@ -63,21 +63,49 @@ class Product extends Model
         return $query;
     }
 
-    public function scopeFilterByPriceAndCategory($query, array $prices = [], array $categories = [])
+    public function scopeFilterByPriceAndCategory($query, array $prices = [], array $categories = [], $all_prices,  $all_categories)
     {
 
+        $all_categories_value = [
+            "All",
+            "Uniforms",
+            "Clothes",
+            "Electronics",
+            "Cosmetics",
+            "Footwear",
+            "Headgear",
+            "Books and Stationary",
+            "Food and Beverages"
+        ];
 
-        foreach ($prices as $price) {
-            if ($price === "All") {
-                return $query->where("price", ">", 0);
-            }
+        if ($all_prices === "All" && $all_categories === "All") {
+            return $query->where("price", ">", 0);
         }
 
-        foreach ($categories as $category) {
-            if ($category === "All") {
-                return $query->where("price", ">", 0);
-            }
+        if ($all_prices === "All") {
+            return $query->where("price", ">", 0)->whereIn("category", $categories);
         }
+
+
+
+        if ($all_categories === "All") {
+            $query->whereIn("category", $all_categories_value);
+
+            if (!empty($prices)) {
+                $query->where(function ($subQuery) use ($prices) {
+                    foreach ($prices as $price) {
+                        $range = explode('-', $price);
+
+                        if (count($range) === 2) {
+                            $subQuery->orWhereBetween('price', [(float)$range[0], (float)$range[1]]);
+                        }
+                    }
+                });
+            }
+
+            return $query;
+        }
+
 
         if (!empty($categories)) {
             $query->whereIn('category', $categories);
@@ -104,7 +132,7 @@ class Product extends Model
     {
 
         foreach ($wishList as $wishlist) {
-            $query->orWhere("id", $wishlist["product_id"])->orderBy("created_at", "DESC");
+            $query->orWhere("id", $wishlist["product_id"]);
         }
 
         return $query;
