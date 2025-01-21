@@ -9,6 +9,7 @@ import VendorRegister from "@/views/vendors/register.vue";
 import Vendorlayout from "@/components/layouts/vendorlayout.vue";
 import VendorDashboard from "@/views/vendors/dashboard.vue";
 import Addproduct from "@/views/vendors/addproduct.vue";
+import Viewproduct from "@/views/vendors/viewproducts.vue";
 
 import { useVendorStore } from "@/stores/vendor";
 
@@ -57,6 +58,11 @@ const router = createRouter({
           path: "addproduct",
           name: "addproduct",
           component: Addproduct,
+        },
+        {
+          path: "viewproducts",
+          name: "viewproducts",
+          component: Viewproduct,
         },
       ],
     },
