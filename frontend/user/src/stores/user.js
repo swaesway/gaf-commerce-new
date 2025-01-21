@@ -161,8 +161,7 @@ export const userStore = defineStore("user", () => {
       );
 
       if (response.data && response.status === 201) {
-        getWishlist(router);
-        toast.success(response.data);
+        toast.success(response.data, { timeout: 10 });
       }
 
       return;
@@ -182,9 +181,9 @@ export const userStore = defineStore("user", () => {
       if (!err?.response?.status) {
         return err?.message;
       } else if (err?.response?.status === 400) {
-        toast.error(err?.response?.data.message);
+        toast.error(err?.response?.data.message, { timeout: 10 });
       } else if (err?.response?.status === 404) {
-        toast.error(err?.response?.data.message);
+        toast.error(err?.response?.data.message, { timeout: 10 });
       } else {
         return "Internal Server Error";
       }
@@ -201,7 +200,8 @@ export const userStore = defineStore("user", () => {
         user.wishList = user.wishList.filter(
           (product) => product.id !== productId
         );
-        toast.success(response.data?.message);
+        // alert("deleted");
+        toast.success(response.data?.message, { timeout: 10 });
       }
 
       return;
