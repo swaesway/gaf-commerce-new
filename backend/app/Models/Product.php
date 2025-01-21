@@ -104,7 +104,7 @@ class Product extends Model
     {
 
         foreach ($wishList as $wishlist) {
-            $query->orWhere("id", $wishlist["product_id"]);
+            $query->orWhere("id", $wishlist["product_id"])->orderBy("created_at", "DESC");
         }
 
         return $query;
