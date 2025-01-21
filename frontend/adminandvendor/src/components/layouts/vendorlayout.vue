@@ -3,9 +3,9 @@
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
       <div class="d-flex align-items-center justify-content-between">
-        <a href="index.html" class="logo d-flex align-items-center">
+        <a href="/" class="logo d-flex align-items-center">
           <img src="/assets/img/logo.png" alt="" />
-          <span class="d-none d-lg-block text-white">NiceAdmin</span>
+          <span class="d-none d-lg-block text-white">Vendor Board</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn text-white"></i>
       </div>
@@ -179,18 +179,22 @@
               href="#"
               data-bs-toggle="dropdown"
             >
-              <img src="" alt="Profile" class="rounded-circle text-white" />
-              <span class="d-none d-md-block dropdown-toggle ps-2 text-white"
-                >K. Anderson</span
-              > </a
+              <img
+                src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"
+                alt="Profile"
+                class="rounded-circle text-white"
+              />
+              <span
+                class="d-none d-md-block dropdown-toggle ps-2 text-white"
+              ></span> </a
             ><!-- End Profile Iamge Icon -->
 
             <ul
               class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile"
             >
               <li class="dropdown-header">
-                <h6>Kevin Anderson</h6>
-                <span>Web Designer</span>
+                <h6>{{ vendor.details.shopname }}</h6>
+                <span>{{ vendor.details.email }}</span>
               </li>
               <li>
                 <hr class="dropdown-divider" />
@@ -207,16 +211,6 @@
               </li>
               <li>
                 <hr class="dropdown-divider" />
-              </li>
-
-              <li>
-                <a
-                  class="dropdown-item d-flex align-items-center"
-                  href="users-profile.html"
-                >
-                  <i class="bi bi-gear"></i>
-                  <span>Account Settings</span>
-                </a>
               </li>
               <li>
                 <hr class="dropdown-divider" />
@@ -255,43 +249,54 @@
     <aside id="sidebar" class="sidebar">
       <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="/vendor/">
+          <router-link
+            to="/vendor"
+            class="nav-link"
+            :class="{ collapsed: !isCurrentRoute('/vendor') }"
+          >
             <i class="bi bi-grid"></i>
             <span>Dashboard</span>
-          </a>
+          </router-link>
         </li>
-        <!-- End Dashboard Nav -->
 
         <li class="nav-item">
-          <a
-            class="nav-link collapsed"
+          <router-link
+            class="nav-link"
+            :class="{ collapsed: !isProductsMenuActive }"
             data-bs-target="#components-nav"
             data-bs-toggle="collapse"
-            href="#"
+            to="/vendor/addproduct"
           >
-            <i class="bi bi-menu-button-wide"></i><span>Products</span
-            ><i class="bi bi-chevron-down ms-auto"></i>
-          </a>
+            <i class="bi bi-menu-button-wide"></i>
+            <span>Products</span>
+            <i class="bi bi-chevron-down ms-auto"></i>
+          </router-link>
           <ul
             id="components-nav"
             class="nav-content collapse"
+            :class="{ show: isProductsMenuActive }"
             data-bs-parent="#sidebar-nav"
           >
             <li>
-              <a href="/vendor/addproduct">
-                <i class="bi bi-circle"></i><span>Add Products</span>
-              </a>
+              <router-link
+                to="/vendor/addproduct"
+                :class="{ active: isCurrentRoute('/vendor/addproduct') }"
+              >
+                <i class="bi bi-circle"></i>
+                <span>Add Products</span>
+              </router-link>
             </li>
             <li>
-              <a href="/vendor/viewproducts">
-                <i class="bi bi-circle"></i><span>View Products</span>
-              </a>
+              <router-link
+                to="/vendor/viewproducts"
+                :class="{ active: isCurrentRoute('/vendor/viewproducts') }"
+              >
+                <i class="bi bi-circle"></i>
+                <span>View Products</span>
+              </router-link>
             </li>
           </ul>
         </li>
-        <!-- End Components Nav -->
-
-        <!-- End Forms Nav -->
       </ul>
     </aside>
     <!-- End Sidebar-->
@@ -320,11 +325,61 @@ textarea {
 .header {
   background-color: #0a2d02;
 }
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  color: #012970;
+  transition: 0.3s;
+}
+
+.nav-link.collapsed {
+  background: transparent;
+  color: #012970;
+}
+
+.nav-link i {
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.nav-content a {
+  display: flex;
+  align-items: center;
+  padding: 10px 0 10px 40px;
+  color: #012970;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.nav-content a.active,
+.nav-content a:hover {
+  color: #4154f1;
+}
+
+.nav-content a i {
+  font-size: 6px;
+  margin-right: 8px;
+  line-height: 0;
+  border-radius: 50%;
+}
 </style>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, onBeforeMount } from "vue";
 import { RouterView } from "vue-router";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import { useVendorStore } from "@/stores/vendor";
+import axiosPrivate from "@/api/axiosPrivate";
+
+const { vendor, getVendorDetails } = useVendorStore();
+
+onBeforeMount(async () => {
+  await axiosPrivate.get("/verify/token");
+  getVendorDetails();
+});
 
 onMounted(() => {
   // Initialize any template JavaScript here
@@ -345,5 +400,20 @@ onMounted(() => {
   if (select(".toggle-sidebar-btn")) {
     select(".toggle-sidebar-btn").addEventListener("click", toggleSidebar);
   }
+});
+
+const route = useRoute();
+
+// Function to check if current route matches given path
+const isCurrentRoute = (path) => {
+  return route.path === path;
+};
+
+// Computed property to check if any products-related route is active
+const isProductsMenuActive = computed(() => {
+  return (
+    route.path.includes("/vendor/addproduct") ||
+    route.path.includes("/vendor/viewproducts")
+  );
 });
 </script>
