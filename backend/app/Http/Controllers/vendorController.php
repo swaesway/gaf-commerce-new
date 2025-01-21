@@ -69,6 +69,8 @@ class vendorController extends Controller
             'shopvendor_id' => $vendor->id
         ]);
 
+        // return response()->json(["message" => "hello"], 201);
+
 
         if ($request->hasFile("images")) {
             foreach ($request->file("images") as $file) {
@@ -331,7 +333,10 @@ class vendorController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'price_range' => 'array',
-            'categories' => 'array'
+            'categories' => 'array',
+            "all_price_range" => 'string',
+            "all_categories" => 'string'
+
         ]);
 
         // if (!$request->price_range && !$request->categories) {
@@ -345,7 +350,7 @@ class vendorController extends Controller
             return response()->json($validate->errors(), 400);
         }
 
-        $product = Product::with("images")->filterByPriceAndCategory($request->price_range, $request->categories)->get();
+        $product = Product::with("images")->filterByPriceAndCategory($request->price_range, $request->categories, $request->all_price_range, $request->all_categories)->get();
 
         if (!$product) {
             return response()->json(["message" => "No Product found in this price range and categories"], 404);

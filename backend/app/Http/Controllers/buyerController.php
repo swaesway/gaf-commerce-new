@@ -287,7 +287,7 @@ class buyerController extends Controller
 
         $isWishListPresent = Wishlist::where("servicenumber", Auth::id())
             ->where("product_id", $product->id)
-            ->first();
+            ->exists();
 
         if ($isWishListPresent) {
             return response()->json(["message" => "product already in wishlist"], 400);
@@ -322,11 +322,11 @@ class buyerController extends Controller
             return response()->json("Product ID required", 400);
         }
 
-        $product = Product::find($productId);
+        // $product = Product::find($productId);
 
-        if (!$product) {
-            return response()->json("Product not found", 404);
-        }
+        // if (!$product) {
+        //     return response()->json("Product not found", 404);
+        // }
 
 
         // if ($session->isUserAuthenticated && $session->serviceNumber && !$session->wishList) {
@@ -355,7 +355,7 @@ class buyerController extends Controller
         // return response()->json($session->get("wishList"), 200);
 
         $foundWishList = Wishlist::where("servicenumber", Auth::id())
-            ->where("product_id", $product->id)
+            ->where("product_id", $productId)
             ->first();
 
         if (!$foundWishList) {
@@ -387,28 +387,25 @@ class buyerController extends Controller
             return response()->json($validate->errors(), 400);
         }
 
-        $product = Product::find($productId);
+        // $product = Product::find($productId);
 
-        if (!$product) {
-            return response()->json(["error" => "Product not found"], 404);
-        }
+        // if (!$product) {
+        //     return response()->json(["error" => "Product not found"], 404);
+        // }
 
         $foundRatedUser = Rating::where("servicenumber", Auth::id())
-            ->where("product_id", $product->id)
-            ->first();
+            ->where("product_id", $productId)
+            ->exists();
 
         if ($foundRatedUser) {
             return response()->json(["message" => "You have already rated this product"], 400);
         }
 
-        // return "jshhs";
 
         $rateProduct = new Rating();
 
-
-
         $rateProduct->servicenumber = Auth::id();
-        $rateProduct->product_id = $product->id;
+        $rateProduct->product_id = $productId;
         $rateProduct->rating = $request->rating;
         $rateProduct->comment = $request->comment;
 
@@ -430,14 +427,14 @@ class buyerController extends Controller
             return response()->json(["message" => "Product is required"], 400);
         }
 
-        $product = Product::find($productId);
+        // $product = Product::find($productId);
 
-        if (!$product) {
-            return response()->json(["message" => "Product not found"], 404);
-        }
+        // if (!$product) {
+        //     return response()->json(["message" => "Product not found"], 404);
+        // }
 
 
-        $foundCallback = Callback::where("servicenumber", Auth::id())->where("product_id", $product->id)->first();
+        $foundCallback = Callback::where("servicenumber", Auth::id())->where("product_id", $productId)->first();
 
         if ($foundCallback) {
 
@@ -452,7 +449,7 @@ class buyerController extends Controller
 
         $callback = new Callback();
         $callback->servicenumber = Auth::id();
-        $callback->product_id = $product->id;
+        $callback->product_id = $productId;
 
         $saveCallback = $callback->save();
 
@@ -467,13 +464,13 @@ class buyerController extends Controller
             return response()->json(["message" => "Product is required"], 400);
         }
 
-        $product = Product::find($productId);
+        // $product = Product::find($productId);
 
-        if (!$product) {
-            return response()->json(["message" => "Product not found"], 404);
-        }
+        // if (!$product) {
+        //     return response()->json(["message" => "Product not found"], 404);
+        // }
 
-        $foundReport = Report::where("servicenumber", Auth::id())->where("product_id", $product->id)->first();
+        $foundReport = Report::where("servicenumber", Auth::id())->where("product_id", $productId)->exists();
 
         if ($foundReport) {
             return response()->json(["message" => "product have been reported already"], 200);
@@ -481,7 +478,7 @@ class buyerController extends Controller
 
         $report = new Report();
         $report->servicenumber = Auth::id();
-        $report->product_id = $product->id;
+        $report->product_id = $productId;
 
         $saveReport = $report->save();
 

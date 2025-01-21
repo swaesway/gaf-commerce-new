@@ -41,6 +41,20 @@ const formCategories = ref([
 const prices = ref([]);
 const categories = ref([]);
 
+function allPrices(value){
+  if(prices.value.includes(value))
+    return "All";
+  else 
+    return "no";
+}
+
+function allCategories(value){
+  if(categories.value.includes(value))
+    return "All";
+  else 
+    return "no";
+}
+
 function isPriceChecked(price){
   return  route.query.price_range?.includes(price);
 }
@@ -57,12 +71,11 @@ function addPriceRange(data){
     prices.value.push(data.price);
   }
 
-  // console.log(categories.value)
-  console.log(prices.value)
-  
   filterByPricesAndCategories({
     price_range: prices.value,
-    categories: categories.value
+    categories: categories.value,
+    all_price_range: allPrices("All"),
+    all_categories: allCategories("All")
   }, router);
 
   router.push({
@@ -85,7 +98,9 @@ function addCategories(data){
 //  console.log(prices.value)
  filterByPricesAndCategories({
    price_range: prices.value,
-   categories: categories.value
+   categories: categories.value,
+   all_price_range: allPrices("All"),
+   all_categories: allCategories("All")
  }, router);
  
 
@@ -124,7 +139,9 @@ categories.value = route.query.categories
         
         filterByPricesAndCategories({
          price_range: prices.value,
-         categories: categories.value
+         categories: categories.value,
+         all_price_range: route.query?.price_range?.includes("All") ? "All" : "no",
+         all_categories: route.query?.categories?.includes("All") ? "All" : "no"
        }, router);
 
       //  interval = setInterval(() => {
