@@ -1,7 +1,8 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
 
-import FadeLoader  from 'vue-spinner/src/FadeLoader.vue'
+import FadeLoader  from 'vue-spinner/src/FadeLoader.vue';
+import moment from 'moment';
 
 import { productStore } from '@/stores/product';
 import { onBeforeMount, onMounted, reactive, ref } from 'vue';
@@ -167,7 +168,7 @@ onMounted(() => {
                 ><i class="fa-sharp fa-solid fa-shop mr-4"></i>{{product.singleProduct?.shopvendor?.shopname}}</strong
               >
 
-              <small class="pt-1"> uploaded on {{product.singleProduct.created_at}}</small>
+              <small class="pt-1"> uploaded on {{moment(product.singleProduct.created_at).format("LLL")}}</small>
             </div>
 
             <div class="d-flex align-items-center mb-4 pt-2">
@@ -273,7 +274,7 @@ onMounted(() => {
                       <i class="fa fa-user" style="font-size:20px"></i>
                       <div class="media-body" style="margin-left:5px">
                         <h6>
-                          {{rating.serviceinfos.name}}<small> - <i>{{rating.created_at}}</i></small>
+                          {{rating.serviceinfos.name}}<small> - <i>{{moment(rating.created_at).fromNow()}}</i></small>
                         </h6>
                         <div v-if="rating.rating === 1" class="text-primary mb-2">
                           <i class="fas fa-star"></i>
