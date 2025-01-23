@@ -50,7 +50,7 @@ const router = createRouter({
       component: Vendorlayout,
       children: [
         {
-          path: "/",
+          path: "/vendor",
           name: "dashboard",
           component: VendorDashboard,
         },

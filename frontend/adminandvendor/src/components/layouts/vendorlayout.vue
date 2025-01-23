@@ -5,7 +5,7 @@
       <div class="d-flex align-items-center justify-content-between">
         <a href="/" class="logo d-flex align-items-center">
           <img src="/assets/img/logo.png" alt="" />
-          <span class="d-none d-lg-block text-white">Vendor Board</span>
+          <!-- <span class="d-none d-lg-block text-white">Vendor Board</span> -->
         </a>
         <i class="bi bi-list toggle-sidebar-btn text-white"></i>
       </div>
@@ -292,7 +292,7 @@
                 :class="{ active: isCurrentRoute('/vendor/viewproducts') }"
               >
                 <i class="bi bi-circle"></i>
-                <span>View Products</span>
+                <span>My Products</span>
               </router-link>
             </li>
           </ul>
