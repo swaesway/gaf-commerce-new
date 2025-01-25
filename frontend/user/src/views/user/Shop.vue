@@ -1,14 +1,15 @@
 <script setup>
 import ProductCard from "@/components/ProductCard.vue";
 
-import { productStore } from "@/stores/product";
-import { onMounted, onUnmounted, reactive, ref } from "vue";
+// import { productStore } from "@/stores/product";
+import { userStore } from "@/stores/user";
+import { onBeforeMount, onMounted, onUnmounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import FadeLoader  from 'vue-spinner/src/FadeLoader.vue'
 
 
-const { product, filterByPricesAndCategories, searchProduct } = productStore();
+const { store, filterByPricesAndCategories, searchProduct } = userStore()
 
 const route = useRoute();
 const router = useRouter();
@@ -40,12 +41,24 @@ const formCategories = ref([
 
 const prices = ref([]);
 const categories = ref([]);
+const sortBy = ref("Latest");
 
 function allPrices(value){
   if(prices.value.includes(value))
     return "All";
   else 
     return "no";
+}
+
+function setSortingState(value){
+  sortBy.value = value
+  filterByPricesAndCategories({
+    price_range: prices.value,
+    categories: categories.value,
+    sortBy: sortBy.value,
+    all_price_range: allPrices("All"),
+    all_categories: allCategories("All")
+  }, router);
 }
 
 function allCategories(value){
@@ -64,6 +77,25 @@ function isCategoryChecked(category){
 }
 
 function addPriceRange(data){
+
+  if(prices.value.includes("All") && data.price !== "All"){ 
+   prices.value = prices.value.filter((price) => price !== "All");
+
+  router.push({
+  name: "Wishlist",
+  query: {price_range:[...prices.value]},
+  });
+}  
+
+if(data.price === "All"){ 
+  prices.value = prices.value.filter((price) => price === "All");
+
+  router.push({
+  name: "Wishlist",
+  query: {price_range:[...prices.value]},
+  });
+
+}  
  
   if(prices.value.includes(data.price)){
      prices.value =  prices.value.filter((price) => price !== data.price)
@@ -74,6 +106,7 @@ function addPriceRange(data){
   filterByPricesAndCategories({
     price_range: prices.value,
     categories: categories.value,
+    sortBy: sortBy.value,
     all_price_range: allPrices("All"),
     all_categories: allCategories("All")
   }, router);
@@ -88,6 +121,25 @@ function addPriceRange(data){
 
 
 function addCategories(data){
+
+  if(categories.value.includes("All") && data.category !== "All"){ 
+  categories.value = categories.value.filter((category) => category !== "All");
+
+  router.push({
+  name: "Wishlist",
+  query: {categories:[...categories.value]},
+  });
+}  
+
+if(data.category === "All"){ 
+  categories.value = categories.value.filter((category) => category === "All");
+
+  router.push({
+  name: "Wishlist",
+  query: {categories:[...categories.value]},
+  });
+
+}  
  
   if(categories.value.includes(data.category)){
   categories.value =  categories.value.filter((category) => category !== data.category)
@@ -99,6 +151,7 @@ function addCategories(data){
  filterByPricesAndCategories({
    price_range: prices.value,
    categories: categories.value,
+   sortBy: sortBy.value,
    all_price_range: allPrices("All"),
    all_categories: allCategories("All")
  }, router);
@@ -118,7 +171,7 @@ function addCategories(data){
 // let interval;
 
 
-onMounted(() => {
+onBeforeMount(() => {
 
 prices.value = route.query.price_range
         ? Array.isArray(route.query.price_range)
@@ -140,6 +193,7 @@ categories.value = route.query.categories
         filterByPricesAndCategories({
          price_range: prices.value,
          categories: categories.value,
+         sortBy: sortBy.value,
          all_price_range: route.query?.price_range?.includes("All") ? "All" : "no",
          all_categories: route.query?.categories?.includes("All") ? "All" : "no"
        }, router);
@@ -334,12 +388,12 @@ categories.value = route.query.categories
                       class="btn btn-sm btn-light dropdown-toggle"
                       data-toggle="dropdown"
                     >
-                      Sorting
+                      {{sortBy}}
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                      <a class="dropdown-item" href="#">Latest</a>
-                      <a class="dropdown-item" href="#">Popularity</a>
-                      <a class="dropdown-item" href="#">Best Rating</a>
+                      <a class="dropdown-item" @click="setSortingState('Latest')">Latest</a>
+                      <a class="dropdown-item" @click="setSortingState('Popularity')">Popularity</a>
+                      <a class="dropdown-item" @click="setSortingState('Best Rating')">Best Rating</a>
                     </div>
                   </div>
                   <div class="btn-group ml-2">
@@ -360,14 +414,15 @@ categories.value = route.query.categories
               </div>
             </div>
 
-        <div v-if="!product.isLoading" class="row px-xl-5">
+        <div v-if="!store.isLoading" class="row px-xl-5">
         <ProductCard
-          v-for="(product, index) in product.filteredProduct" :key="index"
+          v-for="(product, index) in store.filteredProduct" :key="index"
           :id="product.id"
           :name="product.title"
           :image="`http://127.0.0.1:8000/api/product/preview-image?image=${product.images[0].image}`"
           :price="`₵${product.price}`"
-          :reviews="99"
+          :totalProductRating="product.average_rating"
+          :reviews="product.ratings?.length"
         />
       </div>
       <div v-else class="row justify-content-center" style="margin:0 auto;">

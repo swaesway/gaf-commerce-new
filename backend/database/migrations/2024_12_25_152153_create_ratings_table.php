@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unique(["servicenumber", "product_id"]);
             $table->foreignId("servicenumber")->constrained("serviceinfos")->onDelete("cascade");
             $table->foreignId("product_id")->constrained("products")->onDelete("cascade");
-            $table->integer("rating");
+            $table->float("rating");
             $table->longText("comment");
             $table->timestamps();
         });

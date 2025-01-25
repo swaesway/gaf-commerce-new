@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 //user login endpoints  
 Route::post('user/login', [LoginModelController::class, 'login']);
 Route::post('user/login/verify', [LoginModelController::class, 'verify']);
@@ -56,6 +57,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 //auth sanctum routes for users
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('user/home', [buyerController::class, 'home']);
+    Route::get("/user/details", [buyerController::class, 'user']);
     Route::post('user/viewmoreinfo/{id}', [buyerController::class, 'viewmoreinfo']);
     Route::Post('users/chatvendor', [buyerController::class, 'chatvendor']);
     // @desc Get User wishlist
@@ -91,6 +93,8 @@ Route::get("/products-latest", [buyerController::class, "latestProducts"]);
 
 // @desc Get all products
 Route::get("/products-all", [buyerController::class, "getAllProducts"]);
+// @desc GET similar products
+Route::post("/products-similar", [buyerController::class, "getSimilarProducts"]);
 // @desc GEt single product
 Route::get("/product/single/{productId}", [buyerController::class, "getProduct"]);
 // @desc Get product Ratings
@@ -104,6 +108,7 @@ Route::get("/product/search-price", [vendorController::class, "searchProductByPr
 Route::post("/product/filter-by-price-and-category", [vendorController::class, "searchProductByPriceAndCategory"]);
 
 Route::get("/product/preview-image", [vendorController::class, "previewProductImage"]);
+
 
 //search option  
 Route::get('/test/image-upload', function () {

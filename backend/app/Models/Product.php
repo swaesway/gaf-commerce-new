@@ -27,6 +27,98 @@ class Product extends Model
     ];
 
 
+    public function scopeAllProduct($query)
+    {
+        return $query
+            ->with(['images', 'ratings']) // Eager load related data
+            ->leftJoin('ratings', 'products.id', '=', 'ratings.product_id') // Join ratings table
+            ->selectRaw('
+                products.id,
+                products.title,
+                products.shopvendor_id,
+                products.price,
+                products.category,
+                products.description,
+                products.frozen,
+                products.created_at,
+                products.updated_at,
+                COALESCE(AVG(ratings.rating), 0) as average_rating') // Select all product fields and calculate the average rating
+            ->groupBy(
+                'products.id',
+                'products.title',
+                'products.shopvendor_id',
+                'products.price',
+                'products.category',
+                'products.description',
+                'products.frozen',
+                'products.created_at',
+                'products.updated_at'
+            ) // Group by product ID for proper aggregation
+            ->orderBy('average_rating', 'DESC'); // Order by average rating (descending)
+    }
+
+
+    public function scopeAllLatestProduct($query)
+    {
+        return $query
+            ->with(['images', 'ratings']) // Eager load related data
+            ->leftJoin('ratings', 'products.id', '=', 'ratings.product_id') // Join ratings table
+            ->selectRaw('
+                products.id,
+                products.title,
+                products.shopvendor_id,
+                products.price,
+                products.category,
+                products.description,
+                products.frozen,
+                products.created_at,
+                products.updated_at,
+                COALESCE(AVG(ratings.rating), 0) as average_rating') // Select all product fields and calculate the average rating
+            ->groupBy(
+                'products.id',
+                'products.title',
+                'products.shopvendor_id',
+                'products.price',
+                'products.category',
+                'products.description',
+                'products.frozen',
+                'products.created_at',
+                'products.updated_at'
+            );
+    }
+
+    public function scopeSimilarProduct($query, $title, $description)
+    {
+        return $query
+            ->with(["images", "ratings"])
+            ->leftJoin("ratings", "products.id", "=", "ratings.product_id")
+            ->selectRaw('
+             products.id,
+             products.title,
+             products.shopvendor_id,
+             products.price,
+             products.category,
+             products.description,
+             products.frozen,
+             products.created_at,
+             products.updated_at,
+             COALESCE(AVG(ratings.rating), 0) as average_rating') // Select all product fields and calculate the average rating
+            ->groupBy(
+                'products.id',
+                'products.title',
+                'products.shopvendor_id',
+                'products.price',
+                'products.category',
+                'products.description',
+                'products.frozen',
+                'products.created_at',
+                'products.updated_at'
+            )
+            ->where("title", "like", "%" . $title . "%")
+            ->where("description", "like", "%" . $description . "%")
+            ->where("price", ">", 0);
+    }
+
     public function scopeSearchItem($query, string $value)
     {
         return $query->orWhere("title", "like", "%" . trim($value) . "%")
@@ -63,7 +155,7 @@ class Product extends Model
         return $query;
     }
 
-    public function scopeFilterByPriceAndCategory($query, array $prices = [], array $categories = [], $all_prices,  $all_categories)
+    public function scopeFilterByPriceAndCategory($query, array $prices = [], array $categories = [], $sortBy, $all_prices,  $all_categories)
     {
 
         $all_categories_value = [
@@ -77,6 +169,96 @@ class Product extends Model
             "Books and Stationary",
             "Food and Beverages"
         ];
+
+        if ($sortBy === "Latest") {
+            $query->with('ratings')
+                ->leftJoin('ratings', 'products.id', '=', 'ratings.product_id')
+                ->selectRaw('
+                products.id, 
+                products.title, 
+                products.shopvendor_id, 
+                products.price, 
+                products.category, 
+                products.description, 
+                products.frozen, 
+                products.created_at, 
+                products.updated_at, 
+                COALESCE(SUM(ratings.rating), 0) as total_rating,
+                COALESCE(AVG(ratings.rating), 0) as average_rating
+            ')
+                ->groupBy(
+                    'products.id',
+                    'products.title',
+                    'products.shopvendor_id',
+                    'products.price',
+                    'products.category',
+                    'products.description',
+                    'products.frozen',
+                    'products.created_at',
+                    'products.updated_at'
+                )
+                ->orderBy('created_at', 'DESC');
+        }
+
+        if ($sortBy === "Popularity") {
+            $query->with('ratings')
+                ->leftJoin('ratings', 'products.id', '=', 'ratings.product_id')
+                ->selectRaw('
+                products.id, 
+                products.title, 
+                products.shopvendor_id, 
+                products.price, 
+                products.category, 
+                products.description, 
+                products.frozen, 
+                products.created_at, 
+                products.updated_at, 
+                COALESCE(SUM(ratings.rating), 0) as total_rating,
+                COALESCE(AVG(ratings.rating), 0) as average_rating
+            ')
+                ->groupBy(
+                    'products.id',
+                    'products.title',
+                    'products.shopvendor_id',
+                    'products.price',
+                    'products.category',
+                    'products.description',
+                    'products.frozen',
+                    'products.created_at',
+                    'products.updated_at'
+                )
+                ->orderBy('total_rating', 'DESC');
+        }
+
+        if ($sortBy === "Best Rating") {
+            $query->with('ratings') // Eager load the ratings relationship
+                ->leftJoin('ratings', 'products.id', '=', 'ratings.product_id') // Join ratings
+                ->selectRaw('
+                products.id,
+                products.title,
+                products.shopvendor_id,
+                products.price,
+                products.category,
+                products.description,
+                products.frozen,
+                products.created_at,
+                products.updated_at,
+                COALESCE(AVG(ratings.rating), 0) as average_rating
+            ') // Calculate average rating
+                ->groupBy(
+                    'products.id',
+                    'products.title',
+                    'products.shopvendor_id',
+                    'products.price',
+                    'products.category',
+                    'products.description',
+                    'products.frozen',
+                    'products.created_at',
+                    'products.updated_at'
+                )
+                ->orderBy('average_rating', 'DESC');
+        }
+
 
         if ($all_prices === "All" && $all_categories === "All") {
             return $query->where("price", ">", 0);
@@ -160,5 +342,10 @@ class Product extends Model
     public function ratings()
     {
         return $this->hasMany(Rating::class, "product_id");
+    }
+
+    public function totalProductRating()
+    {
+        return $this->ratings()->avg("rating");
     }
 }

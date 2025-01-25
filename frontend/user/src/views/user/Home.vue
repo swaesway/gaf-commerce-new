@@ -4,6 +4,7 @@ import ProductCard from "@/components/ProductCard.vue";
 import { productStore } from "@/stores/product";
 import { userStore } from "@/stores/user";
 import { onMounted, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
 
 import FadeLoader from "vue-spinner/src/FadeLoader.vue";
 
@@ -14,13 +15,16 @@ import FadeLoader from "vue-spinner/src/FadeLoader.vue";
 //   },
 // };
 
-const { product } = productStore();
-const { getWishlist } = userStore();
+const router = useRouter();
+// const { product } = productStore();
+const { store, getWishlist, currentUser } = userStore();
 
 // let interval;
 
 onMounted(() => {
-  getWishlist();
+  
+  currentUser(router);
+  getWishlist(router);
   //  interval = setInterval(() => {
   //   getWishlist();
   //   }, 100)
@@ -161,7 +165,7 @@ onMounted(() => {
             <img class="img-fluid" src="/assets/img/accessories.jpg" alt="" />
             <div class="offer-text">
               <h3 class="text-white mb-3">Accessories</h3>
-              <a href="" class="btn btn-primary">Shop Now</a>
+              <a href="#" class="btn btn-primary">Shop Now</a>
             </div>
           </div>
           <div class="product-offer mb-30" style="height: 200px">
@@ -208,15 +212,16 @@ onMounted(() => {
         <span class="bg-secondary pr-3">Featured Products</span>
       </h2>
 
-      <div v-if="!product.isLoading" class="row px-xl-5">
+      <div v-if="!store.isLoading" class="row px-xl-5">
         <ProductCard
-          v-for="product in product.all_product"
+          v-for="product in store.all_product"
           :key="product.id"
           :id="product.id"
           :name="product.title"
           :image="`http://127.0.0.1:8000/api/product/preview-image?image=${product.images[0].image}`"
           :price="`₵${product.price}`"
-          :reviews="99"
+          :totalProductRating="product.average_rating"
+          :reviews="product.ratings.length"
         />
       </div>
       <div v-else class="row px-xl-5 justify-content-center">
@@ -268,15 +273,16 @@ onMounted(() => {
       </h2>
       <!-- <div class="row px-xl-5"> -->
 
-      <div v-if="!product.isLoading" class="row px-xl-5">
+      <div v-if="!store.isLoading" class="row px-xl-5">
         <ProductCard
-          v-for="product in product.latestProduct"
+          v-for="product in store.latestProduct"
           :key="product.id"
           :id="product.id"
           :name="product.title"
           :image="`http://127.0.0.1:8000/api/product/preview-image?image=${product.images[0].image}`"
           :price="`₵${product.price}`"
-          :reviews="99"
+          :totalProductRating="product.average_rating"
+          :reviews="product.ratings.length"
         />
       </div>
       <div

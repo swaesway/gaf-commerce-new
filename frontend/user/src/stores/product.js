@@ -47,6 +47,7 @@ export const productStore = defineStore("product", () => {
       if (response.data && response.status === 200) {
         product.isLoading = false;
         product.singleProduct = response.data;
+        console.log(response.data);
       }
     } catch (err) {
       if (!err?.response?.status) {
@@ -84,10 +85,10 @@ export const productStore = defineStore("product", () => {
 
   async function getProductReviews(productId) {
     try {
-      const response = await axiosInstance.get(`/product/${productId}/ratings`);
+      const response = await axiosPrivate.get(`/product/${productId}/ratings`);
       if (response.data && response.status === 200) {
         product.productRatings = response.data;
-        console.log(response.data);
+        console.log(response.data, "reviews");
       }
     } catch (err) {
       if (!err.response?.status) {
@@ -156,7 +157,7 @@ export const productStore = defineStore("product", () => {
     getAllProduct,
     getProductById,
     getLatestProducts,
-    getProductReviews,
+    // getProductReviews,
     filterByPricesAndCategories,
     searchProduct,
   };

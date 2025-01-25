@@ -17,7 +17,6 @@ class Serviceinfo extends Model
     ];
 
     protected $hidden = [
-        "id",
         "servicenumber",
         "telephone",
         "created_at",

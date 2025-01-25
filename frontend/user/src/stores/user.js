@@ -17,14 +17,21 @@ export const userStore = defineStore("user", () => {
   // const router = useRouter();
   const toast = useToast();
 
-  const user = reactive({
+  const store = reactive({
     details: {
+      info: null,
       servicenumber: Cookies.get("service_id") || null,
       telephone: null,
     },
     wishList: [],
     isAuthenticated: Cookies.get("token_u") || false,
     isLoading: true,
+    all_product: [],
+    singleProduct: {},
+    latestProduct: [],
+    similarProducts: [],
+    filteredProduct: [],
+    productRatings: [],
   });
 
   /*
@@ -48,7 +55,7 @@ export const userStore = defineStore("user", () => {
           sameSite: "Strict",
         });
 
-        user.details.telephone = Cookies.get("telephone");
+        store.details.telephone = Cookies.get("telephone");
 
         toast.success(response.data.message);
         router.push({ name: "verify" });
@@ -84,7 +91,7 @@ export const userStore = defineStore("user", () => {
           sameSite: "Strict",
         });
 
-        user.isAuthenticated = Cookies.get("token_u");
+        store.isAuthenticated = Cookies.get("token_u");
         toast.success(response.data.message);
         router.push("/");
       }
@@ -108,7 +115,7 @@ export const userStore = defineStore("user", () => {
       const response = await axiosPrivate.post("/user/logout");
 
       if (response.data && response.status === 200) {
-        user.isAuthenticated = false;
+        store.isAuthenticated = false;
         Cookies.remove("token_u", {
           expires: 2 * 60 * 1000,
           path: "/",
@@ -131,18 +138,41 @@ export const userStore = defineStore("user", () => {
     }
   }
 
+  async function currentUser(router) {
+    try {
+      const response = await axiosPrivate.get("/user/details");
+      if (response.data && response.status === 200) {
+        store.details.info = response.data;
+        console.log(response.data);
+      }
+    } catch (err) {
+      if (err?.response?.status === 401) {
+        if (err?.response?.status === 401) {
+          router.push({ name: "Login" });
+          return;
+        }
+      }
+      if (!err?.response?.status) {
+        return err.message;
+      } else {
+        return "Internal Server Error " + err.response;
+      }
+    }
+  }
+
   async function getWishlist(router) {
     try {
       const response = await axiosPrivate.get("/user/product-wishlist");
       if (response.data && response.status === 200) {
-        user.isLoading = false;
-        user.wishList = response.data;
-        // console.log(response.data);
+        // store.isLoading = false;
+        store.wishList = response.data;
+
+        console.log(response.data, "JJJJ");
       }
       // return response.data;
     } catch (err) {
       if (err?.response?.status === 401) {
-        user.isAuthenticated = false;
+        store.isAuthenticated = false;
         router.push({ name: "Login" });
         return;
       }
@@ -150,6 +180,151 @@ export const userStore = defineStore("user", () => {
         return err?.message;
       } else {
         toast.error("Internal Sever Error");
+      }
+    }
+  }
+
+  async function getAllProduct() {
+    try {
+      const response = await axiosInstance.get("/products-all");
+
+      if (response.data && response.status === 200) {
+        store.all_product = response.data;
+        store.isLoading = false;
+      }
+    } catch (err) {
+      if (!err?.response?.status) {
+        return err?.message;
+      } else {
+        return "Internal Server Error.";
+      }
+    }
+  }
+
+  async function getProductById(productId) {
+    try {
+      store.isLoading = true;
+      const response = await axiosInstance.get(`/product/single/${productId}`);
+      if (response.data && response.status === 200) {
+        store.isLoading = false;
+        store.singleProduct = response.data;
+        console.log(response.data);
+      }
+    } catch (err) {
+      if (!err?.response?.status) {
+        return err?.message;
+      } else if (
+        err?.response?.status === 400 ||
+        err?.response?.status === 404
+      ) {
+        toast.error(err?.response?.data?.message);
+      } else {
+        return "Internal Server Error.";
+      }
+    }
+  }
+
+  async function getLatestProducts() {
+    try {
+      const response = await axiosInstance.get("/products-latest");
+      if (response.data && response.status === 200) {
+        store.latestProduct = response.data;
+      }
+    } catch (err) {
+      if (!err?.response?.status) {
+        return err?.message;
+      } else if (
+        err?.response?.status === 400 ||
+        err?.response?.status === 404
+      ) {
+        toast.error(err?.response?.data?.message);
+      } else {
+        return "Internal Server Error.";
+      }
+    }
+  }
+
+  async function getSimilarProducts(data) {
+    try {
+      const response = await axiosInstance.post("/products-similar", data);
+      if (response.data && response.status === 200) {
+        store.similarProducts = response.data;
+        console.log(response.data, "similar");
+      }
+    } catch (err) {
+      if (!err?.response?.status) {
+        return err?.message;
+      } else {
+        return "Internal Server Error.";
+      }
+    }
+  }
+
+  async function getProductReviews(productId) {
+    try {
+      const response = await axiosPrivate.get(`/product/${productId}/ratings`);
+      if (response.data && response.status === 200) {
+        store.productRatings = response.data;
+        console.log(response.data, "reviews");
+      }
+    } catch (err) {
+      if (!err.response?.status) {
+        return err?.message;
+      } else if (err.response?.status === 400) {
+        toast.error(err.response?.data?.message);
+      } else {
+        return "Internal Server Error: " + err.response;
+      }
+    }
+  }
+
+  async function filterByPricesAndCategories(data, router) {
+    try {
+      store.isLoading = true;
+      const response = await axiosInstance.post(
+        "/product/filter-by-price-and-category",
+        data
+      );
+
+      if (response.data && response.status === 200) {
+        store.isLoading = false;
+        store.filteredProduct = response.data;
+        console.log(response.data, "filter");
+      }
+    } catch (err) {
+      if (!err?.response?.status) {
+        return err?.message;
+      } else if (err?.response?.status === 400) {
+        if (err.response?.data?.price_range)
+          toast.error(err.response?.data?.price_range[0]);
+        if (err.response?.data?.categories)
+          toast.error(err.response?.data?.categories[0]);
+      } else if (err?.response?.status === 404) {
+        toast.error(err?.response?.data?.message);
+      } else {
+        return "Internal Server Error";
+      }
+    }
+  }
+
+  async function searchProduct(search) {
+    try {
+      store.isLoading = true;
+      const response = await axiosInstance.post("/product/search-all", search);
+      if (response.data && response.status === 200) {
+        store.isLoading = false;
+        store.filteredProduct = response.data;
+        console.log(response.data);
+      }
+    } catch (err) {
+      if (!err?.response?.status) {
+        return err?.message;
+      } else if (err?.response?.status === 400) {
+        toast.error(err?.response?.data.search[0]);
+      } else if (err?.response?.status === 404) {
+        store.filteredProduct = [];
+      } else {
+        return "Internal Server Error";
       }
     }
   }
@@ -167,7 +342,7 @@ export const userStore = defineStore("user", () => {
       return;
     } catch (err) {
       if (err?.response?.status === 401) {
-        user.isAuthenticated = false;
+        store.isAuthenticated = false;
         Cookies.remove("token_u", {
           expires: 2 * 60 * 1000,
           path: "/",
@@ -197,17 +372,13 @@ export const userStore = defineStore("user", () => {
       );
 
       if (response.data && response.status === 200) {
-        user.wishList = user.wishList.filter(
-          (product) => product.id !== productId
-        );
-        // alert("deleted");
-        toast.success(response.data?.message, { timeout: 10 });
+        toast.success(response.data?.message, { timeout: 100 });
       }
 
       return;
     } catch (err) {
       if (err?.response?.status === 401) {
-        user.isAuthenticated = false;
+        store.isAuthenticated = false;
         Cookies.remove("token_u", {
           expires: 2 * 60 * 1000,
           path: "/",
@@ -242,7 +413,7 @@ export const userStore = defineStore("user", () => {
       }
     } catch (err) {
       if (err.response?.status === 401) {
-        user.isAuthenticated = false;
+        store.isAuthenticated = false;
         Cookies.remove("token_u", {
           expires: 2 * 60 * 1000,
           path: "/",
@@ -270,7 +441,7 @@ export const userStore = defineStore("user", () => {
     }
   }
 
-  async function requestCallback(productId) {
+  async function requestCallback(productId, router) {
     try {
       const response = await axiosPrivate.post(
         `/user/product/${productId}/request-callback`
@@ -283,7 +454,7 @@ export const userStore = defineStore("user", () => {
       }
     } catch (err) {
       if (err.response?.status === 401) {
-        user.isAuthenticated = false;
+        store.isAuthenticated = false;
         Cookies.remove("token_u", {
           expires: 2 * 60 * 1000,
           path: "/",
@@ -304,7 +475,7 @@ export const userStore = defineStore("user", () => {
     }
   }
 
-  async function reportProduct(productId) {
+  async function reportProduct(productId, router) {
     try {
       const response = await axiosPrivate.post(
         `/user/product/${productId}/report`
@@ -317,7 +488,7 @@ export const userStore = defineStore("user", () => {
       }
     } catch (err) {
       if (err.response?.status === 401) {
-        user.isAuthenticated = false;
+        store.isAuthenticated = false;
         Cookies.remove("token_u", {
           expires: 2 * 60 * 1000,
           path: "/",
@@ -338,12 +509,38 @@ export const userStore = defineStore("user", () => {
     }
   }
 
+  async function getProductReviews(productId) {
+    try {
+      const response = await axiosPrivate.get(`/product/${productId}/ratings`);
+      if (response.data && response.status === 200) {
+        store.productRatings = response.data;
+        console.log(response.data, "reviews");
+      }
+    } catch (err) {
+      if (!err.response?.status) {
+        return err?.message;
+      } else if (err.response?.status === 400) {
+        toast.error(err.response?.data?.message);
+      } else {
+        return "Internal Server Error: " + err.response;
+      }
+    }
+  }
+
   return {
-    user,
+    store,
     loginFn,
     verifyTokenFn,
     logOut,
+    currentUser,
     getWishlist,
+    getAllProduct,
+    getProductById,
+    getLatestProducts,
+    getSimilarProducts,
+    filterByPricesAndCategories,
+    searchProduct,
+    getProductReviews,
     addProductToWishlist,
     deleteProductFromWishlist,
     rateProduct,
