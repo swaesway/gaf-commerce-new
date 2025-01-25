@@ -3,14 +3,14 @@ import { userStore } from '@/stores/user';
 import { onBeforeMount, onBeforeUpdate, onMounted, onUnmounted, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-import FadeLoader  from 'vue-spinner/src/FadeLoader.vue'
+import FadeLoader  from 'vue-spinner/src/FadeLoader.vue';
 
 const route = useRoute();
 const router = useRouter();
-const { user, getWishlist, deleteProductFromWishlist } = userStore();
+const { store, getWishlist, deleteProductFromWishlist } = userStore();
 
 const categories = ref([]);
-const filteredWishlist = ref(user.wishList);
+const filteredWishlist = ref(store.wishList);
 
 const formCategories = ref([
 {isChecked: false, category: "All"},
@@ -29,6 +29,25 @@ function isCategoryChecked(category){
 
 function addCategories(data){
  
+if(categories.value.includes("All") && data.category !== "All"){ 
+  categories.value = categories.value.filter((category) => category !== "All");
+
+  router.push({
+  name: "Wishlist",
+  query: {categories:[...categories.value]},
+  });
+}  
+
+if(data.category === "All"){ 
+  categories.value = categories.value.filter((category) => category === "All");
+
+  router.push({
+  name: "Wishlist",
+  query: {categories:[...categories.value]},
+  });
+
+}  
+
  if(categories.value.includes(data.category)){
  categories.value =  categories.value.filter((category) => category !== data.category)
 }else{
@@ -47,7 +66,8 @@ router.push({
 
 function deleteProductFromWishlistFn(productId){
   deleteProductFromWishlist(productId, router);
-  getWishlist();
+  // store.wishList = store.wishList.filter((wishlist) => wishlist.product.id !== productId);
+  getWishlist(router);
 }
 
 // let interval;
@@ -60,9 +80,11 @@ onMounted(() => {
 
   categories.value = route.query.categories ? Array.isArray(route.query.categories) ? route.query.categories : [route.query.categories] : []
 
+
     getWishlist(router);
     // interval = setInterval(() => {
     //   getWishlist(router);
+    //   console.log("hiiii")
     // }, 5000);
 });
 
@@ -73,16 +95,16 @@ onMounted(() => {
 onBeforeUpdate(() => {
 
   if(!route?.query?.categories.length){
-     filteredWishlist.value = user.wishList;
+     filteredWishlist.value = store.wishList;
      return
   }
 
   if(route?.query?.categories.includes("All")){
-    filteredWishlist.value = user.wishList;
+    filteredWishlist.value = store.wishList;
     return 
   }
 
-  filteredWishlist.value = user.wishList.filter((wishlist) => route?.query?.categories.includes(wishlist.category));
+  filteredWishlist.value = store.wishList.filter((wishlist) => route?.query?.categories.includes(wishlist.product.category));
 
 })
 
@@ -122,27 +144,27 @@ onBeforeUpdate(() => {
             </thead>
             <tbody class="align-middle">
               
-              <tr v-if="user.isLoading">
+              <tr v-if="store.isLoading">
                 <td colspan="5" class="row justify-content-center">
                   <FadeLoader :loading="true" :color="'rgb(204 208 207)'" />
                   <span>loading ... </span>
                 </td>
               </tr>
-              <tr v-else v-for="wishList in filteredWishlist || user.wishList" :key="wishList.id">
-                <td v-if="user.wishList.length === 0">
+              <tr v-else v-for="wishList in filteredWishlist || store.wishList" :key="wishList.id">
+                <td v-if="store.wishList.length === 0">
                     <span>you have no wishlist  <RouterLink to="/shop?price_range=All&categories=All">try to add some</RouterLink></span>
                 </td>
                 <!-- <RouterLink :to="'/product-details/' + wishList.id"> -->
                   <td v-else >
                   <img
-                    :src="`http://127.0.0.1:8000/api/product/preview-image?image=${wishList.images[0].image}`"
+                    :src="`http://127.0.0.1:8000/api/product/preview-image?image=${wishList.product.images[0].image}`"
                     alt=""
                     style="width: 50px"
                   />
-                  {{wishList.title}}
+                  {{wishList.product.title}}
                 </td>
                 <!-- </RouterLink> -->
-                <td class="align-middle">₵{{wishList.price}}</td>
+                <td class="align-middle">₵{{wishList.product.price}}</td>
                 <td class="align-middle">
                   <small
                     v-for="n in 5"
@@ -150,9 +172,9 @@ onBeforeUpdate(() => {
                     class="fa fa-star text-primary mr-1"
                   ></small>
                 </td>
-                <td class="align-middle">{{wishList?.category}}</td>
+                <td class="align-middle">{{wishList?.product.category}}</td>
                 <td class="align-middle">
-                  <button title="remove" @click="deleteProductFromWishlistFn(wishList.id)" class="btn btn">
+                  <button title="remove" @click="deleteProductFromWishlistFn(wishList.product.id)" class="btn btn">
                     <i class="fa fa-heart text-primary"></i>
                   </button>
                 </td>

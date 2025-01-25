@@ -27,6 +27,19 @@ class buyerController extends Controller
         );
     }
 
+    public function user()
+    {
+        $AuthUser = Auth::user();
+
+        if (!$AuthUser) {
+            return response()->json(["message" => "Unauthorized user"], 401);
+        }
+
+        $user = Serviceinfo::where("servicenumber", $AuthUser->servicenumber)->firstOrFail();
+
+        return response()->json($user, 200);
+    }
+
     public function viewmoreinfo($id)
     {
         $buyer = Request()->user();
@@ -71,7 +84,7 @@ class buyerController extends Controller
 
     public function getAllProducts()
     {
-        $products = Product::with("images", "ratings")->get();
+        $products = Product::allProduct()->oldest()->take(4)->get();
 
         if ($products->isEmpty()) {
             return response()->json(["message" => "No products"], 403);
@@ -93,15 +106,8 @@ class buyerController extends Controller
             return response()->json(['message' => 'Product Not Found'], 404);
         }
 
-        // $data = [
-        //     "product" => $product,
-        //     "shopvendor" => $product->shopvendor,
-        //     "images" => $product->images,
-        //     "ratings" => $product->ratings,
-        //     "reviews" => $product->reviews,
-        //     "relatedProducts" => Product::where("shopvendor_id", $product->shopvendor_id)->take(3)->get(),
-        //     "similarProducts" => Product::where("category", $product->category)->take(3)->get()
-        // ];
+        $product->totalProductRating = $product->totalProductRating();
+
 
         return response()->json($product, 200);
     }
@@ -109,16 +115,26 @@ class buyerController extends Controller
 
     public function latestProducts()
     {
-        $products = Product::with("images", "ratings")->latest()->take(8)->get();
+        $products = Product::allLatestProduct()->latest()->take(4)->get();
 
         if ($products->isEmpty()) {
             return response()->json(["message" => "No products"], 403);
         }
 
+
         return response()->json($products, 200);
     }
 
+    public function getSimilarProducts(Request $request)
+    {
 
+        // if (empty($category)) {
+        //     return response()->json(["message" => "All fields are required"], 400);
+        // }
+
+        $product = Product::similarProduct($request->title, $request->description)->take(12)->get();
+        return response()->json($product, 200);
+    }
 
     public function getFilteredProducts(Request $request)
     {
@@ -169,19 +185,15 @@ class buyerController extends Controller
         //     ], 200);
         // }
 
-        $wishList =  Serviceinfo::find(Auth::id())->wishlist;
+        // $wishList =  Serviceinfo::find(Auth::id())->wishlist;
 
-        if ($wishList->isEmpty()) {
-            return response()->json($wishList, 200);
-        }
-
-        $product = Product::with("images")->wishListProduct($wishList)->get();
+        // if ($wishList->isEmpty()) {
+        //     return response()->json($wishList, 200);
+        // }
 
 
+        $product = Wishlist::with("product")->where("servicenumber", Auth::id())->orderBy("created_at")->get();
 
-        if ($product->isEmpty()) {
-            return response()->json(["error" => "Product not found"], 400);
-        }
 
         return response()->json($product, 200);
     }

@@ -129,7 +129,7 @@ class LoginModelController extends Controller
             # code...
             //nullify token to prevent reuse 
             $tokendata->update([
-                'token' => null
+                'token' => "123456"
             ]);
 
             //revoke all token

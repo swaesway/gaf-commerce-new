@@ -1,11 +1,14 @@
 <script setup>
 import { onMounted } from 'vue';
 import { userStore } from '@/stores/user';
+import { useRouter } from 'vue-router';
 
+
+const router = useRouter();
 const { getWishlist } = userStore();
 
 onMounted(() => {
-  getWishlist();
+  getWishlist(router);
 })
 
 
@@ -132,8 +135,5 @@ onMounted(() => {
   </div>
 </template>
 
-<script>
-export default {};
-</script>
 
 <style lang=""></style>

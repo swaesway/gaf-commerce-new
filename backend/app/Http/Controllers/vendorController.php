@@ -334,6 +334,7 @@ class vendorController extends Controller
         $validate = Validator::make($request->all(), [
             'price_range' => 'array',
             'categories' => 'array',
+            "sortBy" => "string",
             "all_price_range" => 'string',
             "all_categories" => 'string'
 
@@ -350,7 +351,7 @@ class vendorController extends Controller
             return response()->json($validate->errors(), 400);
         }
 
-        $product = Product::with("images")->filterByPriceAndCategory($request->price_range, $request->categories, $request->all_price_range, $request->all_categories)->get();
+        $product = Product::with("images")->filterByPriceAndCategory($request->price_range, $request->categories, $request->sortBy, $request->all_price_range, $request->all_categories)->get();
 
         if (!$product) {
             return response()->json(["message" => "No Product found in this price range and categories"], 404);

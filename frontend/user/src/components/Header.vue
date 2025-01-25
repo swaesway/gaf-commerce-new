@@ -7,8 +7,8 @@ import { RouterLink, useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 
-const { product, searchProduct } = productStore();
-const { user, logOut } = userStore();
+// const { product, searchProduct } = productStore();
+const { store, logOut, searchProduct } = userStore();
 
 const form = reactive({
   search: "",
@@ -16,6 +16,7 @@ const form = reactive({
 
 function logOutFn() {
   logOut(router);
+  console.log(store.isAuthenticated, "ooo")
 }
 
 function searchBtnTriggered() {
@@ -39,9 +40,9 @@ function searchFn() {
         class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex"
       >
         <div class="col-lg-4">
-          <a href="/" class="text-decoration-none poppins-bold text-green">
+          <RouterLink to="/" class="text-decoration-none poppins-bold text-green">
             <img src="/assets/img/logo.png" alt="logo" class="logo" />
-          </a>
+          </RouterLink>
         </div>
         <div class="col-lg-4 col-6 text-left">
           <div class="input-group" style="width: 150%">
@@ -78,17 +79,17 @@ function searchFn() {
               My Account
             </button>
             <div
-              v-if="user.isAuthenticated"
+              v-if="store.isAuthenticated"
               class="dropdown-menu dropdown-menu-right"
             >
-              <RouterLink to="/login"
+              <a
                 ><button @click="logOutFn" class="dropdown-item" type="button">
                   Sign out
-                </button></RouterLink
+                </button></a
               >
             </div>
             <div v-else class="dropdown-menu dropdown-menu-right">
-              <RouterLink href="/login"
+              <RouterLink to="/login"
                 ><button class="dropdown-item" type="button">
                   Sign in
                 </button></RouterLink
@@ -124,18 +125,18 @@ function searchFn() {
               <div v-if="route.path === '/shop'"></div>
               <div v-else>
                 <div class="nav-item dropdown dropright">
-                  <a
-                    href="/shop"
+                  <RouterLink
+                    to="/shop"
                     class="nav-link dropdown-toggle"
                     data-toggle="dropdown"
                     >Uniforms <i class="fa fa-angle-right float-right mt-1"></i
-                  ></a>
+                  ></RouterLink>
                   <div
                     class="dropdown-menu position-absolute rounded-0 border-0 m-0"
                   >
-                    <a href="/shop" class="dropdown-item">Army</a>
-                    <a href="/shop" class="dropdown-item">Navy</a>
-                    <a href="/shop" class="dropdown-item">Air Forces</a>
+                    <RouterLink to="/shop" class="dropdown-item">Army</RouterLink>
+                    <RouterLink to="/shop" class="dropdown-item">Navy</RouterLink>
+                    <RouterLink to="/shop" class="dropdown-item">Air Forces</RouterLink>
                   </div>
                 </div>
                 <RouterLink
@@ -182,13 +183,13 @@ function searchFn() {
             class="navbar navbar-expand-lg bg-green navbar-dark py-3 py-lg-0 px-0"
           >
             <div class="d-flex">
-              <a href="" class="d-block d-lg-none">
+              <RouterLink to="/" class="d-block d-lg-none">
                 <img
                   src="/assets/img/m-logo.png"
                   alt="gaf logo"
                   class="logo d-inline"
                 />
-              </a>
+              </RouterLink>
               <button
                 type="button"
                 class="navbar-toggler"
@@ -240,7 +241,7 @@ function searchFn() {
                   <span
                     class="badge text-secondary border border-secondary rounded-circle"
                     style="padding-bottom: 2px"
-                    >{{ user.wishList.length }}</span
+                    >{{ store.wishList.length }}</span
                   >
                 </RouterLink>
                 <RouterLink to="/chat" class="btn px-0 ml-3">
