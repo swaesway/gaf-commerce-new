@@ -60,7 +60,7 @@ function isProductPresentInWishlist(id) {
             <i class="fas fa-comment"></i>
           </RouterLink>
           <RouterLink @click="addToWishlist(id)" to="" :class="isProductPresentInWishlist(id) ? 'btn btn-dark btn-square': 'btn btn-outline-dark btn-square'">
-            <i class="far fa-heart"></i>
+            <i :class="isProductPresentInWishlist(id) ? 'fas fa-heart text-primary': 'far fa-heart'"></i>
           </RouterLink>
           <RouterLink
             class="btn btn-outline-dark btn-square"
@@ -71,7 +71,7 @@ function isProductPresentInWishlist(id) {
         </div>
       </div>
       <div class="text-center py-4">
-        <a class="h6 text-decoration-none text-truncate" href="">{{ name }}</a>
+        <RouterLink class="h6 text-decoration-none text-truncate" :to="'/product-details/' + id">{{ name }}</RouterLink>
         <div class="d-flex align-items-center justify-content-center mt-2">
           <h5>{{ price }}</h5>
           <!-- Uncomment and pass oldPrice prop for a discounted price -->

@@ -197,7 +197,7 @@ onUnmounted(() => {
                 ><i class="fa-sharp fa-solid fa-shop mr-4"></i>{{store.singleProduct?.shopvendor?.shopname}}</strong
               >
 
-              <small class="pt-1"> uploaded on {{moment(store.singleProduct.created_at).format("LLL")}}</small>
+              <small class="pt-1"> Uploaded on {{moment(store.singleProduct.created_at).format("LLL")}}</small>
             </div>
 
             <div class="d-flex align-items-center mb-4 pt-2">
