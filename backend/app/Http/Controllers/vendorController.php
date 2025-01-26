@@ -38,7 +38,7 @@ class vendorController extends Controller
 
 
         $validate = Validator::make($request->all(), [
-            'title' => 'required|string|min:7',
+            'title' => 'required|string',
             'price' => 'required|numeric|min:0',
             'category' => 'required|string',
             'description' => 'required|string',

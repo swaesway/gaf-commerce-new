@@ -76,6 +76,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/user/logout', [buyerController::class, 'userlogout']);
 });
 
+Route::post("/user/contact-admin", [buyerController::class, 'contactAdmin']);
 
 //auth sanctum for admin
 Route::middleware(['auth:sanctum'])->group(function () {
