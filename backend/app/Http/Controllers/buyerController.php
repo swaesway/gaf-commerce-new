@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\contactMail;
 use App\Models\Rating;
 use App\Models\Report;
 use App\Models\Product;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 // use Framework\Session\Session;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -192,7 +194,7 @@ class buyerController extends Controller
         // }
 
 
-        $product = Wishlist::with("product")->where("servicenumber", Auth::id())->orderBy("created_at")->get();
+        $product = Wishlist::wishlistProduct()->where("wishlists.servicenumber", Auth::id())->orderBy("created_at")->get();
 
 
         return response()->json($product, 200);
@@ -497,5 +499,27 @@ class buyerController extends Controller
         if (!$saveReport) return response()->json(["message" => "Failed to report product"], 500);
 
         return response()->json(["message" => "product report has been recorded"], 201);
+    }
+
+
+    public function contactAdmin(Request $request)
+    {
+
+        $validate = Validator::make($request->all(), [
+            "subject" => "required|string|max:100",
+            "message" => "required|string",
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json($validate->errors(), 400);
+        }
+
+        $to = "codefuseini176@gmail.com";
+        $subject = $request->subject;
+        $message = $request->message;
+
+        Mail::to($to)->send(new contactMail());
+
+        return response()->json("mail sent", 200);
     }
 }
