@@ -1,12 +1,10 @@
 <script setup>
-import { reactive, ref, useTemplateRef, onMounted } from "vue";
+import { reactive, ref, onMounted } from "vue";
 import { useToast } from "vue-toastification";
-
-import { useRouter } from "vue-router";
-
 import { useVendorStore } from "@/stores/vendor";
-
 import axiosPrivate from "@/api/axiosPrivate";
+import Quill from "quill";
+import "quill/dist/quill.snow.css";
 
 const { addProduct } = useVendorStore();
 const toast = useToast();
@@ -20,7 +18,8 @@ const product = reactive({
 });
 
 const previewImages = ref([]);
-const fileInput = useTemplateRef("fileInput");
+const fileInput = ref(null);
+const quillEditor = ref(null);
 
 function triggerFileUpload() {
   fileInput.value.click();
@@ -46,19 +45,20 @@ function resetForm() {
   product.images = [];
 
   previewImages.value = [];
+  quillEditor.value.setContents([]); // Clear the Quill editor
 }
 
 function handlePriceInput(event) {
   const input = event.target.value;
 
-  // Allow only numbers and a single decimal point
   const validInput = input.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1");
 
-  // Update the product.price with validated input
   product.price = validInput;
 }
 
 function uploadProduct() {
+  product.description = quillEditor.value.root.innerHTML; // Get content from the Quill editor
+
   const data = {
     title: product.title,
     price: product.price,
@@ -67,18 +67,29 @@ function uploadProduct() {
   };
 
   addProduct(data, product.images);
-
-  return;
 }
 
 function onDeleteImage(index) {
-  // Remove the selected image from the arrays
   product.images.splice(index, 1);
   previewImages.value.splice(index, 1);
 }
 
-onMounted(async () => {
-  await axiosPrivate.get("/verify/token");
+onMounted(() => {
+  axiosPrivate.get("/verify/token");
+
+  // Initialize Quill editor
+  quillEditor.value = new Quill("#quill-editor", {
+    theme: "snow",
+    placeholder: "Enter product description...",
+    modules: {
+      toolbar: [
+        ["bold", "italic", "underline", "strike"], // Formatting buttons
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ header: [1, 2, 3, false] }], // Header levels
+        ["link", "image"], // Insert link or image
+      ],
+    },
+  });
 });
 </script>
 
@@ -93,7 +104,6 @@ onMounted(async () => {
         </ol>
       </nav>
     </div>
-    <!-- End Page Title -->
 
     <section class="section">
       <div class="px-1 mt-n1">
@@ -111,7 +121,6 @@ onMounted(async () => {
                       v-model="product.title"
                     />
                     <label for="productName">Title*</label>
-                    <!-- <small class="text-danger" v-if="errors.title">{{ errors.title }}</small> -->
                   </div>
                   <div class="form-floating col-sm-6">
                     <input
@@ -121,7 +130,6 @@ onMounted(async () => {
                       @input="handlePriceInput"
                     />
                     <label for="productPrice">Price*</label>
-                    <!-- <small class="text-danger" v-if="errors.price">{{ errors.price }}</small> -->
                   </div>
                 </div>
 
@@ -140,38 +148,25 @@ onMounted(async () => {
                       </option>
                       <option value="Food & Beverages">Food & Beverages</option>
                     </select>
-
                     <label for="productCategory">Category*</label>
-                    <!-- <small class="text-danger" v-if="errors.category">{{ errors.category }}</small> -->
                   </div>
                 </div>
 
-                <!-- Product Description -->
+                <!-- Rich Text Editor for Product Description -->
                 <div class="row justify-content-between text-left mb-4">
-                  <div class="form-floating col-12">
-                    <textarea
-                      v-model="product.description"
-                      class="form-control"
-                      rows="3"
-                    ></textarea>
-                    <label for="productDescription">Description*</label>
-                    <!-- <small
-                        class="text-danger"
-                        v-if="errors.description"
-                      >{{ errors.description }}</small> -->
+                  <div class="col-12">
+                    <label for="productDescription" class="form-label">
+                      Description*
+                    </label>
+                    <div id="quill-editor" style="height: 200px;"></div>
                   </div>
                 </div>
 
-                <!-- File Upload Button with Max 4 Images -->
+                <!-- File Upload Button -->
                 <div class="form-group mb-4">
                   <h6 class="fw-bold mb-2">
                     Add up to 4 photos for this category
                   </h6>
-
-                  <p>
-                    First picture - is the title picture. You can change the
-                    order of photos: just grab your photos and drag
-                  </p>
                   <button
                     type="button"
                     class="btn btn-outline-success"
@@ -187,7 +182,6 @@ onMounted(async () => {
                     accept="image/*"
                     @change="handleFileUpload"
                   />
-
                   <div id="preview-container" class="mt-3 d-flex flex-wrap">
                     <div
                       v-for="(img, index) in previewImages"
@@ -204,10 +198,6 @@ onMounted(async () => {
                         type="button"
                         class="btn btn-danger btn-sm position-absolute top-0 end-0"
                         @click="onDeleteImage(index)"
-                        style="
-                          /* transform: translate(50%, -50%); */
-                          border-radius: 50%;
-                        "
                       >
                         <i class="bi bi-trash-fill"></i>
                       </button>
@@ -248,19 +238,5 @@ onMounted(async () => {
   object-fit: cover;
   margin: 5px;
   border-radius: 5px;
-}
-
-.position-relative {
-  position: relative;
-}
-
-.position-absolute {
-  position: absolute;
-}
-
-.btn-sm {
-  --bs-btn-padding-y: 0.2rem;
-  --bs-btn-padding-x: 0.3rem;
-  --bs-btn-font-size: 0.7rem;
 }
 </style>
