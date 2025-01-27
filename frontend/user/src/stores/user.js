@@ -26,6 +26,7 @@ export const userStore = defineStore("user", () => {
     wishList: [],
     isAuthenticated: Cookies.get("token_u") || false,
     isLoading: true,
+    isMailSent: false,
     all_product: [],
     singleProduct: {},
     latestProduct: [],
@@ -527,6 +528,40 @@ export const userStore = defineStore("user", () => {
     }
   }
 
+  async function contactAdmin(data, router) {
+    try {
+      store.isMailSent = true;
+      const response = await axiosPrivate.post("/user/contact-admin", data);
+      if (response.data && response.status === 200) {
+        store.isMailSent = false;
+        toast.success(response.data);
+      }
+    } catch (err) {
+      if (err.response?.status === 401) {
+        store.isAuthenticated = false;
+        Cookies.remove("token_u", {
+          expires: 2 * 60 * 1000,
+          path: "/",
+          secure: true,
+          sameSite: "Strict",
+        });
+        router.push({ name: "Login" });
+        return;
+      }
+      if (!err?.response?.status) {
+        return err?.message;
+      } else if (err?.response?.status === 400) {
+        store.isMailSent = false;
+        if (err?.response?.data?.subject)
+          toast.error(err?.response?.data?.subject[0]);
+        if (err?.response?.data?.message)
+          toast.error(err?.response?.data?.message[0]);
+      } else {
+        return "Internal Server Error: " + err.response;
+      }
+    }
+  }
+
   return {
     store,
     loginFn,
@@ -546,5 +581,6 @@ export const userStore = defineStore("user", () => {
     rateProduct,
     requestCallback,
     reportProduct,
+    contactAdmin,
   };
 });

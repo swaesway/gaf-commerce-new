@@ -510,16 +510,28 @@ class buyerController extends Controller
             "message" => "required|string",
         ]);
 
+
+
         if ($validate->fails()) {
             return response()->json($validate->errors(), 400);
         }
 
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json("Unauthorized", 401);
+        }
+
+        $serviceInfo = Serviceinfo::where("servicenumber", $user->servicenumber)->firstOrFail();
+
+        $fromEmail = $serviceInfo->email;
         $to = "codefuseini176@gmail.com";
         $subject = $request->subject;
         $message = $request->message;
 
-        Mail::to($to)->send(new contactMail());
+        Mail::alwaysFrom($fromEmail);
+        Mail::to($to)->send(new contactMail($subject, $message, $fromEmail));
 
-        return response()->json("mail sent", 200);
+        return response()->json("Thank you for contacting us. Our team will get back to you soon.", 200);
     }
 }

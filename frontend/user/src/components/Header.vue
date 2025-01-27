@@ -1,14 +1,14 @@
 <script setup>
 import { productStore } from "@/stores/product";
 import { userStore } from "@/stores/user";
-import { reactive } from "vue";
+import { onMounted, reactive } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
 
 // const { product, searchProduct } = productStore();
-const { store, logOut, searchProduct } = userStore();
+const { store, getWishlist , logOut, searchProduct } = userStore();
 
 const form = reactive({
   search: "",
@@ -31,6 +31,10 @@ function searchFn() {
     query: { search: true, q: form.search },
   });
 }
+
+onMounted(() => {
+   getWishlist(router);
+})
 </script>
 
 <template>

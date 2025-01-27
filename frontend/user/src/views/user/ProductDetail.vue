@@ -393,7 +393,7 @@ onUnmounted(() => {
   </h2>
   <div class="row px-xl-5">
     <div class="col">
-      <div class="owl-carousel related-carousel">
+      <div class="related-carousel">
         <div v-for="product in store.similarProducts" :key="product.id" class="product-item bg-light">
           <div class="product-img position-relative overflow-hidden">
             <img class="img-fluid w-100" :src="`http://127.0.0.1:8000/api/product/preview-image?image=${product.images[0].image}`" :alt="product.title" />

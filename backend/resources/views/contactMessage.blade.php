@@ -1,58 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Form Submission</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Report Email</title>
 </head>
 
-<body class="bg-gray-100">
-    <div class="max-w-2xl mx-auto my-8 bg-white rounded-lg shadow-lg border border-gray-200">
-        <!-- Header -->
-        <div class="bg-green-500 text-white text-center py-6 rounded-t-lg">
-            <h1 class="text-2xl font-bold">New Contact Form Submission</h1>
-        </div>
+<body style="background-color: #f9fafb; font-family: Arial, sans-serif; padding: 20px;">
 
-        <!-- Body -->
-        <div class="p-6 text-gray-800">
-            <!-- Contact Details -->
-            <h3 class="text-lg font-semibold text-green-500 mb-4">Contact Details</h3>
+    <table
+        style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <tr>
+            <td
+                style="background-color: #3b82f6; color: white; text-align: center; padding: 20px; font-size: 20px; font-weight: bold; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+                Reporter Issue
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 20px;">
+                <h2 style="color: #111827; font-size: 18px; font-weight: bold; margin-bottom: 10px;">Reporter Details
+                </h2>
+                <p style="margin: 0; line-height: 1.5; color: #374151;"><strong>Email:</strong> {{ $email }} </p>
+                <p style="margin: 0; line-height: 1.5; color: #374151;"><strong>Problem Statement:</strong>
+                    {{ $problem }}</p>
+                <p
+                    style="margin: 10px 0 0; padding: 10px; background-color: #f3f4f6; border-radius: 4px; color: #374151;">
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; padding: 20px; background-color: #f9fafb; color: #6b7280; font-size: 14px;">
+                Thank you for reporting this issue. Our team will get back to you soon.
+            </td>
+        </tr>
+    </table>
 
-            <div class="mb-4">
-                <strong class="block text-gray-600">Name:</strong>
-                <span class="text-gray-700"></span>
-            </div>
-            <div class="mb-4">
-                <strong class="block text-gray-600">Email:</strong>
-                <span class="text-gray-700"></span>
-            </div>
-            <div class="mb-4">
-                <strong class="block text-gray-600">Phone:</strong>
-                <span class="text-gray-700"></span>
-            </div>
-            <div class="mb-6">
-                <strong class="block text-gray-600">Subject:</strong>
-                <span class="text-gray-700"></span>
-            </div>
-
-            <!-- Message -->
-            <h3 class="text-lg font-semibold text-green-500 mb-2">Message</h3>
-            <p class="text-gray-700 leading-relaxed"></p>
-        </div>
-
-        <!-- Footer -->
-        <div class="bg-gray-100 text-center py-4 rounded-b-lg text-sm text-gray-500">
-            <p>
-                Thank you for contacting us. We will get back to you as soon as possible.
-                <br>
-                Visit our
-                <a href="https://www.yourwebsite.com" class="text-green-500 hover:underline">website</a>
-                for more details.
-            </p>
-        </div>
-    </div>
 </body>
 
 </html>

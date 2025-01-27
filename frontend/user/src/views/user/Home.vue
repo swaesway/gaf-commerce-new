@@ -17,22 +17,33 @@ import FadeLoader from "vue-spinner/src/FadeLoader.vue";
 
 const router = useRouter();
 // const { product } = productStore();
-const { store, getWishlist, currentUser } = userStore();
+const { store, getWishlist, currentUser, getAllProduct, getLatestProducts  } = userStore();
 
-// let interval;
+let interval;
 
 onMounted(() => {
-  
+    
   currentUser(router);
   getWishlist(router);
-  //  interval = setInterval(() => {
-  //   getWishlist();
-  //   }, 100)
+
+    getAllProduct();
+    getLatestProducts();
+    // getWishlist(router);
+    
+
+    interval = setInterval(() => {
+    getAllProduct();
+    getLatestProducts();
+  }, 5000);
+
+  
 });
 
-// onUnmounted(() => {
-//   clearInterval(interval)
-// });
+
+onUnmounted(() => {
+  clearInterval(interval);
+})
+
 </script>
 
 <template>

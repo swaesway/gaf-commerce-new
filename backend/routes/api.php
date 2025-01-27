@@ -73,10 +73,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // @desc report product
     Route::post("/user/product/{productId}/report", [buyerController::class, "reportProduct"]);
 
+    Route::post("/user/contact-admin", [buyerController::class, 'contactAdmin']);
+
     Route::post('/user/logout', [buyerController::class, 'userlogout']);
 });
 
-Route::post("/user/contact-admin", [buyerController::class, 'contactAdmin']);
+
 
 //auth sanctum for admin
 Route::middleware(['auth:sanctum'])->group(function () {
