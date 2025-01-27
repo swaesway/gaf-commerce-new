@@ -86,7 +86,7 @@ onMounted(() => {
         ["bold", "italic", "underline", "strike"], // Formatting buttons
         [{ list: "ordered" }, { list: "bullet" }],
         [{ header: [1, 2, 3, false] }], // Header levels
-        ["link", "image"], // Insert link or image
+        ["link"], // Insert link or image
       ],
     },
   });
