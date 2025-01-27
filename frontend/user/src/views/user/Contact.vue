@@ -1,11 +1,24 @@
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, reactive } from 'vue';
 import { userStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
 
+import ClipLoader  from 'vue-spinner/src/ClipLoader.vue';
 
 const router = useRouter();
-const { getWishlist } = userStore();
+const {store,  getWishlist, contactAdmin, resetIsMailSent } = userStore();
+
+const form = reactive({
+  subject: "",
+  message: ""
+})
+
+function contactAdminFn(){
+  contactAdmin({subject: form.subject, message: form.message}, router);
+  form.subject = "";
+  form.message = "";
+  
+}
 
 onMounted(() => {
   getWishlist(router);
@@ -13,15 +26,6 @@ onMounted(() => {
 
 
 </script>
-
-
-
-
-
-
-
-
-
 
 
 <template lang="">
@@ -48,31 +52,10 @@ onMounted(() => {
         <div class="col-lg-7 mb-5">
           <div class="contact-form bg-light p-30">
             <div id="success"></div>
-            <form name="sentMessage" id="contactForm" novalidate="novalidate">
+            <form name="sentMessage" id="contactForm" novalidate="novalidate" @submit.prevent="contactAdminFn">
               <div class="control-group">
                 <input
-                  type="text"
-                  class="form-control"
-                  id="name"
-                  placeholder="Your Name"
-                  required="required"
-                  data-validation-required-message="Please enter your name"
-                />
-                <p class="help-block text-danger"></p>
-              </div>
-              <div class="control-group">
-                <input
-                  type="email"
-                  class="form-control"
-                  id="email"
-                  placeholder="Your Email"
-                  required="required"
-                  data-validation-required-message="Please enter your email"
-                />
-                <p class="help-block text-danger"></p>
-              </div>
-              <div class="control-group">
-                <input
+                  v-model="form.subject"
                   type="text"
                   class="form-control"
                   id="subject"
@@ -80,10 +63,12 @@ onMounted(() => {
                   required="required"
                   data-validation-required-message="Please enter a subject"
                 />
-                <p class="help-block text-danger"></p>
+                <!-- <p class="help-block text-danger"></p> -->
               </div>
+              <br />
               <div class="control-group">
                 <textarea
+                   v-model="form.message"
                   class="form-control"
                   rows="8"
                   id="message"
@@ -91,9 +76,22 @@ onMounted(() => {
                   required="required"
                   data-validation-required-message="Please enter your message"
                 ></textarea>
-                <p class="help-block text-danger"></p>
+                <!-- <p class="help-block text-danger"></p> -->
               </div>
-              <div>
+              <div v-if="store.isMailSent">
+                <button
+                  class="btn btn-primary py-2 px-4"
+                  type="submit"
+                  id="sendMessageButton"
+                  disabled
+                >
+                
+                  Send Message
+
+                  <ClipLoader :loading="true" :color="'rgb(204 208 207)'" style="float:right;" />
+                </button>
+              </div>
+              <div v-else>
                 <button
                   class="btn btn-primary py-2 px-4"
                   type="submit"

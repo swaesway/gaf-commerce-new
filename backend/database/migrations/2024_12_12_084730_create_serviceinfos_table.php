@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('serviceinfos', function (Blueprint $table) {
             $table->id();
-            $table->unique(["servicenumber", "telephone"]);
+            $table->unique(["servicenumber", "telephone", "email"]);
             $table->string('servicenumber');
+            $table->string("email");
             $table->string('telephone');
             $table->timestamps();
         });

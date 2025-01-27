@@ -94,6 +94,8 @@ onMounted(() => {
 
 onBeforeUpdate(() => {
 
+  getWishlist(router);
+
   if(!route?.query?.categories.length){
      filteredWishlist.value = store.wishList;
      return
@@ -166,11 +168,14 @@ onBeforeUpdate(() => {
                 <!-- </RouterLink> -->
                 <td class="align-middle">₵{{wishList.product.price}}</td>
                 <td class="align-middle">
-                  <small
-                    v-for="n in 5"
-                    :key="n"
-                    class="fa fa-star text-primary mr-1"
-                  ></small>
+ <div class="text-primary mb-2">
+    <!-- Render filled stars -->
+    <i v-for="star in Math.floor(wishList.average_rating)" :key="`filled-${star}`" class="fas fa-star"></i>
+    <!-- Render half star if applicable -->
+    <i v-if="wishList.average_rating % 1 !== 0" class="fas fa-star-half-alt"></i>
+    <!-- Render empty stars -->
+    <i v-for="star in 5 - Math.ceil(wishList.average_rating)" :key="`empty-${star}`" class="far fa-star"></i>
+  </div>
                 </td>
                 <td class="align-middle">{{wishList?.product.category}}</td>
                 <td class="align-middle">
