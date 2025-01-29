@@ -26,7 +26,7 @@ export default {};
         </div>
         <div class="col-lg-8 col-md-12">
           <div class="row">
-            <div class="col-md-4 mb-5">
+            <div class="col-md-6 mb-5">
               <h5 class="text-secondary text-uppercase mb-4">GAF MARKET</h5>
               <div class="d-flex flex-column justify-content-start">
                 <a class="text-secondary mb-2" href="#"
@@ -43,30 +43,7 @@ export default {};
                 >
               </div>
             </div>
-            <div class="col-md-4 mb-5">
-              <h5 class="text-secondary text-uppercase mb-4">My Account</h5>
-              <div class="d-flex flex-column justify-content-start">
-                <a class="text-secondary mb-2" href="#"
-                  ><i class="fa fa-angle-right mr-2"></i>Home</a
-                >
-                <a class="text-secondary mb-2" href="#"
-                  ><i class="fa fa-angle-right mr-2"></i>Our Shop</a
-                >
-                <a class="text-secondary mb-2" href="#"
-                  ><i class="fa fa-angle-right mr-2"></i>Shop Detail</a
-                >
-                <a class="text-secondary mb-2" href="#"
-                  ><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a
-                >
-                <a class="text-secondary mb-2" href="#"
-                  ><i class="fa fa-angle-right mr-2"></i>Checkout</a
-                >
-                <a class="text-secondary" href="#"
-                  ><i class="fa fa-angle-right mr-2"></i>Contact Us</a
-                >
-              </div>
-            </div>
-            <div class="col-md-4 mb-5">
+            <div class="col-md-6 mb-5">
               <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
               <p>
                 Subscribe to our newsletter for the latest updates, exclusive
