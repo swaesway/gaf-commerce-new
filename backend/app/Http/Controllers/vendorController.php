@@ -130,13 +130,17 @@ class vendorController extends Controller
         //fetch current user detials
         $vendor = request()->user();
 
+        if (!$vendor) {
+            return response()->json([
+                'message' => 'Unauthorized',
+            ], 401);
+        }
+
         //fetch products with corresponding id of vendor
         $vendorProducts = Product::where('shopvendor_id', $vendor->id)->get();
 
         //return true if found 
-        return response()->json([
-            'products' => $vendorProducts,
-        ]);
+        return response()->json($vendorProducts, 200);
     }
 
     public function updateproduct(Request $request, $id)
@@ -250,9 +254,7 @@ class vendorController extends Controller
             }
         }
 
-        return response()->json([
-            'message' => 'Product deleted successfully!'
-        ], 210);
+        return response()->json('Product deleted successfully!', 200);
     }
 
     public function previewProductImage(Request $request)
