@@ -83,9 +83,9 @@ onMounted(() => {
     placeholder: "Enter product description...",
     modules: {
       toolbar: [
-        ["bold", "italic", "underline", "strike"], // Formatting buttons
+        ["bold", "italic", "strike"], // Formatting buttons
         [{ list: "ordered" }, { list: "bullet" }],
-        [{ header: [1, 2, 3, false] }], // Header levels
+        [{ header: [false] }], // Header levels
         ["link"], // Insert link or image
       ],
     },
