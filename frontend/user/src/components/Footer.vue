@@ -106,7 +106,11 @@ export default {};
 </template>
 
 <style>
-.text-green {
-  color: #318e2b !important;
+.text-primary {
+  color: var(--secondary) !important;
+}
+
+.bg-green {
+    background-color: var(--primary) !important;
 }
 </style>

@@ -225,7 +225,7 @@ onUnmounted(() => {
             <div class="d-flex align-items-center mb-4 pt-2">
               <button
                 @click="requestCallbackFn"
-                class="btn bg-green px-3 mr-3 text-white"
+                class="btn bg-primary px-3 mr-3 text-white"
               >
                 <i class="fa fa-arrows-rotate mr-1"></i> {{ callbackText }}
               </button>
@@ -562,9 +562,6 @@ onUnmounted(() => {
 </template>
 
 <style>
-.bg-green {
-  background-color: #318e2b !important;
-}
 .bg-red {
   background-color: #8e2b2b !important;
 }
@@ -572,9 +569,6 @@ onUnmounted(() => {
   background-color: #ffd333 !important;
 }
 
-.text-green {
-  color: #318e2b !important;
-}
 .text-white {
   color: #fcfcfc !important;
 }
