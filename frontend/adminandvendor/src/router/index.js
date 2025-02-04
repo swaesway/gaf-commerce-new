@@ -1,9 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { createPinia } from "pinia";
 
-import { onBeforeMount } from "vue";
-import axiosInstance from "@/api/axiosInstance";
-
 import VendorLogin from "@/views/vendors/login.vue";
 import VendorRegister from "@/views/vendors/register.vue";
 import Vendorlayout from "@/components/layouts/vendorlayout.vue";
@@ -12,6 +9,9 @@ import Addproduct from "@/views/vendors/addproduct.vue";
 import Viewproduct from "@/views/vendors/viewproducts.vue";
 import Profile from "@/views/vendors/profile.vue";
 
+import AdminDashboard from "@/views/admin/dashboard.vue"; // Assuming you have this component
+import AdminLayout from "@/components/layouts/adminlayout.vue"; // Assuming you have this component
+
 import { useVendorStore } from "@/stores/vendor";
 
 const pinia = createPinia();
@@ -19,6 +19,7 @@ const pinia = createPinia();
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    // Vendor Routes
     {
       path: "/vendor/login",
       name: "vendorLogin",
@@ -72,12 +73,30 @@ const router = createRouter({
         },
       ],
     },
+
+    // Admin Routes
+    {
+      path: "/admin",
+      name: "adminLayout",
+      component: AdminLayout,
+      children: [
+        {
+          path: "/admin",
+          name: "adminDashboard",
+          component: AdminDashboard, 
+        },
+        // Add more admin routes here if needed
+      ],
+    },
   ],
 });
 
 router.beforeEach(async (to, from, next) => {
   const { vendor, checkAuthStatus } = useVendorStore();
+
+  // Only apply authentication checks for vendor routes
   if (
+    to.path.startsWith("/vendor") &&
     to.path !== "/vendor/register" &&
     to.path !== "/vendor/login" &&
     !vendor.isAuthenticated
@@ -85,6 +104,7 @@ router.beforeEach(async (to, from, next) => {
     return next({ name: "vendorLogin" });
   }
 
+  // Admin routes are not protected for now
   next();
 });
 
