@@ -14,8 +14,13 @@ return new class extends Migration
         Schema::create('callbacks', function (Blueprint $table) {
             $table->id();
             $table->unique(["servicenumber", "product_id"]);
+            $table->foreignId("product_id_images")->constrained("product_images", "product_id")->onDelete("cascade");
+            $table->foreignId("shopvendors_id")->constrained("shopvendors")->onDelete("cascade");
             $table->foreignId("servicenumber")->constrained("serviceinfos")->onDelete("cascade");
-            $table->foreignId("product_id")->constrained("products")->onDelete("cascade");
+            $table->foreignId("product_id")->constrained("products");
+            $table->enum("status", ["0401", "1010", "2010"])->default("2010");
+            $table->boolean("hide")->default(0);
+            $table->boolean("view")->default(0);
             $table->timestamps();
         });
     }

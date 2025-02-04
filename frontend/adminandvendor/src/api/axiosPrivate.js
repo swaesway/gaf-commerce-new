@@ -34,7 +34,7 @@ axiosPrivate.interceptors.response.use(
         secure: true,
         sameSite: "Strict",
       });
-      toast.error("Unauthorized, please try to login");
+      // toast.error("Unauthorized, please try to login");
     }
 
     return Promise.reject(error);

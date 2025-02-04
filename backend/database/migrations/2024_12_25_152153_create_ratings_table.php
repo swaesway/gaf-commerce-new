@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unique(["servicenumber", "product_id"]);
             $table->foreignId("servicenumber")->constrained("serviceinfos")->onDelete("cascade");
+            $table->unsignedBigInteger('shopvendor_id');
+            $table->foreign("shopvendor_id")->references("id")->on("shopvendors")->onDelete("cascade");
             $table->foreignId("product_id")->constrained("products")->onDelete("cascade");
             $table->float("rating");
             $table->longText("comment");

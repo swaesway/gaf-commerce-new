@@ -57,17 +57,18 @@ function addToWishlist() {
 }
 
 function rateProductFn() {
+
   rateProduct(
     route.params?.id,
-    { rating: currentRating.value, comment: form.comment },
+    { rating: currentRating.value, comment: form.comment, shopvendor_id: String(store.singleProduct?.shopvendor_id) },
     router
   );
   getProductReviews(route.params?.id);
   form.comment = "";
 }
 
-function requestCallbackFn() {
-  requestCallback(route.params?.id, router);
+function requestCallbackFn(shopvendorId) {
+  requestCallback(route.params?.id, {shopvendor_id: shopvendorId} , router);
   callbackText.value = "Callback Request";
 }
 
@@ -226,8 +227,8 @@ onUnmounted(() => {
             <div class="d-flex mb-4"></div>
             <div class="d-flex align-items-center mb-4 pt-2">
               <button
-                @click="requestCallbackFn"
-                class="btn bg-primary px-3 mr-3 text-white"
+                @click="requestCallbackFn(store.singleProduct.shopvendor_id)"
+                class="btn bg-green px-3 mr-3 text-white"
               >
                 <i class="fa fa-arrows-rotate mr-1"></i> {{ callbackText }}
               </button>

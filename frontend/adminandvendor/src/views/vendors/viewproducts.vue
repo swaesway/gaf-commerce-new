@@ -5,6 +5,7 @@ import { RouterLink, useRouter } from "vue-router";
 import FadeLoader from "vue-spinner/src/FadeLoader.vue"
 
 import {productStore} from "@/stores/products";
+import { useVendorStore } from "@/stores/vendor";
 
 
 // Separate queries for name and category
@@ -12,20 +13,22 @@ const nameQuery = ref("");
 const categoryQuery = ref("");
 
 const router = useRouter()
-const { products, getVendorProducts, deleteProduct } = productStore();
+const { products, getVendorProducts, deleteProduct, freezeProduct } = productStore();
+const { vendor } = useVendorStore();
 
 
 function deleteProductFn(productId){
   deleteProduct(productId, router);
-  getVendorProducts(router);
+  // getVendorProducts(router);
 }
 
+function freezeProductFn(productId){
+   freezeProduct(productId, router)
+}
 
 onMounted(() => {
   getVendorProducts(router);
 })
-
-
 
 
 
@@ -65,7 +68,7 @@ const filteredProducts = computed(() => {
   <div class="container-fluid py-4">
     <!-- Header Section with enhanced search -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="mb-0">View Products</h2>
+      <h2 class="mb-0">Products</h2>
       <div class="d-flex gap-3">
         <div class="d-flex gap-2">
           <input
@@ -113,14 +116,14 @@ const filteredProducts = computed(() => {
                 <td>{{ product.title }}</td>
                 <td>{{ product.category }}</td>
                 <td>
-                  <!-- <span
+                  <span
                     :class="[
                       'badge',
-                      product.status === 'active' ? 'bg-success' : 'bg-danger',
+                      product.frozen == 0 ? 'bg-success' : 'bg-danger',
                     ]"
                   >
-                    {{ product.status }}
-                  </span> -->
+                    {{ product.frozen == 0 ? 'not freezed' : 'freezed'}}
+                  </span>
                 </td>
                 <td>
                   <div class="dropdown">
@@ -134,32 +137,26 @@ const filteredProducts = computed(() => {
                     </button>
                     <ul class="dropdown-menu">
                       <li>
-                        <a
-                          class="dropdown-item"
-                          href="#"
-                         
+                        <RouterLink
+                          class="dropdown-item text-primary"
+                          :to="'/vendor/editproduct/' +  '?product=' + product.id + '?vendor=' + vendor.details.id"
                         >
-                          <i class="bi bi-pencil me-2"></i>Update
-                        </a>
+                        <i class="bi bi-pencil-square me-2"></i>update
+                        </RouterLink>
                       </li>
                       <li>
-                        <!-- <a
+                        <RouterLink
                           class="dropdown-item"
-                          href="#"
-                          
+                          to="#"
+                          @click.prevent="freezeProductFn(product.id)"
                         >
                           <i
-                            class="bi"
-                            :class="[
-                              product.status === 'active'
-                                ? 'bi-snow'
-                                : 'bi-snow-fill',
-                            ]"
+                            class="bi bi-snow me-2"
                           ></i>
                           {{
-                            product.status === "active" ? "Freeze" : "Unfreeze"
+                            product.frozen == 0 ? "Freeze" : "Unfreeze"
                           }}
-                        </a> -->
+                        </RouterLink>
                       </li>
                       <li><hr class="dropdown-divider" /></li>
                       <li>

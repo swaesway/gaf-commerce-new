@@ -413,6 +413,7 @@ export const userStore = defineStore("user", () => {
         toast.success(response?.data?.message);
       }
     } catch (err) {
+      console.log(err?.response?.data?.message);
       if (err.response?.status === 401) {
         store.isAuthenticated = false;
         Cookies.remove("token_u", {
@@ -428,12 +429,15 @@ export const userStore = defineStore("user", () => {
       if (!err?.response?.status) {
         return err?.message;
       } else if (err?.response?.status === 400) {
+        console.log(err?.response.data);
         if (err?.response?.data?.message)
           toast.error(err?.response?.data?.message);
         if (err.response?.data?.rating)
           toast.error(err.response?.data?.rating[0]);
         if (err.response?.data?.comment)
           toast.error(err.response?.data?.comment[0]);
+        if (err.response?.data?.shopvendor_id)
+          toast.error(err.response?.data?.shopvendor_id[0]);
       } else if (err.response?.status === 404) {
         toast.error(err.response?.data?.message);
       } else {
@@ -442,10 +446,11 @@ export const userStore = defineStore("user", () => {
     }
   }
 
-  async function requestCallback(productId, router) {
+  async function requestCallback(productId, data, router) {
     try {
       const response = await axiosPrivate.post(
-        `/user/product/${productId}/request-callback`
+        `/user/product/${productId}/request-callback`,
+        data
       );
       if (
         response.data &&
