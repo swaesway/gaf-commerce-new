@@ -4,6 +4,7 @@ import { useToast } from 'vue-toastification';
 
 import { useVendorStore } from "@/stores/vendor";
 
+import ClipLoader  from 'vue-spinner/src/ClipLoader.vue';
 
 const { vendor,  loginFn  } = useVendorStore();
 
@@ -80,7 +81,8 @@ function loginVendor(){
                     </div>
 
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Login</button>
+                      <button v-if="vendor.isLoading" class="btn btn-primary w-100" type="submit" disabled>Login <ClipLoader :loading="true" :color="'rgb(204 208 207)'" style="float:right;" /></button>
+                      <button v-else class="btn btn-primary w-100" type="submit">Login</button>
                     </div>
                     <div class="col-12">
                       <p class="small mb-0">Don't have account? <router-link to="/vendor/register">Create an account</router-link></p>

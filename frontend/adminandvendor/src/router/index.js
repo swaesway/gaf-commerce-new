@@ -9,15 +9,25 @@ import VendorRegister from "@/views/vendors/register.vue";
 import Vendorlayout from "@/components/layouts/vendorlayout.vue";
 import VendorDashboard from "@/views/vendors/dashboard.vue";
 import Addproduct from "@/views/vendors/addproduct.vue";
+import Editproduct from "@/views/vendors/editproduct.vue";
 import Viewproduct from "@/views/vendors/viewproducts.vue";
 import Profile from "@/views/vendors/profile.vue";
+import CallbackView from "@/views/vendors/callback.vue";
+import CallbackSignleView from "@/views/vendors/callbackProduct.vue";
 
 import { useVendorStore } from "@/stores/vendor";
 
 const pinia = createPinia();
-
+// '/:pathMatch(.*)*
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior(to, from, savedPosition) {
+    console.log("Scrolling Behavior Triggered:", savedPosition);
+    if (savedPosition) {
+      return savedPosition;
+    }
+    return { top: 0, left: 0, behavior: "smooth" };
+  },
   routes: [
     {
       path: "/vendor/login",
@@ -59,6 +69,20 @@ const router = createRouter({
           path: "addproduct",
           name: "addproduct",
           component: Addproduct,
+        },
+        {
+          path: "editproduct",
+          name: "editproduct",
+          component: Editproduct,
+        },
+        {
+          path: "callbacks",
+          name: "callbacks",
+          component: CallbackView,
+        },
+        {
+          path: "callback/:id",
+          component: CallbackSignleView,
         },
         {
           path: "viewproducts",

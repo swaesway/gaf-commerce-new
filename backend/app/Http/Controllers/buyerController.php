@@ -393,7 +393,8 @@ class buyerController extends Controller
         $validate = Validator::make($request->all(), [
             // 'servicenumber' => 'required|size:6',
             'rating' => 'required|numeric|between:1,5',
-            "comment" => "required|string"
+            "comment" => "required|string",
+            "shopvendor_id" => "required|string"
         ]);
 
 
@@ -422,6 +423,7 @@ class buyerController extends Controller
         $rateProduct->product_id = $productId;
         $rateProduct->rating = $request->rating;
         $rateProduct->comment = $request->comment;
+        $rateProduct->shopvendor_id = $request->shopvendor_id;
 
 
         $saveRatedProduct = $rateProduct->save();
@@ -433,7 +435,7 @@ class buyerController extends Controller
         return response()->json(["message" => "Product rated successfully"], 201);
     }
 
-    public function requestCallback($productId)
+    public function requestCallback(Request $request, $productId)
     {
 
 
@@ -463,6 +465,8 @@ class buyerController extends Controller
 
         $callback = new Callback();
         $callback->servicenumber = Auth::id();
+        $callback->shopvendors_id = $request->shopvendor_id;
+        $callback->product_id_images = $productId;
         $callback->product_id = $productId;
 
         $saveCallback = $callback->save();

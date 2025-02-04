@@ -42,17 +42,30 @@ Route::post('admin/logout', [LoginModelController::class, 'adminlogout']);
 //auth sanctum routes for vendor
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('vendor/owner/dashboard', [vendorController::class, 'Vendor']);
-    Route::post('vendor/addproduct', [vendorController::class, 'addproduct']);
-    Route::get('vendor/viewproduct/{id}', [vendorController::class, 'viewproduct']);
+    Route::post('/vendor/addproduct', [vendorController::class, 'addproduct']);
+    Route::get('/vendor/product/{id}', [vendorController::class, 'getVendorProductById']);
     Route::get('vendor/products', [vendorController::class, 'viewproducts']);
-    Route::put('vendor/updateproduct/{id}', [vendorController::class, 'updateproduct']);
-    Route::put('vendor/freezeproduct/{id}', [vendorController::class, 'freezeproduct']);
+    Route::post('/vendor/updateproduct/{id}', [vendorController::class, 'updateproduct']);
+    Route::post('/vendor/freezeproduct/{id}', [vendorController::class, 'freezeproduct']);
     Route::put('vendor/unfreezeproduct/{id}', [vendorController::class, 'unfreezeproduct']);
     Route::delete('vendor/deleteproduct/{id}', [vendorController::class, 'deleteproduct']);
+
+    Route::get("/vendor/callbacks", [vendorController::class, "getVendorCallbacks"]);
+    Route::get("/vendor/callbacks/{id}", [vendorController::class, "getVendorCallbackById"]);
+    Route::post("/vendor/callback/{id}/status", [vendorController::class, "callbackStatus"]);
+    Route::post("/vendor/callback/hide/{id}", [vendorController::class, "hideCallback"]);
+    Route::post("/vendor/callback/view/{id}", [vendorController::class, "viewCallback"]);
+
+    Route::get("/vendor/product/average/rating", [vendorController::class, "averageProductRating"]);
+    Route::get("/vendor/product-today", [vendorController::class, "todaysProduct"]);
+    Route::get("/vendor/product-month", [vendorController::class, "monthsProduct"]);
+    Route::get("/vendor/product-year", [vendorController::class, "yearsProduct"]);
     Route::get('vendor/chat', [vendorController::class, 'chat']);
-    Route::post('vendor/logout', [vendorController::class, 'vendorlogout']);
+    Route::post('/vendor/logout', [vendorController::class, 'vendorLogout']);
     //images 
 });
+
+
 
 //auth sanctum routes for users
 Route::middleware(['auth:sanctum'])->group(function () {

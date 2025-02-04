@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use function PHPUnit\Framework\isArray;
-
 class Product extends Model
 {
     //
@@ -22,7 +20,6 @@ class Product extends Model
 
     protected $hidden = [
         "productid",
-        "frozen",
         "updated_at"
     ];
 
@@ -30,8 +27,8 @@ class Product extends Model
     public function scopeAllProduct($query)
     {
         return $query
-            ->with(['images', 'ratings']) // Eager load related data
-            ->leftJoin('ratings', 'products.id', '=', 'ratings.product_id') // Join ratings table
+            ->with(['images', 'ratings'])
+            ->leftJoin('ratings', 'products.id', '=', 'ratings.product_id') // Joined ratings table
             ->selectRaw('
                 products.id,
                 products.title,
@@ -54,6 +51,7 @@ class Product extends Model
                 'products.created_at',
                 'products.updated_at'
             ) // Group by product ID for proper aggregation
+            ->where("frozen", '!=', "1")
             ->orderBy('average_rating', 'DESC'); // Order by average rating (descending)
     }
 
@@ -84,7 +82,8 @@ class Product extends Model
                 'products.frozen',
                 'products.created_at',
                 'products.updated_at'
-            );
+            )
+            ->where("frozen", '!=', "1");
     }
 
     public function scopeSimilarProduct($query, $title, $description)
@@ -116,14 +115,16 @@ class Product extends Model
             )
             ->where("title", "like", "%" . $title . "%")
             ->where("description", "like", "%" . $description . "%")
-            ->where("price", ">", 0);
+            ->where("price", ">", 0)
+            ->where("frozen", '!=', "1");
     }
 
     public function scopeSearchItem($query, string $value)
     {
         return $query->orWhere("title", "like", "%" . trim($value) . "%")
             ->orWhere("category", "like", "%" . trim($value) . "%")
-            ->orWhere("description", "like", "%" . trim($value) . "%");
+            ->orWhere("description", "like", "%" . trim($value) . "%")
+            ->OrWhere("frozen", '!=', "1");
     }
 
     public function scopeSearchCategory($query, array $categories)
@@ -197,6 +198,7 @@ class Product extends Model
                     'products.created_at',
                     'products.updated_at'
                 )
+                ->where("frozen", '!=', "1")
                 ->orderBy('created_at', 'DESC');
         }
 
@@ -227,6 +229,7 @@ class Product extends Model
                     'products.created_at',
                     'products.updated_at'
                 )
+                ->where("frozen", '!=', "1")
                 ->orderBy('total_rating', 'DESC');
         }
 
@@ -256,25 +259,26 @@ class Product extends Model
                     'products.created_at',
                     'products.updated_at'
                 )
+                ->where("frozen", '!=', "1")
                 ->orderBy('average_rating', 'DESC');
         }
 
 
         if ($all_prices === "All" && $all_categories === "All") {
-            return $query->where("price", ">", 0);
+            return $query->where("price", ">", 0)->where("frozen", '!=', "1");
         }
 
         if ($all_prices === "All") {
-            return $query->where("price", ">", 0)->whereIn("category", $categories);
+            return $query->where("price", ">", 0)->where("frozen", '!=', "1")->whereIn("category", $categories);
         }
 
 
 
         if ($all_categories === "All") {
-            $query->whereIn("category", $all_categories_value);
+            $query->where("frozen", '!=', "1")->whereIn("category", $all_categories_value);
 
             if (!empty($prices)) {
-                $query->where(function ($subQuery) use ($prices) {
+                $query->where("frozen", '!=', "1")->where(function ($subQuery) use ($prices) {
                     foreach ($prices as $price) {
                         $range = explode('-', $price);
 
@@ -290,11 +294,11 @@ class Product extends Model
 
 
         if (!empty($categories)) {
-            $query->whereIn('category', $categories);
+            $query->where("frozen", '!=', "1")->whereIn('category', $categories);
         }
 
         if (!empty($prices)) {
-            $query->where(function ($subQuery) use ($prices) {
+            $query->where("frozen", '!=', "1")->where(function ($subQuery) use ($prices) {
                 foreach ($prices as $price) {
                     $range = explode('-', $price);
 

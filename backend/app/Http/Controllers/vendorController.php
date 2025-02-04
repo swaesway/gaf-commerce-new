@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Callback;
 use App\Models\Product;
-use App\Models\ProductImage;
 use App\Models\ShopVendor;
-use Illuminate\Support\Facades\Storage;
+use App\Models\ProductImage;
+use App\Models\Rating;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use PhpParser\Builder\Function_;
-
+use Illuminate\Support\Carbon;
 use function Illuminate\Log\log;
+use PhpParser\Builder\Function_;
+use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class vendorController extends Controller
 {
@@ -28,6 +31,7 @@ class vendorController extends Controller
 
         return response()->json($vendor, 200);
     }
+
     //function to add products
     public function addproduct(Request $request)
     {
@@ -69,13 +73,14 @@ class vendorController extends Controller
             'shopvendor_id' => $vendor->id
         ]);
 
-        // return response()->json(["message" => "hello"], 201);
+        // return response()->json(["message" => "hello"], 201)
 
 
         if ($request->hasFile("images")) {
             foreach ($request->file("images") as $file) {
 
                 $pathToUploadFile = $file->store("product-images", "public");
+
 
                 if (!$pathToUploadFile) {
                     return response()->json("Failed to upload product-images", 403);
@@ -106,23 +111,20 @@ class vendorController extends Controller
         return response()->json(['message' => 'Product added successfully', 'product' => $product], 201);
     }
 
-    public function viewproduct($id)
+    public function getVendorProductById($id)
     {
         $vendor = request()->user();
         $product = Product::where('shopvendor_id', $vendor->id)
             ->where('id', $id)
+            ->where("frozen", '!=', "1")
             ->get()->first();
         if (!$product) {
             return response()->json([
-                'status' => 404,
                 'message' => 'No Product found'
             ], 404);
         }
 
-        return response()->json([
-            'status' => 201,
-            'product' => $product
-        ], 201);
+        return response()->json($product, 200);
     }
 
     public function viewproducts()
@@ -143,14 +145,42 @@ class vendorController extends Controller
         return response()->json($vendorProducts, 200);
     }
 
+
+    public function getVendorCallbacks()
+    {
+
+        $vendor = Auth::user();
+        $callback = Callback::myCallbacks()->where("shopvendors_id", $vendor->id)->where("hide", "=",  0)->get();
+        return response()->json($callback);
+    }
+
+    public function getVendorCallbackById($id)
+    {
+
+        if (empty($id)) {
+            return response()->json(['message' => 'Callback ID is required.'], 400);
+        }
+
+        $vendor = Auth::user();
+
+        $callback = Callback::myCallbacks()->where("callbacks.id", $id)->where("hide", "=", 0)->where("shopvendors_id", $vendor->id)->get();
+
+        if ($callback->isEmpty()) {
+            return response()->json(['message' => 'No Callback found for this ID.'], 404);
+        }
+
+        return response()->json($callback);
+    }
+
     public function updateproduct(Request $request, $id)
     {
+
         $vendor = $request->user();
 
         //validate inputs
 
         $validate = Validator::make($request->all(), [
-            'title' => 'required|string|min:7',
+            'title' => 'required|string',
             'price' => 'required|numeric|min:0',
             'category' => 'required|string',
             'description' => 'required|string',
@@ -180,9 +210,11 @@ class vendorController extends Controller
         ]);
 
 
-        if ($request->hasFile("images")) {
-            $deleteProductImages = ProductImage::where("proudct_id", $product->id)->delete();
 
+
+        if ($request->hasFile("images")) {
+
+            $deleteProductImages = ProductImage::where("product_id", $product->id)->delete();
             if (!$deleteProductImages) {
                 return response()->json([
                     'message' => 'Failed to delete product images',
@@ -216,7 +248,7 @@ class vendorController extends Controller
             # code...
             return response()->json([
                 'message' => 'Product updated successfully!'
-            ], 210);
+            ], 201);
         } else {
             return response()->json([
                 'message' => 'An error occured updating product'
@@ -279,12 +311,10 @@ class vendorController extends Controller
         return response()->file(Storage::disk("public")->path($imagePath));
     }
 
-    public function vendorlogout(Request $request)
+    public function vendorLogout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-        return response()->json([
-            'status' => 201
-        ], 201);
+        return response()->json("You have successfully logged out", 200);
     }
 
     public function freezeproduct(Request $request, $id)
@@ -295,16 +325,21 @@ class vendorController extends Controller
         if (!$product) {
             # code...
             return response()->json([
-                'status' => 404,
                 'message' => 'No product was found'
             ], 404);
+        }
+
+        if ($product->frozen == "1") {
+            $product->frozen = "0";
+            $product->save();
+
+            return response()->json(["message" => "Product unfrozen ❄️! "], 201);
         }
 
         $product->frozen = '1';
         $product->save();
 
         return response()->json([
-            'status' => 201,
             'message' => 'Product frozen ❄️! '
         ], 201);
     }
@@ -419,5 +454,183 @@ class vendorController extends Controller
         }
 
         return response()->json(["products" => $products]);
+    }
+
+
+    public function todaysProduct()
+    {
+
+        $vendor = Auth::user();
+
+        $todaysProductCount = Product::where("shopvendor_id", $vendor->id)->whereDate('created_at', Carbon::today())->count();
+        $yesterdaysProductCount = Product::where("shopvendor_id", $vendor->id)->whereDate('created_at', Carbon::yesterday())->count();
+
+        $percentageChangeT = 0;
+        $percentageChangeY = 0;
+        if ($yesterdaysProductCount > 0) {
+            $percentageChangeY = (($todaysProductCount - $yesterdaysProductCount) / $yesterdaysProductCount) * 100;
+        } else {
+            // If there were no products yesterday, any new products today mean a 100% increase
+            $percentageChangeT = $todaysProductCount > 0 ? 100 : 0;
+        }
+
+        return response()->json([
+            'percentageChangeY' => round($percentageChangeY, 2),
+            'percentageChangeT' => round($percentageChangeT, 2)
+        ], 200);
+    }
+
+    public function monthsProduct()
+    {
+
+        $vendor = Auth::user();
+
+
+        $thisMonthsProductCount = Product::where("shopvendor_id", $vendor->id)->whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->count();
+        $lastMonthsProductCount = Product::where("shopvendor_id", $vendor->id)->whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->subMonth()->month)
+            ->count();
+
+        $percentageChangeT = 0;
+        $percentageChangeY = 0;
+
+        if ($lastMonthsProductCount > 0) {
+
+            if ($lastMonthsProductCount === 0) {
+                $percentageChangeY = 0;
+            } else {
+                $percentageChangeY = (($thisMonthsProductCount - $lastMonthsProductCount) / $lastMonthsProductCount) * 100;
+            }
+        } else {
+            // If there were no products yesterday, any new products today mean a 100% increase
+            $percentageChangeT = $thisMonthsProductCount > 0 ? 100 : 0;
+        }
+
+        return response()->json([
+            'percentageChangeY' => round($percentageChangeY, 2),
+            'percentageChangeT' => round($percentageChangeT, 2)
+        ], 200);
+    }
+    public function yearsProduct()
+    {
+
+        $vendor = Auth::user();
+
+
+        $thisYearsProductCount = Product::where("shopvendor_id", $vendor->id)->whereYear('created_at', Carbon::now()->year)->count();
+        $lastYearsProductCount = Product::where("shopvendor_id", $vendor->id)->whereYear('created_at', Carbon::now()->subYear()->year)->count();
+
+        $percentageChangeT = 0;
+        $percentageChangeY = 0;
+
+        if ($lastYearsProductCount > 0) {
+            if ($lastYearsProductCount === 0) {
+                $percentageChangeY = 0;
+            } else {
+                $percentageChangeY = (($$thisYearsProductCount - $lastYearsProductCount) / $lastYearsProductCount) * 100;
+            }
+
+            $percentageChangeY = (($thisYearsProductCount - $lastYearsProductCount) / $lastYearsProductCount) * 100;
+        } else {
+            // If there were no products yesterday, any new products today mean a 100% increase
+            $percentageChangeT = $thisYearsProductCount > 0 ? 100 : 0;
+        }
+
+        return response()->json([
+            'percentageChangeY' => round($percentageChangeY, 2),
+            'percentageChangeT' => round($percentageChangeT, 2)
+        ], 200);
+    }
+
+
+    public function callbackStatus(Request $request, $id)
+    {
+        if (empty($id)) {
+            return response()->json(['message' => 'Product id is required'], 400);
+        }
+
+        if (!$request->query("status")) {
+            return response()->json(['message' => 'Status is required'], 400);
+        }
+
+
+        $vendor = Auth::user();
+
+        $callback = Callback::where("id", $id)->where("shopvendors_id", $vendor->id)->first();
+
+        if (!$callback) {
+            return response()->json(['message' => 'No callback found for this product'], 404);
+        }
+
+
+        if ($request->query("status") === "0401") {
+
+            $callback->update([
+                "status" => $request->query("status")
+            ]);
+
+            return response()->json('Callback declined successfully', 200);
+        }
+
+        if ($request->query("status") === "1010") {
+            $callback->update([
+                "status" => $request->query("status")
+            ]);
+
+            return response()->json('Callback approved successfully', 200);
+        }
+    }
+
+
+    public function hideCallback($id)
+    {
+
+        if (empty($id)) {
+            return response()->json(['message' => 'Callback id is required'], 400);
+        }
+
+        $vendor = Auth::user();
+
+        $callback = Callback::where("id", $id)->where("shopvendors_id", $vendor->id)->first();
+
+        if (!$callback) {
+            return response()->json(['message' => 'No callback found for this product'], 404);
+        }
+
+        $callback->hide = 1;
+        $callback->save();
+
+        return response()->json('Callback hidden successfully', 200);
+    }
+
+    public function viewCallback($id)
+    {
+        if (empty($id)) {
+            return response()->json(["message" => "Callback ID is required"], 400);
+        }
+
+        $vendor = Auth::user();
+
+        $callback = Callback::where("id", $id)->where("shopvendors_id", $vendor->id)->first();
+
+        if (!$callback) {
+            return response()->json(["message" => "No callback found for this product"]);
+        }
+
+        $callback->view = 1;
+        $callback->save();
+
+        return response()->json("viewed callback ID of " . $id, 200);
+    }
+
+    public function averageProductRating()
+    {
+        $vendor = Auth::user();
+
+        $totalAverageRating = Rating::where("shopvendor_id", $vendor->id)->avg("ratings.rating");
+
+        return response()->json($totalAverageRating, 200);
     }
 }

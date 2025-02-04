@@ -6,7 +6,9 @@ import axiosPrivate from "@/api/axiosPrivate";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 
-const { addProduct } = useVendorStore();
+import ClipLoader  from 'vue-spinner/src/ClipLoader.vue';
+
+const {vendor,  addProduct } = useVendorStore();
 const toast = useToast();
 
 const product = reactive({
@@ -208,13 +210,25 @@ onMounted(() => {
                 <!-- Submit Button -->
                 <div class="row justify-content-center text-center">
                   <div class="col-sm-6">
-                    <button
+                    <button v-if="vendor.isLoading"
+                      type="submit"
+                      class="btn btn-success"
+                      style="width: 100%"
+                      disabled
+                    >
+                      Upload Product
+                      <ClipLoader :loading="true" :color="'rgb(204 208 207)'" style="float:right;" />
+                    </button>
+
+                    <button v-else
                       type="submit"
                       class="btn btn-success"
                       style="width: 100%"
                     >
                       Upload Product
+                      <!-- <ClipLoader :loading="true" :color="'rgb(204 208 207)'" style="float:right;" /> -->
                     </button>
+                    
                   </div>
                 </div>
               </form>

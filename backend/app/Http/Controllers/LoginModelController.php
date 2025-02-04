@@ -129,7 +129,7 @@ class LoginModelController extends Controller
             # code...
             //nullify token to prevent reuse 
             $tokendata->update([
-                'token' => "123456"
+                'token' => null
             ]);
 
             //revoke all token
@@ -179,7 +179,7 @@ class LoginModelController extends Controller
     {
         //validate input request
         $validate = Validator::make($request->all(), [
-            'shopname' => 'required|string|min:10|unique:shopvendors,shopname',
+            'shopname' => 'required|string|unique:shopvendors,shopname',
             'email' => 'required|email|unique:shopvendors,email',
             'telephone' => 'required|unique:shopvendors,telephone|numeric|min:10',
             'location' => 'required|string',

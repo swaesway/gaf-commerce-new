@@ -1,12 +1,105 @@
+<script setup>
+import { onMounted, onBeforeMount, onBeforeUnmount, watchEffect } from "vue";
+import { RouterLink, RouterView, useRouter } from "vue-router";
+import { computed } from "vue";
+import moment from "moment"
+import { useRoute } from "vue-router";
+import { useVendorStore } from "@/stores/vendor";
+import { callbackStore } from "@/stores/callbacks";
+
+
+const router = useRouter();
+const { vendor, getVendorDetails, logOutFn } = useVendorStore();
+const { callbacks, getVendorCallbacks, viewCallback} = callbackStore();
+
+let unreadCallbacks = [];
+
+function logOutVendor(){
+  logOutFn(router)
+}
+
+function viewCallbackFn(callbackId){
+  viewCallback(callbackId, router);
+}
+
+
+watchEffect(() => {
+   unreadCallbacks = callbacks.myCallbacks.filter((callback) => callback.callback_view === 0);
+})
+
+let interval;
+onBeforeMount(async () => {
+  // await axiosPrivate.get("/verify/token");
+  getVendorDetails();
+  getVendorCallbacks();
+  interval = setInterval(() => {
+    getVendorCallbacks();
+  }, 50000); 
+
+
+});
+
+
+onBeforeUnmount(() => {
+  clearInterval(interval);
+})
+
+onMounted(() => {
+  // Initialize any template JavaScript here
+  const select = (el, all = false) => {
+    el = el.trim();
+    if (all) {
+      return [...document.querySelectorAll(el)];
+    } else {
+      return document.querySelector(el);
+    }
+  };
+
+  // Toggle sidebar
+  const toggleSidebar = () => {
+    select("body").classList.toggle("toggle-sidebar");
+  };
+
+  if (select(".toggle-sidebar-btn")) {
+    select(".toggle-sidebar-btn").addEventListener("click", toggleSidebar);
+  }
+});
+
+const route = useRoute();
+
+// Function to check if current route matches given path
+const isCurrentRoute = (path) => {
+  return route.path === path;
+};
+
+// Computed property to check if any products-related route is active
+const isProductsMenuActive = computed(() => {
+  return (
+    route.path.includes("/vendor/addproduct") ||
+    route.path.includes("/vendor/viewproducts")
+  );
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
 <template>
   <div>
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
       <div class="d-flex align-items-center justify-content-between">
-        <a href="/" class="logo d-flex align-items-center">
+        <RouterLink to="/" class="logo d-flex align-items-center">
           <img src="/assets/img/logo.png" alt="" />
           <!-- <span class="d-none d-lg-block text-white">Vendor Board</span> -->
-        </a>
+        </RouterLink>
         <i class="bi bi-list toggle-sidebar-btn text-white"></i>
       </div>
       <!-- End Logo -->
@@ -14,9 +107,9 @@
       <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
           <li class="nav-item dropdown">
-            <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <RouterLink class="nav-link nav-icon" to="#" data-bs-toggle="dropdown">
               <i class="bi bi-bell text-white"></i>
-              <span class="badge bg-primary badge-number">4</span> </a
+              <span class="badge bg-primary badge-number">4</span> </RouterLink
             ><!-- End Notification Icon -->
 
             <ul
@@ -24,10 +117,10 @@
             >
               <li class="dropdown-header">
                 You have 4 new notifications
-                <a href="#"
+                <RouterLink to="#"
                   ><span class="badge rounded-pill bg-primary p-2 ms-2"
                     >View all</span
-                  ></a
+                  ></RouterLink
                 >
               </li>
               <li>
@@ -86,7 +179,7 @@
                 <hr class="dropdown-divider" />
               </li>
               <li class="dropdown-footer">
-                <a href="#">Show all notifications</a>
+                <RouterLink href="#">Show all notifications</RouterLink>
               </li>
             </ul>
             <!-- End Notification Dropdown Items -->
@@ -94,79 +187,49 @@
           <!-- End Notification Nav -->
 
           <li class="nav-item dropdown">
-            <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <RouterLink class="nav-link nav-icon" to="#" data-bs-toggle="dropdown">
               <i class="bi bi-chat-left-text text-white"></i>
-              <span class="badge bg-success badge-number">3</span> </a
+              <span class="badge bg-success badge-number">{{ callbacks.myCallbacks.length }}</span> </RouterLink
             ><!-- End Messages Icon -->
 
             <ul
               class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages"
             >
-              <li class="dropdown-header">
-                You have 3 new messages
-                <a href="#"
+            <li class="dropdown-header">
+                You have {{ unreadCallbacks.length }} unread callback
+                <!-- <RouterLink to="/vendor/callbacks"
                   ><span class="badge rounded-pill bg-primary p-2 ms-2"
                     >View all</span
-                  ></a
-                >
+                  ></RouterLink
+                > -->
               </li>
               <li>
                 <hr class="dropdown-divider" />
               </li>
-
-              <li class="message-item">
-                <a href="#">
+              
+              <div v-for="(callback, index) in callbacks.myCallbacks" :key="index">
+                <RouterLink :to="'/vendor/callback/' + callback.callback_id" @click="viewCallbackFn(callback.callback_id)">
+                <li class="message-item">
+                <RouterLink :to="'/vendor/callback/' + callback.callback_id">
                   <img src="" alt="" class="rounded-circle" />
                   <div>
-                    <h4>Maria Hudson</h4>
+                    <h4 :style="callback?.callback_view ? 'color:#ababae' : 'color:black'">{{ callback?.service_name }}</h4>
                     <p>
-                      Velit asperiores et ducimus soluta repudiandae labore
-                      officia est ut...
+                      {{ callback?.service_telephone }}
                     </p>
-                    <p>4 hrs. ago</p>
+                    <p>{{ moment(callback?.callback_created_at).fromNow() }}</p>
                   </div>
-                </a>
+                </RouterLink>
               </li>
+            </RouterLink>
               <li>
                 <hr class="dropdown-divider" />
               </li>
-
-              <li class="message-item">
-                <a href="#">
-                  <img src="" alt="" class="rounded-circle" />
-                  <div>
-                    <h4>Anna Nelson</h4>
-                    <p>
-                      Velit asperiores et ducimus soluta repudiandae labore
-                      officia est ut...
-                    </p>
-                    <p>6 hrs. ago</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <hr class="dropdown-divider" />
-              </li>
-
-              <li class="message-item">
-                <a href="#">
-                  <img src="" alt="" class="rounded-circle" />
-                  <div>
-                    <h4>David Muldon</h4>
-                    <p>
-                      Velit asperiores et ducimus soluta repudiandae labore
-                      officia est ut...
-                    </p>
-                    <p>8 hrs. ago</p>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <hr class="dropdown-divider" />
-              </li>
+              
+              </div>
 
               <li class="dropdown-footer">
-                <a href="#">Show all messages</a>
+                <RouterLink to="/vendor/callbacks">Show all callbacks</RouterLink>
               </li>
             </ul>
             <!-- End Messages Dropdown Items -->
@@ -174,9 +237,9 @@
           <!-- End Messages Nav -->
 
           <li class="nav-item dropdown pe-3">
-            <a
+            <RouterLink
               class="nav-link nav-profile d-flex align-items-center pe-0"
-              href="#"
+              to="#"
               data-bs-toggle="dropdown"
             >
               <img
@@ -186,7 +249,7 @@
               />
               <span
                 class="d-none d-md-block dropdown-toggle ps-2 text-white"
-              ></span> </a
+              ></span> </RouterLink
             ><!-- End Profile Iamge Icon -->
 
             <ul
@@ -201,13 +264,13 @@
               </li>
 
               <li>
-                <a
+                <RouterLink
                   class="dropdown-item d-flex align-items-center"
-                  href="/vendor/profile"
+                  to="/vendor/profile"
                 >
                   <i class="bi bi-person"></i>
                   <span>My Profile</span>
-                </a>
+                </RouterLink>
               </li>
               <li>
                 <hr class="dropdown-divider" />
@@ -217,20 +280,20 @@
               </li>
 
               <li>
-                <a
+                <RouterLink
                   class="dropdown-item d-flex align-items-center"
-                  href="pages-faq.html"
+                  to="pages-faq.html"
                 >
                   <i class="bi bi-question-circle"></i>
                   <span>Need Help?</span>
-                </a>
+                </RouterLink>
               </li>
               <li>
                 <hr class="dropdown-divider" />
               </li>
 
-              <li>
-                <a class="dropdown-item d-flex align-items-center" href="#">
+              <li @click="logOutVendor">
+                <a class="dropdown-item d-flex align-items-center" >
                   <i class="bi bi-box-arrow-right"></i>
                   <span>Sign Out</span>
                 </a>
@@ -366,54 +429,4 @@ textarea {
 }
 </style>
 
-<script setup>
-import { onMounted, onBeforeMount } from "vue";
-import { RouterView } from "vue-router";
-import { computed } from "vue";
-import { useRoute } from "vue-router";
-import { useVendorStore } from "@/stores/vendor";
-import axiosPrivate from "@/api/axiosPrivate";
 
-const { vendor, getVendorDetails } = useVendorStore();
-
-onBeforeMount(async () => {
-  await axiosPrivate.get("/verify/token");
-  getVendorDetails();
-});
-
-onMounted(() => {
-  // Initialize any template JavaScript here
-  const select = (el, all = false) => {
-    el = el.trim();
-    if (all) {
-      return [...document.querySelectorAll(el)];
-    } else {
-      return document.querySelector(el);
-    }
-  };
-
-  // Toggle sidebar
-  const toggleSidebar = () => {
-    select("body").classList.toggle("toggle-sidebar");
-  };
-
-  if (select(".toggle-sidebar-btn")) {
-    select(".toggle-sidebar-btn").addEventListener("click", toggleSidebar);
-  }
-});
-
-const route = useRoute();
-
-// Function to check if current route matches given path
-const isCurrentRoute = (path) => {
-  return route.path === path;
-};
-
-// Computed property to check if any products-related route is active
-const isProductsMenuActive = computed(() => {
-  return (
-    route.path.includes("/vendor/addproduct") ||
-    route.path.includes("/vendor/viewproducts")
-  );
-});
-</script>

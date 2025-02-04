@@ -4,8 +4,11 @@ import { useToast } from "vue-toastification";
 
 import { useVendorStore } from "@/stores/vendor";
 
+import ClipLoader  from 'vue-spinner/src/ClipLoader.vue';
+
 const toast = useToast();
-const { registerFn } = useVendorStore();
+const { vendor, registerFn } = useVendorStore();
+
 
 const form = reactive({
   shopname: "",
@@ -203,7 +206,11 @@ function createVendorAccount() {
                         />
                       </div>
                       <div class="col-12">
-                        <button class="btn btn-primary w-100" type="submit">
+                        <button v-if="vendor.isLoading" class="btn btn-primary w-100" type="submit" disabled>
+                          Create Account
+                          <ClipLoader :loading="true" :color="'rgb(204 208 207)'" style="float:right;" />
+                        </button>
+                        <button v-else class="btn btn-primary w-100" type="submit">
                           Create Account
                         </button>
                       </div>

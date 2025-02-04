@@ -25,6 +25,7 @@ export const useVendorStore = defineStore("vendor", () => {
     },
     isAuthenticated: Cookies.get("token") || false,
     accessToken: null,
+    isLoading: false,
   });
 
   /* 
@@ -50,6 +51,7 @@ export const useVendorStore = defineStore("vendor", () => {
 
   async function registerFn(credentials) {
     try {
+      vendor.isLoading = true;
       const formData = new FormData();
       const {
         shopname,
@@ -76,6 +78,7 @@ export const useVendorStore = defineStore("vendor", () => {
       const message = response?.data?.message;
 
       if (message && response.status === 201) {
+        vendor.isLoading = false;
         router.push({ name: "vendorLogin" });
         toast.success(message);
       }
@@ -83,8 +86,10 @@ export const useVendorStore = defineStore("vendor", () => {
       return;
     } catch (err) {
       if (!err.response.status) {
+        vendor.isLoading = false;
         toast.info(err.message);
       } else if (err?.response?.status === 400) {
+        vendor.isLoading = false;
         if (err.response?.data?.shopname)
           toast.error(err.response?.data?.shopname[0]);
         if (err.response?.data?.email)
@@ -101,6 +106,7 @@ export const useVendorStore = defineStore("vendor", () => {
           toast.error(err.response?.data?.password_confirmation[0]);
         if (err.response?.data?.pob) toast.error(err.response?.data?.pob[0]);
       } else {
+        vendor.isLoading = false;
         toast.error("Internal server error");
       }
     }
@@ -108,12 +114,14 @@ export const useVendorStore = defineStore("vendor", () => {
 
   async function loginFn(credentials) {
     try {
+      vendor.isLoading = true;
       const response = await axiosInstance.post("/vendor/login", credentials);
 
       const message = response?.data?.message;
       console.log(response.data);
 
       if (response.status === 200) {
+        vendor.isLoading = false;
         Cookies.set("token", response?.data?.access_token, {
           expires: 2 * 60 * 1000,
           path: "/",
@@ -130,18 +138,60 @@ export const useVendorStore = defineStore("vendor", () => {
     } catch (err) {
       console.log(err);
       if (!err.response.status) {
+        vendor.isLoading = false;
         toast.info(err.message);
       } else if (err?.response?.status === 400) {
+        vendor.isLoading = false;
         if (err.response?.data?.email)
           toast.error(err.response?.data?.email[0]);
         if (err.response?.data?.password)
           toast.error(err.response?.data?.password[0]);
       } else if (err?.response?.status === 401) {
+        vendor.isLoading = false;
         toast.error(err.response?.data?.message);
       } else if (err?.response?.status === 403) {
+        vendor.isLoading = false;
         toast.error(err.response?.data?.message);
       } else {
+        vendor.isLoading = false;
         toast.error("Internal server error");
+      }
+    }
+  }
+
+  async function logOutFn(router) {
+    try {
+      const response = await axiosPrivate.post("/vendor/logout");
+      if (response.data && response.status === 200) {
+        vendor.isAuthenticated = false;
+        Cookies.remove("token", response?.data?.access_token, {
+          expires: 2 * 60 * 1000,
+          path: "/",
+          secure: true,
+          sameSite: "Strict",
+        });
+
+        toast.success(response.data);
+        router.push({ name: "vendorLogin" });
+      }
+    } catch (err) {
+      if (err?.response?.status === 401) {
+        vendor.isAuthenticated = false;
+        Cookies.set("token", vendor.accessToken, {
+          expires: 2 * 60 * 1000,
+          path: "/",
+          secure: true,
+          sameSite: "Strict",
+        });
+
+        router.push({ name: "vendorLogin" });
+        return;
+      }
+
+      if (!err?.response?.status) {
+        return err?.message;
+      } else {
+        return "Internal Server Error " + err.message;
       }
     }
   }
@@ -165,8 +215,8 @@ export const useVendorStore = defineStore("vendor", () => {
 
   async function addProduct(data, productImages) {
     try {
+      vendor.isLoading = true;
       const { title, price, category, description } = data;
-
       const formData = new FormData();
       formData.append("title", title);
       formData.append("price", price);
@@ -183,15 +233,20 @@ export const useVendorStore = defineStore("vendor", () => {
       );
 
       if (saveProduct.status === 201) {
+        // console.log(saveProduct);
+        vendor.isLoading = false;
         toast.success("Product Added successfully");
         router.push({ name: "dashboard" });
       }
 
       return;
     } catch (err) {
+      console.log(err);
       if (!err.response?.status) {
+        vendor.isLoading = false;
         toast.info(err.message);
       } else if (err?.response?.status === 400) {
+        vendor.isLoading = false;
         if (err.response?.data?.title)
           toast.error(err.response?.data?.title[0]);
         if (err.response?.data?.price)
@@ -200,11 +255,12 @@ export const useVendorStore = defineStore("vendor", () => {
           toast.error(err.response?.data?.category[0]);
         if (err.response?.data?.description)
           toast.error(err.response?.data?.description[0]);
-        if (err.response?.data?.images)
-          toast.error(err.response?.data?.images[0]);
+        if (err.response?.data?.images) toast.error("fdfhdjjh");
       } else if (err?.response?.status === 404) {
+        vendor.isLoadig = false;
         toast.error(err.response?.data?.message);
       } else {
+        vendor.isLoading = false;
         toast.error("Internal server error");
       }
     }
@@ -214,6 +270,7 @@ export const useVendorStore = defineStore("vendor", () => {
     vendor,
     registerFn,
     loginFn,
+    logOutFn,
     getVendorDetails,
     addProduct,
     checkAuthStatus,
