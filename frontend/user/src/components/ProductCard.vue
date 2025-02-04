@@ -27,7 +27,6 @@ defineProps({
     type: Number,
     default: 0,
   },
-
 });
 
 const router = useRouter();
@@ -39,15 +38,13 @@ function addToWishlist(id) {
   getWishlist(router);
 }
 
-
 function isProductPresentInWishlist(id) {
-  const foundProductInWishlist = store.wishList.find((wishlist) => wishlist.product.id == id);
-  if(foundProductInWishlist) 
-    return true;
-  else 
-    return false;
+  const foundProductInWishlist = store.wishList.find(
+    (wishlist) => wishlist.product.id == id
+  );
+  if (foundProductInWishlist) return true;
+  else return false;
 }
-
 </script>
 
 <template>
@@ -59,8 +56,22 @@ function isProductPresentInWishlist(id) {
           <RouterLink class="btn btn-outline-dark btn-square" to="">
             <i class="fas fa-comment"></i>
           </RouterLink>
-          <RouterLink @click="addToWishlist(id)" to="" :class="isProductPresentInWishlist(id) ? 'btn btn-dark btn-square': 'btn btn-outline-dark btn-square'">
-            <i :class="isProductPresentInWishlist(id) ? 'fas fa-heart text-primary': 'far fa-heart'"></i>
+          <RouterLink
+            @click="addToWishlist(id)"
+            to=""
+            :class="
+              isProductPresentInWishlist(id)
+                ? 'btn btn-dark btn-square'
+                : 'btn btn-outline-dark btn-square'
+            "
+          >
+            <i
+              :class="
+                isProductPresentInWishlist(id)
+                  ? 'fas fa-heart text-primary'
+                  : 'far fa-heart'
+              "
+            ></i>
           </RouterLink>
           <RouterLink
             class="btn btn-outline-dark btn-square"
@@ -71,7 +82,13 @@ function isProductPresentInWishlist(id) {
         </div>
       </div>
       <div class="text-center py-4">
-        <RouterLink class="h6 text-decoration-none text-truncate" :to="'/product-details/' + id">{{ name }}</RouterLink>
+        <RouterLink
+          class="h6 text-decoration-none text-truncate d-block mx-auto"
+          :to="'/product-details/' + id"
+          style="max-width: 90%"
+        >
+          {{ name }}
+        </RouterLink>
         <div class="d-flex align-items-center justify-content-center mt-2">
           <h5>{{ price }}</h5>
           <!-- Uncomment and pass oldPrice prop for a discounted price -->
@@ -79,14 +96,27 @@ function isProductPresentInWishlist(id) {
         </div>
         <div class="d-flex align-items-center justify-content-center mb-1">
           <div class="text-primary mb-2">
-    <!-- Render filled stars -->
-    <i v-for="star in Math.floor(totalProductRating)" :key="`filled-${star}`" class="fas fa-star"></i>
-    <!-- Render half star if applicable -->
-    <i v-if="totalProductRating % 1 !== 0" class="fas fa-star-half-alt"></i>
-    <!-- Render empty stars -->
-    <i v-for="star in 5 - Math.ceil(totalProductRating)" :key="`empty-${star}`" class="far fa-star"></i>
-  </div>
-          <small style="font-size: 16px; margin-top: -5px; margin-left: 10px;">({{ reviews }})</small>
+            <!-- Render filled stars -->
+            <i
+              v-for="star in Math.floor(totalProductRating)"
+              :key="`filled-${star}`"
+              class="fas fa-star"
+            ></i>
+            <!-- Render half star if applicable -->
+            <i
+              v-if="totalProductRating % 1 !== 0"
+              class="fas fa-star-half-alt"
+            ></i>
+            <!-- Render empty stars -->
+            <i
+              v-for="star in 5 - Math.ceil(totalProductRating)"
+              :key="`empty-${star}`"
+              class="far fa-star"
+            ></i>
+          </div>
+          <small style="font-size: 16px; margin-top: -5px; margin-left: 10px"
+            >({{ reviews }})</small
+          >
         </div>
       </div>
     </div>

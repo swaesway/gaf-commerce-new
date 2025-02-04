@@ -267,7 +267,7 @@ onMounted(() => {
 
 <style>
 .bg-green {
-  background-color: #318e2b !important;
+  background-color: var(--primary) !important;
 }
 
 .logo {
@@ -276,7 +276,7 @@ onMounted(() => {
 }
 
 .text-green {
-  color: #318e2b !important;
+  color: var(--primary) !important;
 }
 
 .input-group {

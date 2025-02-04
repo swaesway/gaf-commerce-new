@@ -1,5 +1,6 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
+import ProductCard from "@/components/ProductCard.vue";
 
 import FadeLoader from "vue-spinner/src/FadeLoader.vue";
 import moment from "moment";
@@ -93,6 +94,7 @@ onMounted(() => {
 onUnmounted(() => {
   clearInterval(interval);
 });
+
 </script>
 
 <template lang="">
@@ -484,88 +486,33 @@ onUnmounted(() => {
     <!-- product start -->
     <!-- Products Start -->
     <div class="container-fluid py-5">
-      <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
-        <span class="bg-secondary pr-3">You May Also Like</span>
-      </h2>
-      <div class="row px-xl-5">
-        <div class="col-3">
-          <div class="related-carousel">
-            <div
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
+      <span class="bg-secondary pr-3">You May Also Like</span>
+    </h2>
+    <div class="row px-xl-5">
+      <div class="col-12">
+        <div class="related-carousel">
+          <div class="row">
+            <ProductCard
               v-for="product in store.similarProducts"
               :key="product.id"
-              class="product-item bg-light"
-            >
-              <div class="product-img position-relative overflow-hidden">
-                <img
-                  class="img-fluid w-100"
-                  :src="`http://127.0.0.1:8000/api/product/preview-image?image=${product.images[0].image}`"
-                  :alt="product.title"
-                />
-                <div class="product-action">
-                  <a class="btn btn-outline-dark btn-square" href="#"
-                    ><i class="fa fa-shopping-cart"></i
-                  ></a>
-                  <a class="btn btn-outline-dark btn-square" href="#"
-                    ><i class="far fa-heart"></i
-                  ></a>
-                  <a class="btn btn-outline-dark btn-square" href="#"
-                    ><i class="fa fa-sync-alt"></i
-                  ></a>
-                 
-                </div>
-              </div>
-              <div class="text-center py-4">
-                <a class="h6 text-decoration-none text-truncate" href="#">{{
-                  product.title
-                }}</a>
-                <div
-                  class="d-flex align-items-center justify-content-center mt-2"
-                >
-                  <h5>₵{{ product.price }}</h5>
-                  <!-- <h6 class="text-muted ml-2"><del>\${{ product.oldPrice }}</del></h6> -->
-                </div>
-                <div
-                  class="d-flex align-items-center justify-content-center mb-1"
-                >
-                  <div class="text-primary mb-2">
-                    <!-- Render filled stars -->
-                    <i
-                      v-for="star in Math.floor(product.average_rating)"
-                      :key="`filled-${star}`"
-                      class="fas fa-star"
-                    ></i>
-                    <!-- Render half star if applicable -->
-                    <i
-                      v-if="product.average_rating % 1 !== 0"
-                      class="fas fa-star-half-alt"
-                    ></i>
-                    <!-- Render empty stars -->
-                    <i
-                      v-for="star in 5 - Math.ceil(product.average_rating)"
-                      :key="`empty-${star}`"
-                      class="far fa-star"
-                    ></i>
-                  </div>
-
-                  <small
-                    style="font-size: 16px; margin-top: -5px; margin-left: 10px"
-                    >({{ product.ratings.length }})</small
-                  >
-                </div>
-              </div>
-            </div>
+              :id="product.id"
+              :name="product.title"
+              :image="`http://127.0.0.1:8000/api/product/preview-image?image=${product.images[0].image}`"
+              :price="`₵${product.price}`"
+              :totalProductRating="product.average_rating"
+              :reviews="product.ratings.length"
+            />
           </div>
         </div>
       </div>
     </div>
+  </div>
     <!-- Products End -->
   </div>
 </template>
 
 <style>
-.bg-green {
-  background-color: #318e2b !important;
-}
 .bg-red {
   background-color: #8e2b2b !important;
 }
@@ -573,9 +520,6 @@ onUnmounted(() => {
   background-color: #ffd333 !important;
 }
 
-.text-green {
-  color: #318e2b !important;
-}
 .text-white {
   color: #fcfcfc !important;
 }
